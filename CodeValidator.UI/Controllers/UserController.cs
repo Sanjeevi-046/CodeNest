@@ -1,6 +1,8 @@
 ﻿using CodeValidator.BLL.Service;
 using CodeValidator.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using ZstdSharp.Unsafe;
 
 namespace CodeValidator.UI.Controllers
 {
@@ -21,9 +23,11 @@ namespace CodeValidator.UI.Controllers
         public async Task<IActionResult> Login(UserDto user)
         {
             var result = await _userService.Login(user.Name, user.Password);
-            if (result)
+            if (result!=null)
             {
-                return RedirectToAction("");
+                HttpContext.Session.SetString("UserID", result.Id);
+
+                return RedirectToAction("Index","Home");
             }
             return View();
         }

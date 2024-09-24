@@ -17,13 +17,22 @@ namespace CodeValidator.BLL.Service
             _mapper = mapper;
         }
 
-        public async Task<bool> Login(string username, string password)
+        public async Task<UserDto> GetUserById(string id)
+        {
+            var existingUser = await _mangoDbService.userModel
+                .Find(u => u.Id == id)
+                .FirstOrDefaultAsync();
+
+            return _mapper.Map<UserDto>(existingUser);
+        }
+
+        public async Task<UserDto> Login(string username, string password)
         {
             var user = await _mangoDbService.userModel
                .Find(u => u.Name == username && u.Password == password)
                .FirstOrDefaultAsync();
 
-            return user != null;
+            return _mapper.Map<UserDto>(user);
         }
         public async Task<bool> Register(UserDto newUser)
         {

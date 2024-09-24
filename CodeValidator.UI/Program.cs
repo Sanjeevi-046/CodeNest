@@ -8,12 +8,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<MangoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IUserService, UserService>();
-//builder.Services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
-//{
-//    microsoftOptions.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"]; // clientID need to give we need to set in json settings
-//    microsoftOptions.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"]; // ClientSeceretKey needed
-//});
-
+builder.Services.AddTransient<IJsonService, JsonService>();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout period
+    options.Cookie.HttpOnly = true; // Cookie settings
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,7 +27,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();

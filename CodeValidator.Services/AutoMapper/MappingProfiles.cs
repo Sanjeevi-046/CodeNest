@@ -9,6 +9,7 @@ namespace CodeValidator.BLL.AutoMapper
         public MappingProfiles()
         {
             CreateMap<UserDto,User>().ReverseMap();
+            CreateMap<JsonModel,JsonModelDto>().ReverseMap();   
         }
     }
 }

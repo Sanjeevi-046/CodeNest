@@ -4,7 +4,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    
+
 }
 @if (ViewBag.Success != null)
 {
@@ -22,7 +22,7 @@
 <div class="main-content">
     <form method="post" asp-action="Validate">
         <textarea class="textarea" asp-for="JsonInput" name="JsonInput" placeholder="Enter your JSON..."></textarea>
-        <textarea class="textarea2" asp-for="BeautifiedJson"  placeholder="See the beautified JSON...">@Model.BeautifiedJson</textarea>
+        <textarea class="textarea2" asp-for="BeautifiedJson" placeholder="See the beautified JSON...">@Model.BeautifiedJson</textarea>
 
         <div class="button-container">
             <button type="submit">Validate</button>

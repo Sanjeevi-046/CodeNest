@@ -7,40 +7,240 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CodeValidator.UI.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"> <!-- Bootstrap Icons -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0f0e0e;
+            color: aliceblue;
+            padding: 15px 20px;
+            font-size: 20px;
+        }
+
+        .nav {
+            width: 200px;
+            background-color: rgb(118, 114, 110);
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+        }
+
+            .nav ul {
+                list-style-type: none;
+            }
+
+            .nav li {
+                margin-bottom: 10px;
+                position: relative;
+            }
+
+            .nav a {
+                text-decoration: none;
+                color: black;
+                padding: 10px;
+                display: flex;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+            }
+
+                .nav a:hover {
+                    background-color: #ddd;
+                }
+
+            .nav .dropdown {
+                cursor: pointer;
+            }
+
+            .nav .dropdown-content {
+                display: none;
+                position: absolute;
+                top: 40px;
+                left: 0;
+                background-color: rgb(249, 248, 247);
+                width: 100%;
+                z-index: 1;
+                border-radius: 4px;
+                color: black;
+            }
+
+                .nav .dropdown-content a {
+                    background-color: rgb(248, 245, 242);
+                    padding-left: 20px;
+                }
+
+            .nav .dropdown:hover .dropdown-content {
+                display: block;
+            }
+
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .textarea, .textarea2 {
+            flex: 1;
+            height: 400px;
+            width:500px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            width: 100%;
+            background-color: rgb(30, 26, 26);
+            color: white;
+            text-align: center;
+        }
+
+        .profile {
+            position: relative;
+        }
+
+        .profile-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgb(255, 251, 251); /* Background for the icon */
+            border-radius: 50%; /* Circular shape */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #0f0e0e; /* Change cursor to pointer */
+        }
+
+            .profile-icon:hover {
+                background-color: #ebe4e4; /* Change background color on hover */
+            }
+
+            .profile-icon svg {
+                color: rgb(43, 36, 36); /* Icon color */
+            }
+
+        .dropdown-menu {
+            display: none; /* Hide by default */
+            position: absolute;
+            top: 50px; /* Adjust to position below the icon */
+            right: 0;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        .profile:hover .dropdown-menu {
+            display: inline;
+            border-radius: 4px;
+            margin: 0; /* Remove margin for better alignment */
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            transition: background-color 0.2s;
+        }
+
+            .dropdown-menu a:hover {
+                background-color: #f0f0f0; /* Highlight on hover */
+            }
+
+        .button-container {
+            display: flex;
+            justify-content: center; /* Space between buttons */
+        }
+
+            .button-container button {
+                padding: 10px 20px;
+                font-size: 16px;
+                border: none;
+                border-radius: 4px;
+                background-color: #007bff; /* Bootstrap primary color */
+                color: white;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                margin-right: 10px;
+            }
+
+                .button-container button:hover {
+                    background-color: #034285;
+                }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CodeValidator.UI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="header">
+        <h1>Dev Tool</h1>
+        <div class="profile">
+            <div class="profile-icon" id="navbarDropdown" role="button" aria-expanded="false">
+                <i class="bi bi-person-circle"></i> <!-- Bootstrap icon -->
             </div>
-        </nav>
-    </header>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" asp-action="Profile" asp-controller="Profile" method="get"><i class="bi bi-person"></i>Profile</a></li>
+                <li class="border-top mt-3 pt-2"><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-left"></i>Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="nav">
+        <ul>
+            <li class="dropdown">
+                <a href="@Url.Action("Validate", "Json")">JsonLint</a>
+                <div class="dropdown-content">
+                    <a href="">Option 1</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)">XML Lint</a>
+                <div class="dropdown-content">
+                    <a href="">Option 1</a>
+                    <a href="">Option 2</a>
+                    <a href="">Option 3</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)">More Options</a>
+                <div class="dropdown-content">
+                    <a href="">Option 1</a>
+                    <a href="">Option 2</a>
+                    <a href="">Option 3</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - CodeValidator.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <div class="footer">
+        &copy; 2024.
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

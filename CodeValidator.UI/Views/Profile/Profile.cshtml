@@ -1,0 +1,66 @@
+﻿@model CodeValidator.DTO.Models.UserDto
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Profile</title>
+</head>
+
+<div class="row justify-content-center">
+
+    <div class="col-md-4">
+        <form asp-action="Edit" asp-controller="Profile" method="post">
+            <div>
+                <h2>Profile</h2>
+            </div>
+            <br />
+            <div class="form-group">
+                <label class="fw-bold">Name :</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter the Name" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="fw-bold">Email :</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter the Email" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="fw-bold">First Name :</label>
+                <input asp-for="FirstName" class="form-control" placeholder="Enter the First Name" required />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="fw-bold">Last Name :</label>
+                <input asp-for="LastName" class="form-control" placeholder="Enter the Last Name" required />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="fw-bold">Country :</label>
+                <input asp-for="Country" class="form-control" placeholder="Enter the Country" required />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="fw-bold">Mobile Number :</label>
+                <input asp-for="MobileNumber" class="form-control" placeholder="Enter the Mobile Number" required />
+                <span asp-validation-for="MobileNumber" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input asp-action="Index" asp-controller="Home" type="submit" value="Cancel" class="btn btn-outline-danger" />
+                <input asp-action="Edit" type="submit" value="Edit" class="btn btn-outline-primary" />
+            </div>
+        </form>
+
+
+    </div>
+</div>
