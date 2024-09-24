@@ -35,7 +35,7 @@ namespace CodeValidator.BLL.Service
             {
                 return false; 
             }
-
+            newUser.RegisterDate = DateTime.Now.ToString();
             await _mangoDbService.userModel.InsertOneAsync(_mapper.Map<User>(newUser));
             return true;
         }

@@ -7,7 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<MangoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
-builder.Services.AddTransient<IUserService, UserService>();  
+builder.Services.AddTransient<IUserService, UserService>();
+//builder.Services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+//{
+//    microsoftOptions.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"]; // clientID need to give we need to set in json settings
+//    microsoftOptions.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"]; // ClientSeceretKey needed
+//});
 
 var app = builder.Build();
 
