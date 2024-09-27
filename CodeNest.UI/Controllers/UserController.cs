@@ -7,9 +7,11 @@ namespace CodeNest.UI.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserController(IUserService userService , IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -24,7 +26,8 @@ namespace CodeNest.UI.Controllers
             var result = await _userService.Login(user.Name, user.Password);
             if (result != null)
             {
-                HttpContext.Session.SetString("UserID", result.Id);
+                _httpContextAccessor.HttpContext.Session.SetString("UserID", result.Id);
+                _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
 
                 return RedirectToAction("Index", "Home");
             }

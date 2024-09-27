@@ -5,8 +5,14 @@ namespace CodeNest.UI.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHttpContextAccessor _httpcontextAccessor;
+        public HomeController(IHttpContextAccessor contextAccessor)
+        {
+            _httpcontextAccessor = contextAccessor;
+        }
         public IActionResult Index()
         {
+            _httpcontextAccessor.HttpContext.Session.GetString("userName");
             return View();
         }
         [HttpPost]

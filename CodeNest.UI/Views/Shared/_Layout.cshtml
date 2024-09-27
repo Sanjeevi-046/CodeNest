@@ -1,6 +1,7 @@
-﻿
-
-
+﻿@inject IHttpContextAccessor _httpContextAccessor
+@{
+    var userName = _httpContextAccessor.HttpContext.Session.GetString("userName");
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,7 +176,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Draude Oba <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@userName <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a asp-action="" asp-controller="" method="" >Profile</a></li>
                             <li role="separator" class="divider"></li>
@@ -312,8 +313,6 @@
 
     <div class="mcw">
 
-
-        
         <div class="container">
             <main role="main" class="pb-3">
                 @RenderBody()
