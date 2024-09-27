@@ -1,7 +1,6 @@
 ﻿using CodeValidator.DTO.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Text.Json.Nodes;
 
 namespace CodeValidator.BLL.Service
 {
@@ -9,18 +8,18 @@ namespace CodeValidator.BLL.Service
     {
         public async Task<ValidationDto> Validate(string jsonObject)
         {
-            if (string.IsNullOrWhiteSpace(jsonObject)) 
-            { 
-                return new ValidationDto { IsValid=false , Message="Not Valid Json"}; 
+            if (string.IsNullOrWhiteSpace(jsonObject))
+            {
+                return new ValidationDto { IsValid = false, Message = "Not Valid Json" };
             }
             jsonObject = jsonObject.Trim();
-            if ((jsonObject.StartsWith("{") && jsonObject.EndsWith("}")) || //For object
-                (jsonObject.StartsWith("[") && jsonObject.EndsWith("]"))) //For array
+            if ((jsonObject.StartsWith("{") && jsonObject.EndsWith("}")) || 
+                (jsonObject.StartsWith("[") && jsonObject.EndsWith("]"))) 
             {
 
                 try
                 {
-                    var parsedJson = JToken.Parse(jsonObject);  
+                    var parsedJson = JToken.Parse(jsonObject);
 
                     string beautifiedJson = parsedJson.ToString(Formatting.Indented);
 
@@ -28,22 +27,22 @@ namespace CodeValidator.BLL.Service
                     {
                         IsValid = true,
                         Message = "Valid JSON",
-                        jsonModelDto = new JsonModelDto
+                        jsonDto = new JsonDto
                         {
                             JsonInput = jsonObject,
-                            BeautifiedJson = beautifiedJson
+                            JsonOutput = beautifiedJson
                         }
                     };
                 }
-                catch (JsonReaderException) 
+                catch (JsonReaderException)
                 {
                     return new ValidationDto
                     {
                         IsValid = false,
                         Message = "Not a valid JSON.",
-                        jsonModelDto = new JsonModelDto 
-                        { 
-                            JsonInput = jsonObject 
+                        jsonDto = new JsonDto
+                        {
+                            JsonInput = jsonObject
                         }
                     };
                 }
@@ -51,11 +50,15 @@ namespace CodeValidator.BLL.Service
             }
             else
             {
-                return new ValidationDto 
-                { IsValid = false, 
-                    Message = "Not a Valid Json" , 
-                    jsonModelDto=new JsonModelDto {JsonInput=jsonObject } 
-                
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Not a Valid Json",
+                    jsonDto = new JsonDto 
+                    { 
+                        JsonInput = jsonObject 
+                    }
+
                 };
             }
 

@@ -1,8 +1,6 @@
 ﻿using CodeValidator.BLL.Service;
 using CodeValidator.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using ZstdSharp.Unsafe;
 
 namespace CodeValidator.UI.Controllers
 {
@@ -16,18 +14,18 @@ namespace CodeValidator.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Login()
         {
-            
+
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Login(UserDto user)
+        public async Task<IActionResult> Login(UsersDto user)
         {
             var result = await _userService.Login(user.Name, user.Password);
-            if (result!=null)
+            if (result != null)
             {
                 HttpContext.Session.SetString("UserID", result.Id);
 
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -40,9 +38,9 @@ namespace CodeValidator.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserDto registeredUser)
+        public async Task<IActionResult> Register(UsersDto registeredUser)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 var result = await _userService.Register(registeredUser);
 

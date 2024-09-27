@@ -7,16 +7,16 @@ namespace CodeValidator.UI.Controllers
     public class JsonController : Controller
     {
         private readonly IJsonService _jsonService;
-        public JsonController(IJsonService jsonService) 
+        public JsonController(IJsonService jsonService)
         {
             _jsonService = jsonService;
         }
-        public IActionResult Index(JsonModelDto jsonModel = null)
+        public IActionResult Index(JsonDto jsonModel = null)
         {
             return View(jsonModel);
         }
         [HttpGet]
-        public async Task<IActionResult> Validate(JsonModelDto jsonModel = null)
+        public async Task<IActionResult> Validate(JsonDto jsonModel = null)
         {
             return View(jsonModel);
         }
@@ -27,10 +27,10 @@ namespace CodeValidator.UI.Controllers
             if (result.IsValid)
             {
                 ViewBag.Success = result.Message;
-                return View(result.jsonModelDto);
-            } 
+                return View(result.jsonDto);
+            }
             ViewBag.ErrorMessage = result.Message;
-            return View( result.jsonModelDto);
+            return View(result.jsonDto);
         }
     }
 }

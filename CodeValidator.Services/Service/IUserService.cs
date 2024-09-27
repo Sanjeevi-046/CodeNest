@@ -4,8 +4,8 @@ namespace CodeValidator.BLL.Service
 {
     public interface IUserService
     {
-        Task<UserDto> GetUserById(string id);
-        Task<UserDto> Login(string username, string password);
-        Task<bool> Register(UserDto newUser);
+        Task<UsersDto> GetUserById(string id);
+        Task<UsersDto> Login(string username, string password);
+        Task<bool> Register(UsersDto newUser);
     }
 }

@@ -2,7 +2,6 @@
 using CodeValidator.DAL.Context;
 using CodeValidator.DAL.Models;
 using CodeValidator.DTO.Models;
-
 using MongoDB.Driver;
 
 namespace CodeValidator.BLL.Service
@@ -11,30 +10,30 @@ namespace CodeValidator.BLL.Service
     {
         private readonly MangoDbService _mangoDbService;
         private readonly IMapper _mapper;
-        public UserService(MangoDbService mangoDbService , IMapper mapper) 
+        public UserService(MangoDbService mangoDbService, IMapper mapper)
         {
             _mangoDbService = mangoDbService;
             _mapper = mapper;
         }
 
-        public async Task<UserDto> GetUserById(string id)
+        public async Task<UsersDto> GetUserById(string id)
         {
             var existingUser = await _mangoDbService.userModel
                 .Find(u => u.Id == id)
                 .FirstOrDefaultAsync();
 
-            return _mapper.Map<UserDto>(existingUser);
+            return _mapper.Map<UsersDto>(existingUser);
         }
 
-        public async Task<UserDto> Login(string username, string password)
+        public async Task<UsersDto> Login(string username, string password)
         {
             var user = await _mangoDbService.userModel
                .Find(u => u.Name == username && u.Password == password)
                .FirstOrDefaultAsync();
 
-            return _mapper.Map<UserDto>(user);
+            return _mapper.Map<UsersDto>(user);
         }
-        public async Task<bool> Register(UserDto newUser)
+        public async Task<bool> Register(UsersDto newUser)
         {
             var existingUser = await _mangoDbService.userModel
                 .Find(u => u.Name == newUser.Name)
@@ -42,10 +41,10 @@ namespace CodeValidator.BLL.Service
 
             if (existingUser != null)
             {
-                return false; 
+                return false;
             }
-            newUser.RegisterDate = DateTime.Now.ToString();
-            await _mangoDbService.userModel.InsertOneAsync(_mapper.Map<User>(newUser));
+            
+            await _mangoDbService.userModel.InsertOneAsync(_mapper.Map<Users>(newUser));
             return true;
         }
     }

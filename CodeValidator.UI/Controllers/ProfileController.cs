@@ -14,9 +14,9 @@ namespace CodeValidator.UI.Controllers
         {
             var userId = HttpContext.Session.GetString("UserID");
             var result = await _userService.GetUserById(userId);
-            if (result != null) 
-            { 
-                return View(result);   
+            if (result != null)
+            {
+                return View(result);
             }
             return View();
         }

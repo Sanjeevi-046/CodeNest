@@ -17,6 +17,17 @@ namespace CodeValidator.DAL.Context
             _database = mangoClient.GetDatabase("CodeValidator");
         }
 
-        public IMongoCollection<User> userModel => _database.GetCollection<User>("UserModel");
+        public IMongoCollection<Users> userModel => _database.GetCollection<Users>("Users");
+        public IMongoCollection<BaseToString> basetoString => _database.GetCollection<BaseToString>("base_to_string");
+        public IMongoCollection<StringToBase> stringtoBase => _database.GetCollection<StringToBase>("string_to_base");
+        public IMongoCollection<Html> html => _database.GetCollection<Html>("html");
+        public IMongoCollection<Javascript> javaScript => _database.GetCollection<Javascript>("javascript");
+        public IMongoCollection<Json> json => _database.GetCollection<Json>("json");
+
+        public IMongoCollection<Jwt> jwt => _database.GetCollection<Jwt>("jwt");
+
+        public IMongoCollection<Xml> xml => _database.GetCollection<Xml>("xml");
+        public IMongoCollection<Workspaces> workSpaces => _database.GetCollection<Workspaces>("workspaces");
+
     }
 }

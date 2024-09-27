@@ -1,9 +1,9 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace CodeValidator.DAL.Models
+namespace CodeValidator.DTO.Models
 {
-    public class User
+    public class UsersDto
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
@@ -18,9 +18,6 @@ namespace CodeValidator.DAL.Models
         [BsonElement("Email")]
         public string Email { get; set; }
 
-        [BsonElement("Register-Date")]
-        public string RegisterDate { get; set; } = DateTime.Now.ToString();
-
         [BsonElement("FirstName")]
         public string FirstName { get; set; }
         [BsonElement("LastName")]
@@ -31,6 +28,8 @@ namespace CodeValidator.DAL.Models
 
         [BsonElement("Country")]
         public string Country { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public List<string> Workspaces { get; set; } = new List<string>();
 
     }
 }

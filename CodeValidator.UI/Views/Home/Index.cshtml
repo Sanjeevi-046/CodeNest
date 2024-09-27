@@ -1,14 +1,23 @@
-﻿@{
+﻿@model CodeValidator.DTO.Models.WorkspacesDto
+@{
        
 }
- @*    <div class="main-content">
-        <textarea class="textarea" placeholder="Enter your code..."></textarea>
-        <textarea class="textarea2" placeholder="See the output..."></textarea>
-    
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="Register" asp-controller="User" >
+            <div>
+                <h2>WorkSpace</h2>
+            </div>
+            <div class="form-group">
+                <label class="fw-bold">Name :</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter the Name" required/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <br />
+            <div>
+                <input type="submit" class="btn btn-outline-dark" value="Save" />
+            </div>
+        </form>
     </div>
-    <div class="button-container">
-        <button>Validate</button>
-        <button>Beautify</button>
-    </div>
- *@
-  
+</div>
