@@ -43,6 +43,7 @@ namespace CodeNest.DTO.Models
         [RegularExpression(@"^[A-Za-z\s]{1,50}$", ErrorMessage = "Country must be up to 50 alphabetic characters.")]
         [Required(ErrorMessage = "Country is required")]
         public string Country { get; set; }
+
         [BsonRepresentation(BsonType.ObjectId)]
         public List<string> Workspaces { get; set; } = new List<string>();
 
