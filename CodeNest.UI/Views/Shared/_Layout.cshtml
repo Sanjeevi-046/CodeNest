@@ -132,6 +132,10 @@
             background: #e2ebf0;
         }
 
+        .navbar-nav li a:hover {
+            background-color: #d1d5d8;
+            color: #333;
+        }
 
 
         .navbar-nav {
@@ -187,6 +191,30 @@
             </div>
         </div>
     </nav>
+
+    <div class="modal fade" id="workspaceModal" tabindex="-1" role="dialog" aria-labelledby="workspaceModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="workspaceModalLabel">Create Workspace</h5>
+
+                </div>
+                <div class="modal-body">
+                    <form asp-action="" asp-controller="" method="post" id="workspaceForm">
+                        <div class="form-group">
+                            <label for="workspaceName">Workspace Name</label>
+                            <input type="text" class="form-control" id="workspaceName" placeholder="Enter workspace name" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="createWorkspaceBtn">Create Workspace</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--msb: main sidebar-->
     <div class="msb">
         <nav class="navbar navbar-default" role="navigation">
@@ -322,16 +350,29 @@
         
     </div>
     <script>
-        
-        // Hover to show collapse
-        $('.jsonlint-link').hover(function () {
-            // Trigger collapse on hover
-            var target = $(this).data('target');
-            $(target).collapse('show');
-        }, function () {
-            // Hide the collapse on mouse leave
-            var target = $(this).data('target');
-            $(target).collapse('hide');
+        $(document).ready(function () {
+            // Show the modal when the page loads
+            $('#workspaceModal').modal('show');
+
+            // Handle the create workspace button click
+            $('#createWorkspaceBtn').click(function () {
+                const workspaceName = $('#workspaceName').val();
+                if (workspaceName) {
+                    // Logic to create workspace goes here
+                    alert('Workspace "' + workspaceName + '" created!');
+                    $('#workspaceModal').modal('hide');
+                } else {
+                    alert('Please enter a workspace name.');
+                }
+            });
+            // Hover to show and hide the collapse panels
+            $('.jsonlint-link').hover(function () {
+                var target = $(this).data('target');
+                $(target).collapse('show');
+            }, function () {
+                var target = $(this).data('target');
+                $(target).collapse('hide');
+            });
         });
         $('.jsonlint-link').click(function (e) {
             var href = $(this).attr('href');
@@ -341,9 +382,6 @@
             e.preventDefault(); // Prevent Bootstrap's default collapse behavior on click
         });
     </script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
