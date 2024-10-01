@@ -1,10 +1,33 @@
-﻿using CodeNest.DTO.Models;
+﻿using System.Diagnostics;
+using CodeNest.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CodeNest.UI.Controllers
+
+namespace CodeNest.UI.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly ILogger<HomeController> _logger;
+
+    public HomeController(ILogger<HomeController> logger)
     {
+        _logger = logger;
+    }
+
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         private readonly IHttpContextAccessor _httpcontextAccessor;
         public HomeController(IHttpContextAccessor contextAccessor)
         {
@@ -20,5 +43,6 @@ namespace CodeNest.UI.Controllers
         {
             return View();
         }
+
     }
 }
