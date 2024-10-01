@@ -14,9 +14,9 @@
   @{
         string title = ViewData["title"] as string ?? "";
         string appName = TempData.Peek("appName") as string ?? "";
-        string productPage = TempData.Peek("productPage") as string ?? "";
+        string productPage = TempData.Peek("") as string ?? "";
     }
-  <title>@title | @appName - Asp.Net Core MVC Free Admin Template</title>
+  <title>@title | @appName </title>
   <meta name="description" content="" />
 
   <!-- Canonical SEO -->
