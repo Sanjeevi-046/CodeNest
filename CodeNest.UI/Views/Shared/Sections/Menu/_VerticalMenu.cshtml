@@ -62,30 +62,21 @@
     </li>
 
     <!-- Apps & Pages -->
-    <li class="menu-header small text-uppercase">
+  @*   <li class="menu-header small text-uppercase">
       <span class="menu-header-text">Tools &amp; </span>
-    </li>
-    <!-- Apps -->
-    <li class='menu-item@(currentPage == "/Apps/Email" ? " active" : "")'>
-      
-    </li>
-    <li class='menu-item@(currentPage == "/Apps/Chat" ? " active" : "")'>
-      
-    </li>
-    <li class='menu-item@(currentPage == "/Apps/Calendar" ? " active" : "")'>
-      
-    </li>
+    </li> *@
+   
     
     <!-- Pages -->
     <li class='menu-item@(currentPage.StartsWith("/Pages/Account") ? " active open" : "")'>
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-dock-top"></i>
-        <div>Json</div>
+        <div>Data Formatter</div>
       </a>
       <ul class="menu-sub">
-        <li class='menu-item@(currentPage == "/Pages/AccountSettings" ? " active" : "")'>
-          <a asp-controller="Pages" asp-action="AccountSettings" class="menu-link">
-            <div>item1</div>
+                <li class='menu-item@(currentPage == "/Formatter/JsonFormatter" ? " active" : "")'>
+                    <a asp-controller="Formatter" asp-action="JsonFormatter" class="menu-link">
+            <div>JSON</div>
           </a>
         </li>
         <li class='menu-item@(currentPage == "/Pages/AccountSettingsNotifications" ? " active" : "")'>
