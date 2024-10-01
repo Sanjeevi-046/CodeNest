@@ -11,6 +11,11 @@ builder.Services.AddSingleton<MangoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IJsonService, JsonService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient("", _client =>
+{
+    _client.Timeout=TimeSpan.FromMinutes(5);
+});
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout period
@@ -31,7 +36,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(

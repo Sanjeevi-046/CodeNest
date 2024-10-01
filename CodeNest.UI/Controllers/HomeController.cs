@@ -28,5 +28,21 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        private readonly IHttpContextAccessor _httpcontextAccessor;
+        public HomeController(IHttpContextAccessor contextAccessor)
+        {
+            _httpcontextAccessor = contextAccessor;
+        }
+        public IActionResult Index()
+        {
+            _httpcontextAccessor.HttpContext.Session.GetString("userName");
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(WorkspacesDto workspacesDto)
+        {
+            return View();
+        }
+
     }
 }

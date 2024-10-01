@@ -34,12 +34,12 @@ namespace CodeNest.BLL.Service
                         }
                     };
                 }
-                catch (JsonReaderException)
+                catch (JsonReaderException ex)
                 {
                     return new ValidationDto
                     {
                         IsValid = false,
-                        Message = "Not a valid JSON.",
+                        Message = ex.ToString(),
                         jsonDto = new JsonDto
                         {
                             JsonInput = jsonObject
