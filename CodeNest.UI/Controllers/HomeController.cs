@@ -8,14 +8,17 @@ namespace CodeNest.UI.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IHttpContextAccessor _httpcontextAccessor;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger , IHttpContextAccessor contextAccessor)
     {
         _logger = logger;
+        _httpcontextAccessor = contextAccessor;
     }
 
     public IActionResult Index()
     {
+        _httpcontextAccessor.HttpContext = _httpcontextAccessor.HttpContext;
         return View();
     }
 
@@ -28,21 +31,10 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        private readonly IHttpContextAccessor _httpcontextAccessor;
-        public HomeController(IHttpContextAccessor contextAccessor)
-        {
-            _httpcontextAccessor = contextAccessor;
-        }
-        public IActionResult Index()
-        {
-            _httpcontextAccessor.HttpContext.Session.GetString("userName");
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Index(WorkspacesDto workspacesDto)
-        {
-            return View();
-        }
+     
+        
+        
+       
 
     }
 }
