@@ -1,4 +1,5 @@
 using CodeNest.BLL.AutoMapper;
+using CodeNest.BLL.Repositories;
 using CodeNest.BLL.Service;
 using CodeNest.DAL.Context;
 
@@ -10,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<MangoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IFormatterServices, FormatterServices>();
 builder.Services.AddTransient<IJsonService, JsonService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("", _client =>
