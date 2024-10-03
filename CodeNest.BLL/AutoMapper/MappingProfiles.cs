@@ -1,4 +1,15 @@
-﻿using AutoMapper;
+﻿// ***********************************************************************************************
+//
+//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//
+//  This software is licensed under a commercial license agreement. For the full copyright and
+//  license information, please contact CTG for more information.
+//
+//  Description: Sample Description.
+//
+// ***********************************************************************************************
+
+using AutoMapper;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 
@@ -8,15 +19,15 @@ namespace CodeNest.BLL.AutoMapper
     {
         public MappingProfiles()
         {
-            CreateMap<UsersDto, Users>().ReverseMap();
-            CreateMap<CustomJson, JsonDto>().ReverseMap();
-            CreateMap<BaseToString, BaseToStringDto>().ReverseMap();
-            CreateMap<StringToBase, StringToBaseDto>().ReverseMap();
-            CreateMap<Workspaces, WorkspacesDto>().ReverseMap();
-            CreateMap<CustomHtml, HtmlDto>().ReverseMap();
-            CreateMap<CustomJavascript, JavascriptDto>().ReverseMap();
-            CreateMap<Jwt, JwtDto>().ReverseMap();
-            CreateMap<CustomXml, XmlDto>().ReverseMap();
+            _ = CreateMap<UsersDto, Users>().ReverseMap();
+            _ = CreateMap<CustomJson, JsonDto>().ReverseMap();
+            _ = CreateMap<BaseToString, BaseToStringDto>().ReverseMap();
+
+            _ = CreateMap<Workspaces, WorkspacesDto>().ReverseMap();
+            _ = CreateMap<CustomHtml, HtmlDto>().ReverseMap();
+            _ = CreateMap<CustomJavascript, JavascriptDto>().ReverseMap();
+            _ = CreateMap<Jwt, JwtDto>().ReverseMap();
+            _ = CreateMap<CustomXml, XmlDto>().ReverseMap();
         }
     }
 }

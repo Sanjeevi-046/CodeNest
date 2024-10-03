@@ -1,4 +1,15 @@
-﻿using CodeNest.BLL.Service;
+﻿// ***********************************************************************************************
+//
+//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//
+//  This software is licensed under a commercial license agreement. For the full copyright and
+//  license information, please contact CTG for more information.
+//
+//  Description: Sample Description.
+//
+// ***********************************************************************************************
+
+using CodeNest.BLL.Service;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +19,7 @@ namespace CodeNest.UI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserController(IUserService userService , IHttpContextAccessor httpContextAccessor)
+        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
@@ -45,9 +56,9 @@ namespace CodeNest.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool result = await _userService.Register(registeredUser);
+                UsersDto result = await _userService.Register(registeredUser);
 
-                if (result)
+                if (result!=null)
                 {
                     return RedirectToAction("Login");
                 }

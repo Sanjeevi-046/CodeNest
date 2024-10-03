@@ -1,3 +1,14 @@
+// ***********************************************************************************************
+//
+//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//
+//  This software is licensed under a commercial license agreement. For the full copyright and
+//  license information, please contact CTG for more information.
+//
+//  Description: Sample Description.
+//
+// ***********************************************************************************************
+
 using CodeNest.BLL.AutoMapper;
 using CodeNest.BLL.Repositories;
 using CodeNest.BLL.Service;
@@ -17,7 +28,7 @@ builder.Services.AddTransient<IJsonService, JsonService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("", _client =>
 {
-    _client.Timeout=TimeSpan.FromMinutes(5);
+    _client.Timeout = TimeSpan.FromMinutes(5);
 });
 builder.Services.AddSession(options =>
 {
@@ -30,9 +41,9 @@ WebApplication app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    _ = app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    _ = app.UseHsts();
 }
 
 app.UseHttpsRedirection();
