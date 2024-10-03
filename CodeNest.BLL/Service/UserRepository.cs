@@ -10,12 +10,13 @@
 // ***********************************************************************************************
 
 using AutoMapper;
+using CodeNest.BLL.Repositories;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using MongoDB.Driver;
 
-namespace CodeNest.BLL.Repositories
+namespace CodeNest.BLL.Service
 {
     public class UserRepository : IUserRepository
     {

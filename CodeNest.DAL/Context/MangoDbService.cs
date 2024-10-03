@@ -6,28 +6,24 @@ namespace CodeNest.DAL.Context
 {
     public class MangoDbService
     {
-        private readonly IConfiguration _configuration;
         private readonly IMongoDatabase _database;
         public MangoDbService(IConfiguration _configuration)
         {
             _configuration = _configuration;
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            var mongoUrl = MongoUrl.Create(connectionString);
-            var mangoClient = new MongoClient(mongoUrl);
+            string? connectionString = _configuration.GetConnectionString("DefaultConnection");
+            MongoUrl mongoUrl = MongoUrl.Create(connectionString);
+            MongoClient mangoClient = new (mongoUrl);
             _database = mangoClient.GetDatabase("CodeValidator");
         }
 
-        public IMongoCollection<Users> userModel => _database.GetCollection<Users>("Users");
-        public IMongoCollection<BaseToString> basetoString => _database.GetCollection<BaseToString>("base_to_string");
-        public IMongoCollection<StringToBase> stringtoBase => _database.GetCollection<StringToBase>("string_to_base");
-        public IMongoCollection<Html> html => _database.GetCollection<Html>("html");
-        public IMongoCollection<Javascript> javaScript => _database.GetCollection<Javascript>("javascript");
-        public IMongoCollection<Json> json => _database.GetCollection<Json>("json");
-
-        public IMongoCollection<Jwt> jwt => _database.GetCollection<Jwt>("jwt");
-
-        public IMongoCollection<Xml> xml => _database.GetCollection<Xml>("xml");
-        public IMongoCollection<Workspaces> workSpaces => _database.GetCollection<Workspaces>("workspaces");
-
+        public IMongoCollection<Users> UserModel => _database.GetCollection<Users>("Users");
+        public IMongoCollection<BaseToString> BasetoString => _database.GetCollection<BaseToString>("base_to_string");
+        public IMongoCollection<StringToBase> StringtoBase => _database.GetCollection<StringToBase>("string_to_base");
+        public IMongoCollection<CustomHtml> Html => _database.GetCollection<CustomHtml>("html");
+        public IMongoCollection<CustomJavascript> JavaScript => _database.GetCollection<CustomJavascript>("javascript");
+        public IMongoCollection<Json> Json => _database.GetCollection<Json>("json");
+        public IMongoCollection<Jwt> Jwt => _database.GetCollection<Jwt>("jwt");
+        public IMongoCollection<Xml> Xml => _database.GetCollection<Xml>("xml");
+        public IMongoCollection<Workspaces> WorkSpaces => _database.GetCollection<Workspaces>("workspaces");
     }
 }
