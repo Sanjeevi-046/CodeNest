@@ -1,4 +1,16 @@
-﻿using AutoMapper;
+﻿// ***********************************************************************************************
+//
+//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//
+//  This software is licensed under a commercial license agreement. For the full copyright and
+//  license information, please contact CTG for more information.
+//
+//  Description: Sample Description.
+//
+// ***********************************************************************************************
+
+using AutoMapper;
+using CodeNest.BLL.Repositories;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
@@ -8,44 +20,47 @@ namespace CodeNest.BLL.Service
 {
     public class UserService : IUserService
     {
-        private readonly MangoDbService _mangoDbService;
-        private readonly IMapper _mapper;
-        public UserService(MangoDbService mangoDbService, IMapper mapper)
+        private readonly IUserRepository _userRepository;
+        /// <summary>
+        /// Initializing instance of <see cref="IUserRepository"/> for accessing the functionality
+        /// </summary>
+        /// <param name="userRepository"></param>
+        public UserService(IUserRepository userRepository)
         {
-            _mangoDbService = mangoDbService;
-            _mapper = mapper;
+            _userRepository = userRepository;
         }
-
+        /// <summary>
+        /// Gets the user detail by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>gets the value from <see cref="IUserRepository"/></returns>
         public async Task<UsersDto> GetUserById(string id)
         {
-            Users existingUser = await _mangoDbService.UserModel
-                .Find(u => u.Id == id)
-                .FirstOrDefaultAsync();
-
-            return _mapper.Map<UsersDto>(existingUser);
+           UsersDto result = await _userRepository.GetUserById(id);
+           return result;
         }
-
+        /// <summary>
+        /// Checks the User whether already in db or not
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns>gets the value from <see cref="IUserRepository"/></returns>
         public async Task<UsersDto> Login(string username, string password)
         {
-            Users user = await _mangoDbService.UserModel
-               .Find(u => u.Name == username && u.Password == password)
-               .FirstOrDefaultAsync();
-
-            return _mapper.Map<UsersDto>(user);
+            UsersDto user = await _userRepository.Login(username, password);
+            return user;
         }
-        public async Task<bool> Register(UsersDto newUser)
+        /// <summary>
+        /// Adding the User in mongo Database
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns>gets the value from <see cref="IUserRepository"/> and returns the vale </returns>
+        public async Task<UsersDto?> Register(UsersDto newUser)
         {
-            Users existingUser = await _mangoDbService.UserModel
-                .Find(u => u.Name == newUser.Name)
-                .FirstOrDefaultAsync();
-
-            if (existingUser != null)
-            {
-                return false;
-            }
-
-            await _mangoDbService.UserModel.InsertOneAsync(_mapper.Map<Users>(newUser));
-            return true;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            UsersDto user = await _userRepository.Register(newUser);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+            return user;
         }
     }
 }

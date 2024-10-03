@@ -17,6 +17,6 @@ namespace CodeNest.BLL.Repositories
     {
         Task<UsersDto> GetUserById(string id);
         Task<UsersDto> Login(string username, string password);
-        Task<UsersDto> Register(UsersDto newUser);
+        Task<UsersDto?> Register(UsersDto newUser);
     }
 }
