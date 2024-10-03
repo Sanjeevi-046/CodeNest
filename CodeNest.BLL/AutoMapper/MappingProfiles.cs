@@ -22,7 +22,6 @@ namespace CodeNest.BLL.AutoMapper
             _ = CreateMap<UsersDto, Users>().ReverseMap();
             _ = CreateMap<CustomJson, JsonDto>().ReverseMap();
             _ = CreateMap<BaseToString, BaseToStringDto>().ReverseMap();
-
             _ = CreateMap<Workspaces, WorkspacesDto>().ReverseMap();
             _ = CreateMap<CustomHtml, HtmlDto>().ReverseMap();
             _ = CreateMap<CustomJavascript, JavascriptDto>().ReverseMap();

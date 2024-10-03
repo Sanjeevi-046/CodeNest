@@ -21,5 +21,6 @@ namespace CodeNest.DAL.Models
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; }
         public string? Name { get; set; }
+        public string? Description { get; set; }
     }
 }

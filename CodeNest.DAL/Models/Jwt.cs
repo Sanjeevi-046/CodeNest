@@ -19,7 +19,7 @@ namespace CodeNest.DAL.Models
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; } 
+        public ObjectId Id { get; set; }
         [BsonElement("Name")]
         public string? Name { get; set; }
         public string? JwtInput { get; set; }
