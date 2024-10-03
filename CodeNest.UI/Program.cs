@@ -3,7 +3,7 @@ using CodeNest.BLL.Repositories;
 using CodeNest.BLL.Service;
 using CodeNest.DAL.Context;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<MangoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IFormatterServices, FormatterServices>();
 builder.Services.AddTransient<IJsonService, JsonService>();
 builder.Services.AddHttpContextAccessor();
@@ -24,7 +25,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true; // Cookie settings
     options.Cookie.IsEssential = true;
 });
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
