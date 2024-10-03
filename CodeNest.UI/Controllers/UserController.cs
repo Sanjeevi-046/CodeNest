@@ -58,7 +58,7 @@ namespace CodeNest.UI.Controllers
             {
                 UsersDto result = await _userService.Register(registeredUser);
 
-                if (result!=null)
+                if (result != null)
                 {
                     return RedirectToAction("Login");
                 }

@@ -21,10 +21,10 @@ namespace CodeNest.BLL.Service
         {
             if (string.IsNullOrWhiteSpace(jsonObject))
             {
-                return new ValidationDto 
-                { 
-                    IsValid = false, 
-                    Message = "Not Valid Json" 
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Not Valid Json"
                 };
             }
             jsonObject = jsonObject.Trim();
@@ -45,7 +45,7 @@ namespace CodeNest.BLL.Service
                     {
                         IsValid = true,
                         Message = "Valid JSON",
-                        jsonDto = new JsonDto
+                        JsonDto = new JsonDto
                         {
                             JsonInput = jsonObject,
                             JsonOutput = beautifiedJson
@@ -58,7 +58,7 @@ namespace CodeNest.BLL.Service
                     {
                         IsValid = false,
                         Message = ex.ToString(),
-                        jsonDto = new JsonDto
+                        JsonDto = new JsonDto
                         {
                             JsonInput = jsonObject
                         }
@@ -71,7 +71,7 @@ namespace CodeNest.BLL.Service
                 {
                     IsValid = false,
                     Message = "Not a Valid Json",
-                    jsonDto = new JsonDto
+                    JsonDto = new JsonDto
                     {
                         JsonInput = jsonObject
                     }

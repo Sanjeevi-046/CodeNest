@@ -9,12 +9,8 @@
 //
 // ***********************************************************************************************
 
-using AutoMapper;
 using CodeNest.BLL.Repositories;
-using CodeNest.DAL.Context;
-using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
-using MongoDB.Driver;
 
 namespace CodeNest.BLL.Service
 {
@@ -36,8 +32,8 @@ namespace CodeNest.BLL.Service
         /// <returns>gets the value from <see cref="IUserRepository"/></returns>
         public async Task<UsersDto> GetUserById(string id)
         {
-           UsersDto result = await _userRepository.GetUserById(id);
-           return result;
+            UsersDto result = await _userRepository.GetUserById(id);
+            return result;
         }
         /// <summary>
         /// Checks the User whether already in db or not

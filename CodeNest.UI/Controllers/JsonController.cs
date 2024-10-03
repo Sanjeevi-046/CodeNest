@@ -38,10 +38,10 @@ namespace CodeNest.UI.Controllers
             if (result.IsValid)
             {
                 ViewBag.Success = result.Message;
-                return View(result.jsonDto);
+                return View(result.JsonDto);
             }
             ViewBag.ErrorMessage = result.Message;
-            return View(result.jsonDto);
+            return View(result.JsonDto);
         }
     }
 }
