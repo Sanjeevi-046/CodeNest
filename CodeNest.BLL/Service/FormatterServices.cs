@@ -19,63 +19,71 @@ namespace CodeNest.BLL.Service
         /// </summary>
         /// <param name="jsonObject"></param>
         /// <returns></returns>
-        public async Task<ValidationDto> JsonValidate(string jsonObject)
+        public async Task<ValidationDto> JsonValidate(string jsonInput)
         {
-            if (string.IsNullOrWhiteSpace(jsonObject))
+            // Check for null or whitespace input
+            if (string.IsNullOrWhiteSpace(jsonInput))
             {
-                return new ValidationDto { IsValid = false, Message = "Not Valid Json" };
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Input is either null, empty, or contains only whitespace."
+                };
             }
-            jsonObject = jsonObject.Trim();
-            if (jsonObject.StartsWith("{") && jsonObject.EndsWith("}") ||
-                jsonObject.StartsWith("[") && jsonObject.EndsWith("]"))
-            {
 
+            // Trim the input to remove any leading or trailing spaces
+            jsonInput = jsonInput.Trim();
+
+            // Validate if input starts and ends with the appropriate JSON characters
+            if ((jsonInput.StartsWith('{') && jsonInput.EndsWith('}')) ||
+                (jsonInput.StartsWith('[') && jsonInput.EndsWith(']')))
+            {
                 try
                 {
-                    var parsedJson = JToken.Parse(jsonObject);
+                    // Try parsing the JSON input
+                    JToken parsedJson = JToken.Parse(jsonInput);
+                    string formattedJson = parsedJson.ToString(Formatting.Indented);
 
-                    string beautifiedJson = parsedJson.ToString(Formatting.Indented);
-
+                    // Return valid JSON response
                     return new ValidationDto
                     {
                         IsValid = true,
-                        Message = "Valid JSON",
-                        jsonDto = new JsonDto
+                        Message = "Valid JSON.",
+                       jsonDto = new JsonDto
                         {
-                            JsonInput = jsonObject,
-                            JsonOutput = beautifiedJson
+                            JsonInput = jsonInput,
+                            JsonOutput = formattedJson
                         }
                     };
                 }
                 catch (JsonReaderException ex)
                 {
+                    // Handle invalid JSON input
                     return new ValidationDto
                     {
                         IsValid = false,
-                        Message = ex.ToString(),
+                        Message = $"Invalid JSON: {ex.Message}",
                         jsonDto = new JsonDto
                         {
-                            JsonInput = jsonObject
+                            JsonInput = jsonInput
                         }
                     };
                 }
-
             }
             else
             {
+                // Return when the structure does not match JSON object or array
                 return new ValidationDto
                 {
                     IsValid = false,
-                    Message = "Not a Valid Json",
+                    Message = "Input is not in valid JSON format (missing appropriate starting or ending brackets).",
                     jsonDto = new JsonDto
                     {
-                        JsonInput = jsonObject
+                        JsonInput = jsonInput
                     }
-
                 };
             }
-
-        } 
+        }
         #endregion
 
     }

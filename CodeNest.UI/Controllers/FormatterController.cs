@@ -15,7 +15,7 @@ namespace CodeNest.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Validate(string JsonInput)
         {
-            var result = await _formatterServices.JsonValidate(JsonInput);
+            DTO.Models.ValidationDto result = await _formatterServices.JsonValidate(JsonInput);
             if (result.IsValid)
             {
                 ViewBag.Success = result.Message;
@@ -24,8 +24,5 @@ namespace CodeNest.UI.Controllers
             ViewBag.ErrorMessage = result.Message;
             return View(result.jsonDto);
         }
-
-
-
     }
 }

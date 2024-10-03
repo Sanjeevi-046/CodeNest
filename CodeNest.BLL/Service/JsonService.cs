@@ -13,13 +13,16 @@ namespace CodeNest.BLL.Service
                 return new ValidationDto { IsValid = false, Message = "Not Valid Json" };
             }
             jsonObject = jsonObject.Trim();
-            if (jsonObject.StartsWith("{") && jsonObject.EndsWith("}") ||
-                jsonObject.StartsWith("[") && jsonObject.EndsWith("]"))
+            char firstChar = jsonObject[0];
+            char lastChar = jsonObject[^1];
+
+            if ((firstChar == '{' && lastChar == '}') ||
+                (firstChar == '[' && lastChar == ']'))
             {
 
                 try
                 {
-                    var parsedJson = JToken.Parse(jsonObject);
+                    JToken parsedJson = JToken.Parse(jsonObject);
 
                     string beautifiedJson = parsedJson.ToString(Formatting.Indented);
 
@@ -46,7 +49,6 @@ namespace CodeNest.BLL.Service
                         }
                     };
                 }
-
             }
             else
             {
@@ -58,10 +60,8 @@ namespace CodeNest.BLL.Service
                     {
                         JsonInput = jsonObject
                     }
-
                 };
             }
-
         }
     }
 }
