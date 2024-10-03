@@ -17,7 +17,7 @@ namespace CodeNest.BLL.Service
 
         public async Task<bool> CreateWorkspace(WorkspacesDto workspacesDto)
         {
-            var result = await _mongoService.workSpaces.Find(x => x.Name == workspacesDto.Name).FirstOrDefaultAsync();
+            var result = await _mongoService.WorkSpaces.Find(x => x.Name == workspacesDto.Name).FirstOrDefaultAsync();
 
             if (result != null)
             {
@@ -25,7 +25,7 @@ namespace CodeNest.BLL.Service
             }
             try
             {
-                await _mongoService.workSpaces.InsertOneAsync(_mapper.Map<Workspaces>(workspacesDto));
+                await _mongoService.WorkSpaces.InsertOneAsync(_mapper.Map<Workspaces>(workspacesDto));
                 return true;
             }
             catch (Exception ex)

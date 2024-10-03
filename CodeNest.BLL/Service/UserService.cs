@@ -18,7 +18,7 @@ namespace CodeNest.BLL.Service
 
         public async Task<UsersDto> GetUserById(string id)
         {
-            var existingUser = await _mangoDbService.userModel
+            Users existingUser = await _mangoDbService.UserModel
                 .Find(u => u.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -27,7 +27,7 @@ namespace CodeNest.BLL.Service
 
         public async Task<UsersDto> Login(string username, string password)
         {
-            var user = await _mangoDbService.userModel
+            Users user = await _mangoDbService.UserModel
                .Find(u => u.Name == username && u.Password == password)
                .FirstOrDefaultAsync();
 
@@ -35,7 +35,7 @@ namespace CodeNest.BLL.Service
         }
         public async Task<bool> Register(UsersDto newUser)
         {
-            var existingUser = await _mangoDbService.userModel
+            Users existingUser = await _mangoDbService.UserModel
                 .Find(u => u.Name == newUser.Name)
                 .FirstOrDefaultAsync();
 
@@ -44,7 +44,7 @@ namespace CodeNest.BLL.Service
                 return false;
             }
 
-            await _mangoDbService.userModel.InsertOneAsync(_mapper.Map<Users>(newUser));
+            await _mangoDbService.UserModel.InsertOneAsync(_mapper.Map<Users>(newUser));
             return true;
         }
     }
