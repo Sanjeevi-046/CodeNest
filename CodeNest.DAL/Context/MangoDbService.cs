@@ -21,9 +21,9 @@ namespace CodeNest.DAL.Context
         public IMongoCollection<StringToBase> StringtoBase => _database.GetCollection<StringToBase>("string_to_base");
         public IMongoCollection<CustomHtml> Html => _database.GetCollection<CustomHtml>("html");
         public IMongoCollection<CustomJavascript> JavaScript => _database.GetCollection<CustomJavascript>("javascript");
-        public IMongoCollection<Json> Json => _database.GetCollection<Json>("json");
+        public IMongoCollection<CustomJson> Json => _database.GetCollection<CustomJson>("json");
         public IMongoCollection<Jwt> Jwt => _database.GetCollection<Jwt>("jwt");
-        public IMongoCollection<Xml> Xml => _database.GetCollection<Xml>("xml");
+        public IMongoCollection<CustomXml> Xml => _database.GetCollection<CustomXml>("xml");
         public IMongoCollection<Workspaces> WorkSpaces => _database.GetCollection<Workspaces>("workspaces");
     }
 }
