@@ -24,7 +24,7 @@ namespace CodeNest.DAL.Context
             string? connectionString = _configuration.GetConnectionString("DefaultConnection");
             MongoUrl mongoUrl = MongoUrl.Create(connectionString);
             MongoClient mangoClient = new(mongoUrl);
-            _database = mangoClient.GetDatabase("CodeValidator");
+            _database = mangoClient.GetDatabase("CodeNest");
         }
 
         public IMongoCollection<Users> UserModel => _database.GetCollection<Users>("Users");
