@@ -19,13 +19,13 @@ namespace CodeNest.DAL.Models
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = string.Empty;
+        public ObjectId Id { get; set; }
         [BsonElement("Name")]
-        public string Name { get; set; }
-        public string JsonInput { get; set; }
-        public string JsonOutput { get; set; }
+        public string? Name { get; set; }
+        public string? JsonInput { get; set; }
+        public string? JsonOutput { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Workspaces { get; set; }
-        public string Version { get; set; }
+        public string? Workspaces { get; set; }
+        public string? Version { get; set; }
     }
 }

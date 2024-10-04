@@ -40,7 +40,7 @@ namespace CodeNest.BLL.Service
         public async Task<UsersDto> GetUserById(string id)
         {
             Users existingUser = await _mangoDbService.UserModel
-                .Find(u => u.Id == id)
+                .Find(u => u.Id.ToString() == id)
                 .FirstOrDefaultAsync();
 
             return _mapper.Map<UsersDto>(existingUser);
@@ -63,8 +63,8 @@ namespace CodeNest.BLL.Service
         /// Adding the User in mongo Database
         /// </summary>
         /// <param name="newUser"></param>
-        /// <returns></returns>
-        public async Task<UsersDto> Register(UsersDto newUser)
+        /// <returns>User Detail after entering in the database if already exist means pass null</returns>
+        public async Task<UsersDto?> Register(UsersDto newUser)
         {
             Users existingUser = await _mangoDbService.UserModel
                 .Find(u => u.Name == newUser.Name)

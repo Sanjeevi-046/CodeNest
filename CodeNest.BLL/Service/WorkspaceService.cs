@@ -1,4 +1,15 @@
-﻿using AutoMapper;
+﻿// ***********************************************************************************************
+//
+//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//
+//  This software is licensed under a commercial license agreement. For the full copyright and
+//  license information, please contact CTG for more information.
+//
+//  Description: Sample Description.
+//
+// ***********************************************************************************************
+
+using AutoMapper;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
@@ -17,7 +28,8 @@ namespace CodeNest.BLL.Service
 
         public async Task<bool> CreateWorkspace(WorkspacesDto workspacesDto)
         {
-            var result = await _mongoService.WorkSpaces.Find(x => x.Name == workspacesDto.Name).FirstOrDefaultAsync();
+            Workspaces result = await _mongoService.WorkSpaces
+                .Find(x => x.Name == workspacesDto.Name).FirstOrDefaultAsync();
 
             if (result != null)
             {
@@ -25,7 +37,8 @@ namespace CodeNest.BLL.Service
             }
             try
             {
-                await _mongoService.WorkSpaces.InsertOneAsync(_mapper.Map<Workspaces>(workspacesDto));
+                await _mongoService.WorkSpaces
+                    .InsertOneAsync(_mapper.Map<Workspaces>(workspacesDto));
                 return true;
             }
             catch (Exception ex)

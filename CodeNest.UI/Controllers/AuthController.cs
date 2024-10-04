@@ -9,9 +9,9 @@
 //
 // ***********************************************************************************************
 
-using Microsoft.AspNetCore.Mvc;
 using CodeNest.BLL.Service;
 using CodeNest.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CodeNest.UI.Controllers
 {
@@ -19,10 +19,10 @@ namespace CodeNest.UI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AuthController(IUserService userService , IHttpContextAccessor httpContextAccessor)
+        public AuthController(IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
-            _userService= userService;
-            _httpContextAccessor= httpContextAccessor;
+            _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public IActionResult ForgotPasswordBasic() => View();
         public IActionResult LoginBasic() => View();
@@ -31,7 +31,7 @@ namespace CodeNest.UI.Controllers
         /// User Login Validation
         /// </summary>
         /// <param name="user"></param>
-        /// <returns></returns>
+        /// <returns>the user detail if exist </returns>
         [HttpPost]
         public async Task<IActionResult> LoginBasic(UsersDto user)
         {
@@ -45,6 +45,5 @@ namespace CodeNest.UI.Controllers
             }
             return View();
         }
-
     }
 }

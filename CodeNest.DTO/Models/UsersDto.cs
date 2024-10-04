@@ -1,4 +1,15 @@
-﻿using MongoDB.Bson;
+﻿// ***********************************************************************************************
+//
+//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//
+//  This software is licensed under a commercial license agreement. For the full copyright and
+//  license information, please contact CTG for more information.
+//
+//  Description: Sample Description.
+//
+// ***********************************************************************************************
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
 
@@ -45,7 +56,7 @@ namespace CodeNest.DTO.Models
         public string Country { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public List<string> Workspaces { get; set; } = new List<string>();
+        public List<ObjectId> Workspaces { get; set; } = new List<ObjectId>();
 
     }
 }
