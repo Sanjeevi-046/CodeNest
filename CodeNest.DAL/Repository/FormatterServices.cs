@@ -9,12 +9,11 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.BLL.Repositories;
 using CodeNest.DTO.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace CodeNest.BLL.Service
+namespace CodeNest.DAL.Repository
 {
     public class FormatterServices : IFormatterServices
     {

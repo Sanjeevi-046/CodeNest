@@ -11,9 +11,10 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace CodeNest.UI.Controllers;
-
-public class DashboardsController : Controller
+namespace CodeNest.UI.Controllers
 {
-    public IActionResult Index() => View();
+    public class DashboardsController : Controller
+    {
+        public IActionResult Index() => View();
+    }
 }

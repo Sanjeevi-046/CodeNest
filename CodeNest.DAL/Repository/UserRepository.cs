@@ -10,24 +10,23 @@
 // ***********************************************************************************************
 
 using AutoMapper;
-using CodeNest.BLL.Repositories;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using MongoDB.Driver;
 
-namespace CodeNest.BLL.Service
+namespace CodeNest.DAL.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly MangoDbService _mangoDbService;
+        private readonly MongoDbService _mangoDbService;
         private readonly IMapper _mapper;
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class, which handles user-related operations.
         /// </summary>
         /// <param name="mangoDbService"> for interacting with mongo database </param>
         /// <param name="mapper"> used for mapping the DTO's and Domain Model </param>
-        public UserRepository(MangoDbService mangoDbService, IMapper mapper)
+        public UserRepository(MongoDbService mangoDbService, IMapper mapper)
         {
             _mangoDbService = mangoDbService;
             _mapper = mapper;
@@ -69,15 +68,13 @@ namespace CodeNest.BLL.Service
             Users existingUser = await _mangoDbService.UserModel
                 .Find(u => u.Name == newUser.Name)
                 .FirstOrDefaultAsync();
-
             if (existingUser != null)
             {
                 return null;
             }
-
-            await _mangoDbService.UserModel.InsertOneAsync(_mapper.Map<Users>(newUser));
+            await _mangoDbService.UserModel
+                .InsertOneAsync(_mapper.Map<Users>(newUser));
             return newUser;
-
         }
     }
 }

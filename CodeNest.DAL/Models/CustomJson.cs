@@ -25,7 +25,7 @@ namespace CodeNest.DAL.Models
         public string? JsonInput { get; set; }
         public string? JsonOutput { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Workspaces { get; set; }
+        public ObjectId? Workspaces { get; set; }
         public string? Version { get; set; }
     }
 }

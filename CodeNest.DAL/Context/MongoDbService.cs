@@ -15,10 +15,10 @@ using MongoDB.Driver;
 
 namespace CodeNest.DAL.Context
 {
-    public class MangoDbService
+    public class MongoDbService
     {
         private readonly IMongoDatabase _database;
-        public MangoDbService(IConfiguration _configuration)
+        public MongoDbService(IConfiguration _configuration)
         {
             _configuration = _configuration;
             string? connectionString = _configuration.GetConnectionString("DefaultConnection");

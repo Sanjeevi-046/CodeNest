@@ -12,40 +12,27 @@
 using AutoMapper;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
+using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 namespace CodeNest.BLL.Service
 {
     public class WorkspaceService : IWorkspaceService
     {
-        private readonly MangoDbService _mongoService;
-        private readonly IMapper _mapper;
-        public WorkspaceService(MangoDbService mongoService, IMapper mapper)
+       private readonly IWorkSpaceRepository _workSpaceRepository;
+        public WorkspaceService(IWorkSpaceRepository workSpaceRepository)
         {
-            _mongoService = mongoService;
-            _mapper = mapper;
+            _workSpaceRepository = workSpaceRepository;
         }
-
-        public async Task<bool> CreateWorkspace(WorkspacesDto workspacesDto)
+        public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto , ObjectId user)
         {
-            Workspaces result = await _mongoService.WorkSpaces
-                .Find(x => x.Name == workspacesDto.Name).FirstOrDefaultAsync();
-
-            if (result != null)
+            WorkspacesDto workSpace = await _workSpaceRepository.CreateWorkspace(workspacesDto , user);
+            if (workSpace!=null)
             {
-                return false;
+                return workSpace;
             }
-            try
-            {
-                await _mongoService.WorkSpaces
-                    .InsertOneAsync(_mapper.Map<Workspaces>(workspacesDto));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return false;
-            }
+            return new WorkspacesDto();
         }
     }
 }

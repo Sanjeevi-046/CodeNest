@@ -10,11 +10,12 @@
 // ***********************************************************************************************
 
 using CodeNest.DTO.Models;
+using MongoDB.Bson;
 
-namespace CodeNest.BLL.Repositories
+namespace CodeNest.DAL.Repository
 {
-    public interface IFormatterServices
+    public interface IJsonRepository
     {
-        Task<ValidationDto> JsonValidate(string jsonObject);
+        Task<bool> SaveAsync(JsonDto jsonData, ObjectId workSpace, ObjectId user);
     }
 }

@@ -10,21 +10,25 @@
 // ***********************************************************************************************
 
 using CodeNest.BLL.AutoMapper;
-using CodeNest.BLL.Repositories;
 using CodeNest.BLL.Service;
 using CodeNest.DAL.Context;
+using CodeNest.DAL.Repository;
+using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<MangoDbService>();
+builder.Services.AddSingleton<MongoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IFormatterServices, FormatterServices>();
+builder.Services.AddTransient<IWorkspaceService, WorkspaceService>();
+builder.Services.AddTransient<IWorkSpaceRepository, WorkSpaceRepository>();
 builder.Services.AddTransient<IJsonService, JsonService>();
+builder.Services.AddTransient<IJsonRepository, JsonRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("", _client =>
 {
