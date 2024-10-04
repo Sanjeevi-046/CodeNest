@@ -12,10 +12,10 @@
 using CodeNest.DTO.Models;
 using MongoDB.Bson;
 
-namespace CodeNest.BLL.Service
+namespace CodeNest.DAL.Repository
 {
-    public interface IWorkspaceService
+    public interface IWorkSpaceRepository
     {
-        Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto,ObjectId user);
+        Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user);
     }
 }

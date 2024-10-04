@@ -17,7 +17,7 @@ namespace CodeNest.DAL.Common
     public class Audit
     {
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId? CreatedBy { get; set; }
+        public ObjectId? CreatedBy {get; set;}
         public DateTime CreatedOn { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId? ModifiedBy { get; set; }

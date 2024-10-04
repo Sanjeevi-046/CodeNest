@@ -10,12 +10,14 @@
 // ***********************************************************************************************
 
 using CodeNest.DTO.Models;
+using MongoDB.Bson;
 
 namespace CodeNest.BLL.Service
 {
     public interface IJsonService
     {
 
-        Task<ValidationDto> Validate(string jsonObject);
+        Task<ValidationDto> Validate(JsonDto jsonDto);
+        Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workspaceId, ObjectId userId);
     }
 }

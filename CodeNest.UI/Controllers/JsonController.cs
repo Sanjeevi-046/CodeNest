@@ -26,15 +26,11 @@ namespace CodeNest.UI.Controllers
         {
             return View(jsonModel);
         }
-        [HttpGet]
-        public async Task<IActionResult> Validate(JsonDto jsonModel = null)
-        {
-            return View(jsonModel);
-        }
+        
         [HttpPost]
-        public async Task<IActionResult> Validate(string JsonInput)
+        public async Task<IActionResult> Validation(JsonDto jsonDto)
         {
-            ValidationDto result = await _jsonService.Validate(JsonInput);
+            ValidationDto result = await _jsonService.Validate(jsonDto);
             if (result.IsValid)
             {
                 ViewBag.Success = result.Message;

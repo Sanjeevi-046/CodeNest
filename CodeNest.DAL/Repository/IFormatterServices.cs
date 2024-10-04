@@ -11,12 +11,10 @@
 
 using CodeNest.DTO.Models;
 
-namespace CodeNest.BLL.Repositories
+namespace CodeNest.DAL.Repository
 {
-    public interface IUserRepository
+    public interface IFormatterServices
     {
-        Task<UsersDto> GetUserById(string id);
-        Task<UsersDto> Login(string username, string password);
-        Task<UsersDto?> Register(UsersDto newUser);
+        Task<ValidationDto> JsonValidate(string jsonObject);
     }
 }

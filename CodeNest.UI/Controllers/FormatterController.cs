@@ -9,9 +9,9 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.BLL.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
+using CodeNest.DTO.Models;
+using CodeNest.DAL.Repository;
 namespace CodeNest.UI.Controllers
 {
     public class FormatterController : Controller
@@ -26,7 +26,7 @@ namespace CodeNest.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Validate(string JsonInput)
         {
-            DTO.Models.ValidationDto result = await _formatterServices.JsonValidate(JsonInput);
+            ValidationDto result = await _formatterServices.JsonValidate(JsonInput);
             if (result.IsValid)
             {
                 ViewBag.Success = result.Message;
