@@ -28,8 +28,6 @@ namespace CodeNest.BLL.Service
             _logger = logger;
             _jsonRepository = jsonRepository;
         }
-
-        #region JsonMethods
         public async Task<ValidationDto> JsonValidate(JsonDto jsonDto)
         {
             if (string.IsNullOrWhiteSpace(jsonDto.JsonInput))
@@ -95,43 +93,54 @@ namespace CodeNest.BLL.Service
         /// <summary>
         /// Save the json data
         /// </summary>
-        /// <param name="usersDto"></param>
+        /// <param name="jsonDto"></param>
         /// <param name="workSpace"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<ValidationDto> Save(JsonDto jsonDTo, ObjectId workSpace, ObjectId user)
+        public async Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workSpace, ObjectId user)
         {
-            if (jsonDTo == null)
+            try
             {
-                _logger.LogWarning("Save: Received null UsersDto.");
+                if (jsonDto == null)
+                {
+                    _logger.LogWarning("Save: Received null JsonDto.");
+                    return new ValidationDto
+                    {
+                        IsValid = false,
+                        Message = "Data cannot be null."
+                    };
+                }
+
+                bool saveResult = await _jsonRepository.SaveAsync(jsonDto, workSpace, user);
+
+                if (saveResult)
+                {
+                    _logger.LogInformation("Save: Successfully saved JSON data.");
+                    return new ValidationDto
+                    {
+                        IsValid = true,
+                        Message = "Data saved successfully."
+                    };
+                }
+                else
+                {
+                    _logger.LogError("Save: Failed to save JSON data.");
+                    return new ValidationDto
+                    {
+                        IsValid = false,
+                        Message = "Failed to save data."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Save: An unexpected error occurred.");
                 return new ValidationDto
                 {
                     IsValid = false,
-                    Message = "Data cannot be null."
-                };
-            }
-
-            bool saveResult = await _jsonRepository.SaveAsync(jsonDTo, workSpace, user);
-
-            if (saveResult)
-            {
-                _logger.LogInformation("Save: Successfully saved JSON data.");
-                return new ValidationDto
-                {
-                    IsValid = true,
-                    Message = "Data saved successfully."
-                };
-            }
-            else
-            {
-                _logger.LogError("Save: Failed to save JSON data.");
-                return new ValidationDto
-                {
-                    IsValid = false,
-                    Message = "Failed to save data."
+                    Message = "An unexpected error occurred."
                 };
             }
         }
-        #endregion
     }
 }
