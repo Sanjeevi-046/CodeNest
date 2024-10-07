@@ -23,25 +23,31 @@ namespace CodeNest.UI.Controllers
         {
             _formatterServices = formatterServices;
         }
-        public IActionResult JsonFormatter(JsonDto? jsonDto)
+        public async Task<IActionResult> JsonFormatter()
         {
-            return View(jsonDto);
+            // Simulate an asynchronous operation to avoid CS1998 warning
+            await Task.CompletedTask;
+            return View();
         }
-
         [HttpPost]
-        public async Task<IActionResult> Validate(JsonDto jsonDto)
+        public async Task<IActionResult> JsonFormatter(JsonDto? jsonDto)
         {
             ValidationDto result = await _formatterServices.JsonValidate(jsonDto);
+            jsonDto.JsonOutput = result.JsonDto?.JsonOutput ?? string.Empty;
+            JsonDto json = result.JsonDto;
             if (result.IsValid)
             {
                 TempData["Success"] = result.Message;
-                return RedirectToAction("JsonFormatter", result.JsonDto);
+                return View(json);
             }
+
             TempData["Error"] = result.Message;
-            return View("JsonFormatter", jsonDto);
+            return View(jsonDto);
         }
+       
         [HttpPost]
         public async Task<IActionResult> SaveJson(JsonDto jsonDto)
+
         {
             string? userId = HttpContext.Session.GetString("userId");
             string? workspaceId = HttpContext.Session.GetString("workspaceId");

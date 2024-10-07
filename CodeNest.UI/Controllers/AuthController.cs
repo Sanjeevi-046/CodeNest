@@ -25,29 +25,28 @@ namespace CodeNest.UI.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
         public IActionResult ForgotPasswordBasic() => View();
-        public IActionResult LoginBasic() => View();
-        public IActionResult RegisterBasic() => View();
+        public IActionResult Login() => View();
+        public IActionResult Register() => View();
         /// <summary>
         /// User Login Validation
         /// </summary>
         /// <param name="user"></param>
         /// <returns>the user detail if exist </returns>
         [HttpPost]
-        public async Task<IActionResult> LoginBasic(UsersDto user)
+        public async Task<IActionResult> Login(UsersDto user)
         {
             UsersDto result = await _userService.Login(user.Name, user.Password);
             if (result != null)
             {
                 _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
-
                 return RedirectToAction("Index", "Home");
             }
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterBasic(UsersDto user)
+        public async Task<IActionResult> Register(UsersDto user)
         {
             if (ModelState.IsValid)
             {
