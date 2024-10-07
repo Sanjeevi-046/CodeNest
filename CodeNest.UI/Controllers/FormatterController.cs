@@ -12,11 +12,13 @@
 using Microsoft.AspNetCore.Mvc;
 using CodeNest.DTO.Models;
 using CodeNest.DAL.Repository;
+using CodeNest.UI.Models.JsonViewModel;
 namespace CodeNest.UI.Controllers
 {
     public class FormatterController : Controller
     {
         private readonly IFormatterServices _formatterServices;
+
         public FormatterController(IFormatterServices formatterServices)
         {
             _formatterServices = formatterServices;
@@ -24,16 +26,16 @@ namespace CodeNest.UI.Controllers
         public IActionResult JsonFormatter() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Validate(string JsonInput)
+        public async Task<IActionResult> Validate(JsonValidationViewModel model)
         {
-            ValidationDto result = await _formatterServices.JsonValidate(JsonInput);
-            if (result.IsValid)
-            {
-                ViewBag.Success = result.Message;
-                return View(result.JsonDto);
-            }
-            ViewBag.ErrorMessage = result.Message;
-            return View(result.JsonDto);
+          
+                ValidationDto result = await _formatterServices.JsonValidate(model.JsonInput);
+                model.IsValid = result.IsValid;
+                model.Message = result.Message;
+                model.JsonDto = result.JsonDto;
+
+                return View("JsonFormatter", model);
+            return View("JsonFormatter", model);
         }
     }
 }

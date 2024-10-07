@@ -20,19 +20,17 @@ namespace CodeNest.BLL.Service
 {
     public class WorkspaceService : IWorkspaceService
     {
-       private readonly IWorkSpaceRepository _workSpaceRepository;
+        private readonly IWorkSpaceRepository _workSpaceRepository;
+
         public WorkspaceService(IWorkSpaceRepository workSpaceRepository)
         {
             _workSpaceRepository = workSpaceRepository;
         }
-        public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto , ObjectId user)
+
+        public async Task<bool> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
         {
-            WorkspacesDto workSpace = await _workSpaceRepository.CreateWorkspace(workspacesDto , user);
-            if (workSpace!=null)
-            {
-                return workSpace;
-            }
-            return new WorkspacesDto();
+            WorkspacesDto workSpace = await _workSpaceRepository.CreateWorkspace(workspacesDto, user);
+            return workSpace != null;
         }
     }
 }

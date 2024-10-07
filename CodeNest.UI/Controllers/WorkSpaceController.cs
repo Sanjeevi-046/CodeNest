@@ -30,13 +30,13 @@ namespace CodeNest.UI.Controllers
         public async Task<IActionResult> Create(WorkspacesDto workspace)
         {
             string user = HttpContext.Session.GetString("UserID");
-            WorkspacesDto workSpacesDto = await _workspaceService.CreateWorkspace(workspace, new ObjectId(user));
-            if(workSpacesDto!=null && workSpacesDto.Id != null)
+            bool isCreated = await _workspaceService.CreateWorkspace(workspace, new ObjectId(user));
+            if (isCreated)
             {
-                string workSpaceId = workSpacesDto.Id.ToString();
-                _contextAccessor.HttpContext.Session.SetString("WorkspaceID",workSpaceId);   
+                string workSpaceId = workspace.Id.ToString();
+                _contextAccessor.HttpContext.Session.SetString("WorkspaceID", workSpaceId);
             }
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

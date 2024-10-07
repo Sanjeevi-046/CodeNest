@@ -12,11 +12,12 @@
 using AutoMapper;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
+using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace CodeNest.DAL.Repository
+namespace CodeNest.BLL.Service
 {
     public class UserRepository : IUserRepository
     {

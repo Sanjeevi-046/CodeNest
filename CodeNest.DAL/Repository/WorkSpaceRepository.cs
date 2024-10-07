@@ -45,6 +45,7 @@ namespace CodeNest.DAL.Repository
                 };
                 await _mongoDbService.WorkSpaces
                     .InsertOneAsync(workspaces);
+
                 return _mapper.Map<WorkspacesDto>(workspaces);
             }
             catch

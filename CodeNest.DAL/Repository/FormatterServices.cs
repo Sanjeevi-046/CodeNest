@@ -10,6 +10,7 @@
 // ***********************************************************************************************
 
 using CodeNest.DTO.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -17,6 +18,12 @@ namespace CodeNest.DAL.Repository
 {
     public class FormatterServices : IFormatterServices
     {
+        private readonly ILogger<FormatterServices> _logger;
+
+        public FormatterServices(ILogger<FormatterServices> logger)
+        {
+            _logger = logger;
+        }
 
         #region JsonMethods
         /// <summary>
@@ -24,11 +31,12 @@ namespace CodeNest.DAL.Repository
         /// </summary>
         /// <param name="jsonObject"></param>
         /// <returns></returns>
-        public async Task<ValidationDto> JsonValidate(string jsonObject)
+        public Task<ValidationDto> JsonValidate(string jsonObject)
         {
             if (string.IsNullOrWhiteSpace(jsonObject))
             {
-                return new ValidationDto { IsValid = false, Message = "Not Valid Json" };
+                _logger.LogWarning("JsonValidate: Received empty or whitespace JSON string.");
+                return Task.FromResult(new ValidationDto { IsValid = false, Message = "Not Valid Json" });
             }
             jsonObject = jsonObject.Trim();
             char firstChar = jsonObject[0];
@@ -37,14 +45,13 @@ namespace CodeNest.DAL.Repository
             if ((firstChar == '{' && lastChar == '}') ||
                 (firstChar == '[' && lastChar == ']'))
             {
-
                 try
                 {
                     JToken parsedJson = JToken.Parse(jsonObject);
-
                     string beautifiedJson = parsedJson.ToString(Formatting.Indented);
 
-                    return new ValidationDto
+                    _logger.LogInformation("JsonValidate: Successfully validated JSON.");
+                    return Task.FromResult(new ValidationDto
                     {
                         IsValid = true,
                         Message = "Valid JSON",
@@ -53,24 +60,39 @@ namespace CodeNest.DAL.Repository
                             JsonInput = jsonObject,
                             JsonOutput = beautifiedJson
                         }
-                    };
+                    });
                 }
                 catch (JsonReaderException ex)
                 {
-                    return new ValidationDto
+                    _logger.LogError(ex, "JsonValidate: JSON validation failed.");
+                    return Task.FromResult(new ValidationDto
                     {
                         IsValid = false,
-                        Message = ex.ToString(),
+                        Message = "Invalid JSON format.",
                         JsonDto = new JsonDto
                         {
                             JsonInput = jsonObject
                         }
-                    };
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "JsonValidate: An unexpected error occurred.");
+                    return Task.FromResult(new ValidationDto
+                    {
+                        IsValid = false,
+                        Message = "An unexpected error occurred during JSON validation.",
+                        JsonDto = new JsonDto
+                        {
+                            JsonInput = jsonObject
+                        }
+                    });
                 }
             }
             else
             {
-                return new ValidationDto
+                _logger.LogWarning("JsonValidate: JSON string does not start and end with valid characters.");
+                return Task.FromResult(new ValidationDto
                 {
                     IsValid = false,
                     Message = "Not a Valid Json",
@@ -78,9 +100,67 @@ namespace CodeNest.DAL.Repository
                     {
                         JsonInput = jsonObject
                     }
-                };
+                });
             }
         }
         #endregion
+
+        //#region XmlMethods
+        ///// <summary>
+        ///// This use to validate the xml data
+        ///// </summary>
+        ///// <param name="xmlObject"></param>
+        ///// <returns></returns>
+        //public Task<ValidationDto> XmlValidate(string xmlObject)
+        //{
+        //    if (string.IsNullOrWhiteSpace(xmlObject))
+        //    {
+        //        _logger.LogWarning("XmlValidate: Received empty or whitespace XML string.");
+        //        return Task.FromResult(new ValidationDto { IsValid = false, Message = "Not Valid XML" });
+        //    }
+
+        //    try
+        //    {
+        //        XDocument.Parse(xmlObject);
+        //        _logger.LogInformation("XmlValidate: Successfully validated XML.");
+        //        return Task.FromResult(new ValidationDto
+        //        {
+        //            IsValid = true,
+        //            Message = "Valid XML",
+        //            JsonDto = new JsonDto
+        //            {
+        //                JsonInput = xmlObject,
+        //                JsonOutput = XDocument.Parse(xmlObject).ToString()
+        //            }
+        //        });
+        //    }
+        //    catch (XmlException ex)
+        //    {
+        //        _logger.LogError(ex, "XmlValidate: XML validation failed.");
+        //        return Task.FromResult(new ValidationDto
+        //        {
+        //            IsValid = false,
+        //            Message = "Invalid XML format.",
+        //            JsonDto = new JsonDto
+        //            {
+        //                JsonInput = xmlObject
+        //            }
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "XmlValidate: An unexpected error occurred.");
+        //        return Task.FromResult(new ValidationDto
+        //        {
+        //            IsValid = false,
+        //            Message = "An unexpected error occurred during XML validation.",
+        //            JsonDto = new JsonDto
+        //            {
+        //                JsonInput = xmlObject
+        //            }
+        //        });
+        //    }
+        //}
+        //#endregion
     }
 }

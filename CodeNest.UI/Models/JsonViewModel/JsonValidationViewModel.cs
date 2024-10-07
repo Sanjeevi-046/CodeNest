@@ -11,10 +11,13 @@
 
 using CodeNest.DTO.Models;
 
-namespace CodeNest.BLL.Service
+namespace CodeNest.UI.Models.JsonViewModel
 {
-    public interface IWorkspaceService
+    public class JsonValidationViewModel
     {
-        Task<bool> CreateWorkspace(WorkspacesDto workspacesDto, MongoDB.Bson.ObjectId objectId);
+        public string JsonInput { get; set; }
+        public string Message { get; set; }
+        public bool IsValid { get; set; }
+        public JsonDto? JsonDto { get; set; }
     }
 }
