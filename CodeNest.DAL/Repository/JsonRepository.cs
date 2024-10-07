@@ -9,7 +9,6 @@
 //
 // ***********************************************************************************************
 
-using AutoMapper;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
@@ -21,17 +20,18 @@ namespace CodeNest.DAL.Repository
     public class JsonRepository : IJsonRepository
     {
         private readonly MongoDbService _mongoDbService;
-       
+
         public JsonRepository(MongoDbService mongoDbService)
         {
             _mongoDbService = mongoDbService;
-            
+
         }
 
-        public async Task<bool> SaveAsync(JsonDto jsonData , ObjectId workSpace , ObjectId user)
+        public async Task<bool> SaveAsync(JsonDto jsonData, ObjectId workSpace, ObjectId user)
         {
-            Workspaces workspaceName = await _mongoDbService.WorkSpaces.Find(x => x.Id == workSpace).FirstOrDefaultAsync();
-            CustomJson jsonUser = new ()
+            Workspaces workspaceName = await _mongoDbService.WorkSpaces
+                .Find(x => x.Id == workSpace).FirstOrDefaultAsync();
+            CustomJson jsonUser = new()
             {
                 Name = workspaceName.Name + ".json",
                 JsonInput = jsonData.JsonInput,

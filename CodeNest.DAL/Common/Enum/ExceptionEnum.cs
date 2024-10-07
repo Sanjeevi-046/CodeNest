@@ -9,12 +9,9 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.Models;
-
-namespace CodeNest.DAL.Repository
+namespace CodeNest.DAL.Common.Enum
 {
-    public interface IFormatterServices
+    public class ExceptionEnum
     {
-        Task<ValidationDto> JsonValidate(string jsonObject);
     }
 }

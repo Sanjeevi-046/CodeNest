@@ -3,7 +3,7 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Home Page";
-    var workSpace = HttpContextAccessor.HttpContext.Session.GetString("WorkspaceID");
+    var workSpace = HttpContextAccessor.HttpContext.Session.GetString("workspaceId");
 
 }
 

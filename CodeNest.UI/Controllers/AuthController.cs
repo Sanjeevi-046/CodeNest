@@ -38,12 +38,29 @@ namespace CodeNest.UI.Controllers
             UsersDto result = await _userService.Login(user.Name, user.Password);
             if (result != null)
             {
-                _httpContextAccessor.HttpContext.Session.SetString("UserID", result.Id);
+                _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
 
                 return RedirectToAction("Index", "Home");
             }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterBasic(UsersDto user)
+        {
+            if (ModelState.IsValid)
+            {
+                UsersDto result = await _userService.Register(user);
+                if (result != null)
+                {
+                    _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
+                    _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return View(user);
         }
     }
 }

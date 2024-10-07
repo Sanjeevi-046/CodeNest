@@ -1,56 +1,68 @@
-﻿
+﻿@model CodeNest.DTO.Models.JsonDto
 
-<div class="row mb-12 g-6">
-    <div class="col-md">
-        <div class="card">
-            <div class="d-flex">
-                <div>
-                    <img class="card-img card-img-left" src="~/img/elements/12.jpg" alt="Card image" />
+<div class="container-fluid text-center">
+    <div class="card">
+        <div class="card-header">
+           @*  @if (Model != null && !string.IsNullOrEmpty())
+            {
+                <div class="alert @(Model.IsValid ? "alert-success" : "alert-danger")" role="alert">
+                    @Model.Message
                 </div>
-                <div>
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content. This content
-                            is a
-                            little bit longer.
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            } *@
+        </div>
+        <div class="card-body">
+            <form method="post" asp-action="Validate" >
+                <div class="row">
+                    <!-- Input JSON Data Column -->
+                    <div class="col-5">
+                        <h5>Input JSON</h5>
+                        <textarea id="inputJson" asp-for="JsonInput" rows="23" class="form-control" placeholder="Enter JSON data">@Model?.JsonInput</textarea>
+                        <div class="mt-2 d-flex justify-content-between">
+                            <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
+                        </div>
+                    </div>
+
+                    <!-- Actions Column -->
+                    <div class="col-2">
+                        <h5></h5>
+                        <br />
+                        <br />
+                        <br />
+                        <button id="validateBtn" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
+                        <button id="minifyBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="minifyJson()">Minify</button>
+                        <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
+                        <button id="saveJsonBtn" type="submit" asp-action="SaveJson" asp-controller="Formatter" class="btn btn-primary w-100">Save</button>
+                    </div>
+
+                    <!-- Formatted JSON Data Column -->
+                    <div class="col-5">
+                        <h5>Formatted JSON</h5>
+                        <textarea id="formattedJson" asp-for="JsonOutput" rows="23" class="form-control" readonly placeholder="Formatted JSON will appear here">@Model?.JsonOutput</textarea>
+                        <div class="mt-2 d-flex justify-content-between">
+                            <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row md-12 g-3">
-        <div class="col-md">
-            <div class="card">
-
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-md">
-        <div class="card">
-            <div class="d-flex">
-                <div>
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content. This content
-                            is a
-                            little bit longer.
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-                <div>
-                    <img class="card-img card-img-right" src="~/img/elements/17.jpg" alt="Card image" />
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        function minifyJson() {
+            const inputJson = document.getElementById('inputJson').value;
+            try {
+                const minifiedJson = JSON.stringify(JSON.parse(inputJson));
+                document.getElementById('inputJson').value = minifiedJson;
+            } catch (e) {
+                alert('Invalid JSON');
+            }
+        }
 
+        function clearJson() {
+            document.getElementById('inputJson').value = '';
+            document.getElementById('formattedJson').value = '';
+        }
+    </script>
+}

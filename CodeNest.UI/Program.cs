@@ -13,7 +13,6 @@ using CodeNest.BLL.AutoMapper;
 using CodeNest.BLL.Service;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Repository;
-using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

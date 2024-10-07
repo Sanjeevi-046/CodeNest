@@ -14,8 +14,10 @@ using MongoDB.Bson;
 
 namespace CodeNest.BLL.Service
 {
-    public interface IWorkspaceService
+    public interface IFormatterServices
     {
-        Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user);
+        Task<ValidationDto> JsonValidate(JsonDto jsonDto);
+
+        Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workSpace, ObjectId user);
     }
 }

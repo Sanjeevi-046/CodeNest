@@ -27,12 +27,13 @@ namespace CodeNest.DAL.Repository
     {
         private readonly MongoDbService _mongoDbService;
         private readonly IMapper _mapper;
-        public WorkSpaceRepository(MongoDbService mongoDbService , IMapper mapper)
+        public WorkSpaceRepository(MongoDbService mongoDbService, IMapper mapper)
         {
             _mongoDbService = mongoDbService;
             _mapper = mapper;
         }
         public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
+
         {
             try
             {

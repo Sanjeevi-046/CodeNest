@@ -9,7 +9,6 @@
 //
 // ***********************************************************************************************
 
-using AutoMapper;
 using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
 
@@ -25,7 +24,7 @@ namespace CodeNest.BLL.Service
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-           
+
         }
         /// <summary>
         /// Gets the user detail by ID
@@ -34,8 +33,8 @@ namespace CodeNest.BLL.Service
         /// <returns>gets the value from <see cref="IUserRepository"/></returns>
         public async Task<UsersDto> GetUserById(string id)
         {
-           UsersDto result = await _userRepository.GetUserById(id);
-           return result;
+            UsersDto result = await _userRepository.GetUserById(id);
+            return result;
         }
         /// <summary>
         /// Checks the User whether already in db or not
