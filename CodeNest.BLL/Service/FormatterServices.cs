@@ -11,20 +11,26 @@
 
 using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CodeNest.BLL.Service
 {
-    public class JsonService : IJsonService
+    public class FormatterServices : IFormatterServices
     {
+        private readonly ILogger<FormatterServices> _logger;
         private readonly IJsonRepository _jsonRepository;
-        public JsonService(IJsonRepository jsonRepository)
+
+        public FormatterServices(ILogger<FormatterServices> logger, IJsonRepository jsonRepository)
         {
+            _logger = logger;
             _jsonRepository = jsonRepository;
         }
-        public async Task<ValidationDto> Validate(JsonDto jsonDto)
+
+        #region JsonMethods
+        public async Task<ValidationDto> JsonValidate(JsonDto jsonDto)
         {
             if (string.IsNullOrWhiteSpace(jsonDto.JsonInput))
             {
@@ -85,28 +91,47 @@ namespace CodeNest.BLL.Service
                 };
             }
         }
+
         /// <summary>
-        /// 
+        /// Save the json data
         /// </summary>
-        /// <param name="jsonDto"></param>
-        /// <param name="workspaceId"></param>
-        /// <param name="userId"></param>
+        /// <param name="usersDto"></param>
+        /// <param name="workSpace"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workspaceId, ObjectId userId)
+        public async Task<ValidationDto> Save(JsonDto jsonDTo, ObjectId workSpace, ObjectId user)
         {
-            bool result = await _jsonRepository.SaveAsync(jsonDto, workspaceId, userId);
-            if (result)
+            if (jsonDTo == null)
             {
+                _logger.LogWarning("Save: Received null UsersDto.");
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Data cannot be null."
+                };
+            }
+
+            bool saveResult = await _jsonRepository.SaveAsync(jsonDTo, workSpace, user);
+
+            if (saveResult)
+            {
+                _logger.LogInformation("Save: Successfully saved JSON data.");
                 return new ValidationDto
                 {
                     IsValid = true,
-                    Message = ""
+                    Message = "Data saved successfully."
                 };
             }
-            return new ValidationDto
+            else
             {
-                IsValid = false,
-            };
+                _logger.LogError("Save: Failed to save JSON data.");
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Failed to save data."
+                };
+            }
         }
+        #endregion
     }
 }

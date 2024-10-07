@@ -38,7 +38,7 @@ namespace CodeNest.UI.Controllers
             UsersDto result = await _userService.Login(user.Name, user.Password);
             if (result != null)
             {
-                _httpContextAccessor.HttpContext.Session.SetString("UserID", result.Id.ToString());
+                _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
 
                 return RedirectToAction("Index", "Home");
@@ -54,7 +54,7 @@ namespace CodeNest.UI.Controllers
                 UsersDto result = await _userService.Register(user);
                 if (result != null)
                 {
-                    _httpContextAccessor.HttpContext.Session.SetString("UserID", result.Id.ToString());
+                    _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
                     _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
 
                     return RedirectToAction("Index", "Home");

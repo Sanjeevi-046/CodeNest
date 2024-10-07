@@ -27,10 +27,14 @@ namespace CodeNest.BLL.Service
             _workSpaceRepository = workSpaceRepository;
         }
 
-        public async Task<bool> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
+        public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
         {
             WorkspacesDto workSpace = await _workSpaceRepository.CreateWorkspace(workspacesDto, user);
-            return workSpace != null;
+            if (workSpace != null)
+            {
+                return workSpace;
+            }
+            return new WorkspacesDto();
         }
     }
 }

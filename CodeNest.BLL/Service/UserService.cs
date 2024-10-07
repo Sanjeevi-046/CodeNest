@@ -9,64 +9,55 @@
 //
 // ***********************************************************************************************
 
-using AutoMapper;
 using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
-using Microsoft.Extensions.Logging;
 
 namespace CodeNest.BLL.Service
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly ILogger<UserService> _logger;
-
-        public UserService(IUserRepository userRepository, ILogger<UserService> logger)
+        /// <summary>
+        /// Initializing instance of <see cref="IUserRepository"/> for accessing the functionality
+        /// </summary>
+        /// <param name="userRepository"></param>
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _logger = logger;
-        }
 
+        }
+        /// <summary>
+        /// Gets the user detail by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>gets the value from <see cref="IUserRepository"/></returns>
         public async Task<UsersDto> GetUserById(string id)
         {
-            try
-            {
-                UsersDto result = await _userRepository.GetUserById(id);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while getting user by ID.");
-                throw;
-            }
+            UsersDto result = await _userRepository.GetUserById(id);
+            return result;
         }
-
+        /// <summary>
+        /// Checks the User whether already in db or not
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns>gets the value from <see cref="IUserRepository"/></returns>
         public async Task<UsersDto> Login(string username, string password)
         {
-            try
-            {
-                UsersDto user = await _userRepository.Login(username, password);
-                return user;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred during login.");
-                throw;
-            }
+            UsersDto user = await _userRepository.Login(username, password);
+            return user;
         }
-
+        /// <summary>
+        /// Adding the User in mongo Database
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns>gets the value from <see cref="IUserRepository"/> and returns the vale </returns>
         public async Task<UsersDto?> Register(UsersDto newUser)
         {
-            try
-            {
-                UsersDto? user = await _userRepository.Register(newUser);
-                return user;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while registering user.");
-                throw;
-            }
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            UsersDto user = await _userRepository.Register(newUser);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+            return user;
         }
     }
 }

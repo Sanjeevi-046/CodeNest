@@ -1,44 +1,45 @@
-﻿@model CodeNest.UI.Models.JsonViewModel.JsonValidationViewModel
+﻿@model CodeNest.DTO.Models.JsonDto
 
 <div class="container-fluid text-center">
     <div class="card">
         <div class="card-header">
-            @if (Model != null && !string.IsNullOrEmpty(Model.Message))
+           @*  @if (Model != null && !string.IsNullOrEmpty())
             {
                 <div class="alert @(Model.IsValid ? "alert-success" : "alert-danger")" role="alert">
                     @Model.Message
                 </div>
-            }
+            } *@
         </div>
         <div class="card-body">
-            <form method="post" asp-action="Validate">
+            <form method="post" asp-action="Validate" >
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="JsonInput" rows="23" class="form-control" placeholder="Enter JSON data">@Model?.JsonInput</textarea>
+                        <textarea id="inputJson" asp-for="JsonInput" rows="23" class="form-control" placeholder="Enter JSON data">@Model?.JsonInput</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
-                            <button id="saveInputJsonBtn" type="button" class="btn btn-outline-primary">Save Input JSON</button>
                         </div>
                     </div>
 
                     <!-- Actions Column -->
                     <div class="col-2">
-                        <h5>Actions</h5>
-                        <button id="transformBtn" type="button" class="btn btn-primary mb-2">Format</button>
-                        <button id="validateBtn" type="submit" class="btn btn-success mb-2">Validate</button>
-                        <button id="minifyBtn" type="button" class="btn btn-info mb-2">Minify</button>
-                        <button id="clearBtn" type="button" class="btn btn-warning">Clear</button>
+                        <h5></h5>
+                        <br />
+                        <br />
+                        <br />
+                        <button id="validateBtn" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
+                        <button id="minifyBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="minifyJson()">Minify</button>
+                        <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
+                        <button id="saveJsonBtn" type="submit" asp-action="SaveJson" asp-controller="Formatter" class="btn btn-primary w-100">Save</button>
                     </div>
 
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Formatted JSON</h5>
-                        <textarea id="formattedJson" rows="23" class="form-control" readonly placeholder="Formatted JSON will appear here">@Model?.JsonDto?.JsonOutput</textarea>
+                        <textarea id="formattedJson" asp-for="JsonOutput" rows="23" class="form-control" readonly placeholder="Formatted JSON will appear here">@Model?.JsonOutput</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
-                            <button id="saveFormattedJsonBtn" type="button" class="btn btn-outline-primary">Save Formatted JSON</button>
                         </div>
                     </div>
                 </div>
@@ -46,3 +47,22 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function minifyJson() {
+            const inputJson = document.getElementById('inputJson').value;
+            try {
+                const minifiedJson = JSON.stringify(JSON.parse(inputJson));
+                document.getElementById('inputJson').value = minifiedJson;
+            } catch (e) {
+                alert('Invalid JSON');
+            }
+        }
+
+        function clearJson() {
+            document.getElementById('inputJson').value = '';
+            document.getElementById('formattedJson').value = '';
+        }
+    </script>
+}

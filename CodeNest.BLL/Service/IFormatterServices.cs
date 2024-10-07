@@ -10,14 +10,14 @@
 // ***********************************************************************************************
 
 using CodeNest.DTO.Models;
+using MongoDB.Bson;
 
-namespace CodeNest.UI.Models.JsonViewModel
+namespace CodeNest.BLL.Service
 {
-    public class JsonValidationViewModel
+    public interface IFormatterServices
     {
-        public string JsonInput { get; set; }
-        public string Message { get; set; }
-        public bool IsValid { get; set; }
-        public JsonDto? JsonDto { get; set; }
+        Task<ValidationDto> JsonValidate(JsonDto jsonDto);
+
+        Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workSpace, ObjectId user);
     }
 }
