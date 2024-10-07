@@ -9,12 +9,15 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace CodeNest.BLL.Service
+namespace CodeNest.DAL.Common.Enum
 {
-    public interface IWorkspaceService
+    public class ExceptionEnum
     {
-        Task<bool> CreateWorkspace(WorkspacesDto workspacesDto, MongoDB.Bson.ObjectId objectId);
     }
 }

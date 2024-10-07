@@ -10,9 +10,9 @@
 // ***********************************************************************************************
 
 using AutoMapper;
-using CodeNest.BLL.Repositories;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
+using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -21,11 +21,11 @@ namespace CodeNest.BLL.Service
 {
     public class UserRepository : IUserRepository
     {
-        private readonly MangoDbService _mangoDbService;
+        private readonly MongoDbService _mangoDbService;
         private readonly IMapper _mapper;
         private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(MangoDbService mangoDbService, IMapper mapper, ILogger<UserRepository> logger)
+        public UserRepository(MongoDbService mangoDbService, IMapper mapper, ILogger<UserRepository> logger)
         {
             _mangoDbService = mangoDbService;
             _mapper = mapper;

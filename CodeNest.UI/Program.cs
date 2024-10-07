@@ -23,7 +23,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<MongoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserRepository, CodeNest.DAL.Repository.UserRepository>();
 builder.Services.AddTransient<IFormatterServices, FormatterServices>();
 builder.Services.AddTransient<IWorkspaceService, WorkspaceService>();
 builder.Services.AddTransient<IWorkSpaceRepository, WorkSpaceRepository>();

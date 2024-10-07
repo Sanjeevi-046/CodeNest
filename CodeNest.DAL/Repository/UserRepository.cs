@@ -24,7 +24,7 @@ namespace CodeNest.DAL.Repository
         private readonly IMapper _mapper;
         private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(MangoDbService mangoDbService, IMapper mapper, ILogger<UserRepository> logger)
+        public UserRepository(MongoDbService mangoDbService, IMapper mapper, ILogger<UserRepository> logger)
         {
             _mangoDbService = mangoDbService;
             _mapper = mapper;
