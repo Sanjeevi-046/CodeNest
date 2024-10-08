@@ -47,20 +47,16 @@ namespace CodeNest.UI.Controllers
        
         [HttpPost]
         public async Task<IActionResult> SaveJson(JsonDto jsonDto)
-
         {
             string? userId = HttpContext.Session.GetString("userId");
             string? workspaceId = HttpContext.Session.GetString("workspaceId");
-
             ValidationDto result = await _formatterServices.Save(jsonDto, new ObjectId(workspaceId), ObjectId.Parse(userId));
             if (result.IsValid)
             {
                 TempData["Success"] = result.Message;
                 return RedirectToAction("Index", "Home");
             }
-
             return View("JsonFormatter");
-
         }
     }
 }
