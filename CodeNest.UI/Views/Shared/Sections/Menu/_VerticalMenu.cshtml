@@ -25,24 +25,9 @@
 
   @* ! Full version menu-items *@
   <ul class="menu-inner py-1">
-    <!-- Dashboards -->
-    <li class='menu-item@(currentPage.EndsWith("/") || currentPage.StartsWith("/Dashboards/") ? " active open" : "")'>
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-home-smile"></i>
-        <div class="text-truncate" data-i18n="Dashboards">WorkSpace</div>
-        
-      </a>
-    </li>
-
-    <!-- Apps & Pages -->
-  @*   <li class="menu-header small text-uppercase">
-      <span class="menu-header-text">Tools &amp; </span>
-    </li> *@
-   
-    
     <!-- Pages -->
     <li class='menu-item@(currentPage.StartsWith("/Pages/Account") ? " active open" : "")'>
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a asp-controller="Formatter" asp-action="JsonFormatter" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div>JSON</div>
       </a>
@@ -64,7 +49,7 @@
         </li>
       </ul>
     </li>
-    <li class='menu-item@(currentPage.StartsWith("/Auth") ? " active open" : "")'>
+  @*   <li class='menu-item@(currentPage.StartsWith("/Auth") ? " active open" : "")'>
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
         <div>XMl</div>
@@ -86,8 +71,8 @@
           </a>
         </li>
       </ul>
-    </li>
-    <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
+    </li> *@
+@*     <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
         <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-cube-alt"></i>
         <div>Html</div>
@@ -104,8 +89,8 @@
           </a>
         </li>
       </ul>
-    </li>
-    <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
+    </li> *@
+@*     <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
         <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-cube-alt"></i>
             <div>JavaScript</div>
@@ -122,8 +107,8 @@
                 </a>
             </li>
         </ul>
-    </li>
-        <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
+    </li> *@
+     @*    <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cube-alt"></i>
                 <div>Jwt</div>
@@ -140,8 +125,8 @@
                     </a>
                 </li>
             </ul>
-        </li>
-        <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
+        </li> *@
+       @*  <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cube-alt"></i>
                 <div>Base64ToString</div>
@@ -158,8 +143,8 @@
                     </a>
                 </li>
             </ul>
-        </li>
-        <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
+        </li> *@
+      @*   <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cube-alt"></i>
                 <div>StringToBase64</div>
@@ -176,7 +161,7 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li> *@
   </ul>
 </aside>
 <!-- / Menu -->
