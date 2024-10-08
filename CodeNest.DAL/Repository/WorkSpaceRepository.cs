@@ -43,7 +43,6 @@ namespace CodeNest.DAL.Repository
                     Description = workspacesDto.Description,
                     CreatedBy = user,
                     CreatedOn = DateTime.UtcNow
-
                 };
                 await _mongoDbService.WorkSpaces
                     .InsertOneAsync(workspaces);
