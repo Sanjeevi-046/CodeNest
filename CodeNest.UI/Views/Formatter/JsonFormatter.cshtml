@@ -1,6 +1,8 @@
 ﻿@model CodeNest.DTO.Models.JsonDto
 
+<form method="post" asp-action="JsonFormatter">
 <div class="container-fluid text-center">
+    @* @Html.AntiForgeryToken() *@
     <div class="card">
         <div class="card-header">
            @*  @if (Model != null && !string.IsNullOrEmpty())
@@ -11,17 +13,16 @@
             } *@
         </div>
         <div class="card-body">
-            <form method="post" asp-action="JsonFormatter">
+            
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" asp-for="JsonInput" rows="23" class="form-control"  placeholder="Enter JSON data">@Model.JsonInput</textarea>
+                        <textarea id="inputJson" name="JsonInput" rows="23" class="form-control"  placeholder="Enter JSON data">@Model?.JsonInput</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
                     </div>
-
                     <!-- Actions Column -->
                     <div class="col-2">
                         <h5></h5>
@@ -33,22 +34,18 @@
                         <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
                         <button id="saveJsonBtn" type="submit" asp-action="SaveJson" asp-controller="Formatter" class="btn btn-primary w-100">Save</button>
                     </div>
-
-                    <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Formatted JSON</h5>
-                        <textarea id="formattedJson" asp-for="JsonOutput" rows="23" class="form-control" style="text-decoration:none" disabled placeholder="Formatted JSON will appear here">@Model?.JsonOutput</textarea>
-
+                        <textarea name="JsonOutput" id="formattedJson" rows="23" class="form-control" >@Model?.JsonOutput</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
                         </div>
                     </div>
                 </div>
-            </form>
         </div>
     </div>
 </div>
-
+</form>
 @section Scripts {
     <script>
         function minifyJson() {
@@ -62,6 +59,7 @@
         }
 
         function clearJson() {
+            console.log(document.getElementById('inputJson').value, );
             document.getElementById('inputJson').value = '';
             document.getElementById('formattedJson').value = '';
         }

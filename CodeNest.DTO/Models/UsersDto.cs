@@ -19,7 +19,7 @@ namespace CodeNest.DTO.Models
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = string.Empty; // Leave this unset for MongoDB to generate
+        public ObjectId Id { get; set; } 
         [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "Name must be alphabetic characters.")]
         [Required(ErrorMessage = "Name is required")]
         [BsonElement("Name")]

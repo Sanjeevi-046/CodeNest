@@ -19,7 +19,7 @@ namespace CodeNest.DTO.Models
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = string.Empty;
+        public ObjectId Id { get; set; } 
         public string? Name { get; set; }
         public string? JwtInput { get; set; }
         public string? JwtOutput { get; set; }
