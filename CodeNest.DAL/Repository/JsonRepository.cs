@@ -33,7 +33,7 @@ namespace CodeNest.DAL.Repository
                 .Find(x => x.Id == workSpace).FirstOrDefaultAsync();
             CustomJson jsonUser = new()
             {
-                Name = workspaceName.Name + ".json",
+                Name = workspaceName.Name,
                 JsonInput = jsonData.JsonInput,
                 JsonOutput = jsonData.JsonOutput,
                 Workspaces = workSpace,
