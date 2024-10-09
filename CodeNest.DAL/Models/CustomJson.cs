@@ -15,17 +15,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CodeNest.DAL.Models
 {
-    public class CustomJson : Audit
+    public class CustomJson : Blob
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; }
-        [BsonElement("Name")]
-        public string? Name { get; set; }
-        public string? JsonInput { get; set; }
-        public string? JsonOutput { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId? Workspaces { get; set; }
-        public string? Version { get; set; }
     }
 }

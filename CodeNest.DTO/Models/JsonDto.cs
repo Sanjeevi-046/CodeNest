@@ -15,18 +15,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CodeNest.DTO.Models
 {
-    public class JsonDto : AuditDto
+    public class JsonDto : FieldDto
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; } 
-        public string? Name { get; set; }
-        public string? JsonInput { get; set; }
-        public string? JsonOutput { get; set; }
-
-        [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId? Workspaces { get; set; }
-
-        public string? Version { get; set; }
     }
 }

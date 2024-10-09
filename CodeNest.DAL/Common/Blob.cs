@@ -9,14 +9,24 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.Models;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace CodeNest.BLL.Service
+namespace CodeNest.DAL.Common
 {
-    public interface IWorkspaceService
+    public class Blob :Audit
     {
-        Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user);
-        Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user);
+        public string? Name { get; set; }
+        public string? Input { get; set; }
+        public string? Output { get; set; }
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public ObjectId Workspaces { get; set; }
+        public string? Version { get; set; }
     }
 }

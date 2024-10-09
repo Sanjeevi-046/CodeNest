@@ -17,18 +17,15 @@ namespace CodeNest.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IHttpContextAccessor _httpcontextAccessor;
         public ILogger<HomeController> Logger;
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor contextAccessor)
+        public HomeController(ILogger<HomeController> logger)
         {
             Logger = logger;
-            _httpcontextAccessor = contextAccessor;
         }
 
         public IActionResult Index()
         {
-            _httpcontextAccessor.HttpContext = _httpcontextAccessor.HttpContext;
             return View();
         }
 

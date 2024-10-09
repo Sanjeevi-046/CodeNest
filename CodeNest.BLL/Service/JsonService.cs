@@ -26,7 +26,7 @@ namespace CodeNest.BLL.Service
         }
         public async Task<ValidationDto> Validate(JsonDto jsonDto)
         {
-            if (string.IsNullOrWhiteSpace(jsonDto.JsonInput))
+            if (string.IsNullOrWhiteSpace(jsonDto.Input))
             {
                 return new ValidationDto
                 {
@@ -34,9 +34,9 @@ namespace CodeNest.BLL.Service
                     Message = "Not Valid Json"
                 };
             }
-            jsonDto.JsonInput = jsonDto.JsonInput.Trim();
-            char firstChar = jsonDto.JsonInput[0];
-            char lastChar = jsonDto.JsonInput[^1];
+            jsonDto.Input = jsonDto.Input.Trim();
+            char firstChar = jsonDto.Input[0];
+            char lastChar = jsonDto.Input[^1];
 
             if ((firstChar == '{' && lastChar == '}') ||
                 (firstChar == '[' && lastChar == ']'))
@@ -44,7 +44,7 @@ namespace CodeNest.BLL.Service
 
                 try
                 {
-                    JToken parsedJson = JToken.Parse(jsonDto.JsonInput);
+                    JToken parsedJson = JToken.Parse(jsonDto.Input);
 
                     string beautifiedJson = parsedJson.ToString(Formatting.Indented);
 
@@ -54,8 +54,8 @@ namespace CodeNest.BLL.Service
                         Message = "Valid JSON",
                         JsonDto = new JsonDto
                         {
-                            JsonInput = jsonDto.JsonInput,
-                            JsonOutput = beautifiedJson
+                            Input = jsonDto.Input,
+                            Output = beautifiedJson
                         }
                     };
                 }
@@ -67,7 +67,7 @@ namespace CodeNest.BLL.Service
                         Message = ex.ToString(),
                         JsonDto = new JsonDto
                         {
-                            JsonInput = jsonDto.JsonInput
+                            Input = jsonDto.Input
                         }
                     };
                 }
@@ -80,7 +80,7 @@ namespace CodeNest.BLL.Service
                     Message = "Not a Valid Json",
                     JsonDto = new JsonDto
                     {
-                        JsonInput = jsonDto.JsonInput
+                        Input = jsonDto.Input
                     }
                 };
             }

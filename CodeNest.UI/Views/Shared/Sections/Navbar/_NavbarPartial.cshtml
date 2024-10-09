@@ -77,3 +77,26 @@
     <!--/ User -->
   </ul>
 </div>
+<script>
+    $(document).ready(function () {
+        // Make an AJAX request to fetch workspaces
+        $.ajax({
+            url: '/WorkSpace/WorkSpaces',  // Adjust to your actual controller endpoint
+            method: 'GET',
+            success: function (workspaces) {
+                var workspaceList = $('#workspaceList');
+                workspaceList.empty(); // Clear existing list
+
+                // Loop through the returned workspaces and append them to the list
+                $.each(workspaces, function (index, workspace) {
+                    var listItem = $('<li></li>').text(workspace.name); // Assuming workspace has a "name" property
+                    workspaceList.append(listItem);
+                });
+            },
+            error: function () {
+                console.error('Error fetching workspaces.');
+            }
+        });
+    });
+
+</script>
