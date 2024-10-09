@@ -9,14 +9,17 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.Models;
-using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace CodeNest.BLL.Service
+namespace CodeNest.DTO.Models
 {
-    public interface IWorkspaceService
+    public class UserWorkspaceFilesDto
     {
-        Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user);
-        Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user);
+        //List<WorkspacesDto>? Workspaces {  get; set; }
+        //List<JsonDto>? Jsonfiles { get; set; }
     }
 }

@@ -15,11 +15,6 @@ using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeNest.DAL.Repository
 {
@@ -31,6 +26,11 @@ namespace CodeNest.DAL.Repository
         {
             _mongoDbService = mongoDbService;
             _mapper = mapper;
+        }
+        public async Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user)
+        {
+            List<Workspaces> workspaces = await _mongoDbService.WorkSpaces.Find(x=>x.CreatedBy == user).ToListAsync(); 
+            return _mapper.Map<List<WorkspacesDto>>(workspaces);
         }
         public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
 

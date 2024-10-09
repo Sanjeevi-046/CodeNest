@@ -11,9 +11,10 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace CodeNest.UI.Controllers;
-
-public class CardsController : Controller
+namespace CodeNest.UI.Controllers
 {
-    public IActionResult Basic() => View();
+    public class CardsController : Controller
+    {
+        public IActionResult Basic() => View();
+    }
 }
