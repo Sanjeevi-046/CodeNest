@@ -25,6 +25,17 @@ namespace CodeNest.UI.Controllers
             _workspaceService = workspaceService;
             _contextAccessor = contextAccessor;
         }
+        public async Task<IActionResult> WorkSpaces()
+        {
+            string? user = HttpContext.Session.GetString("userId");
+             
+            List<WorkspacesDto> workspaces = await _workspaceService.GetWorkspaces(new ObjectId(user));
+            return Json(new 
+            {
+                workspaces 
+            });    
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(WorkspacesDto workspace)
         {

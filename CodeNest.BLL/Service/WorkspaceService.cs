@@ -26,6 +26,11 @@ namespace CodeNest.BLL.Service
         {
             _workSpaceRepository = workSpaceRepository;
         }
+        public async Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user)
+        {
+            List<WorkspacesDto> workspaces = await _workSpaceRepository.GetWorkspaces(user);
+            return workspaces;
+        }
 
         public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
         {

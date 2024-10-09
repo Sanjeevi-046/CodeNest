@@ -17,5 +17,6 @@ namespace CodeNest.DAL.Repository
     public interface IWorkSpaceRepository
     {
         Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user);
+        Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user);
     }
 }
