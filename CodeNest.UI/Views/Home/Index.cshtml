@@ -10,3 +10,11 @@
 {
     @await Html.PartialAsync("Sections/Card/_Card")
 }
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
+            keyboard: false
+        });
+        myModal.show();
+    });
+</script>

@@ -1,4 +1,8 @@
+@inject IHttpContextAccessor _httpContextAccessor
 @* ! Brand demo (display only for navbar-full and hide on below xl) *@
+@{
+    string userName = _httpContextAccessor.HttpContext.Session.GetString("userName")??"User";
+}
 @if (ViewData["navbarFull"] != null)
 {
 <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
@@ -33,7 +37,7 @@
     <!-- Dropdown -->
     <li class="nav-item dropdown me-3">
       <span class="btn btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Large button
+        WorkSpace
       </span>
       <ul class="dropdown-menu float-end">
         <li><a class="dropdown-item" href="javascript:void(0);">Action</a></li>
@@ -50,20 +54,9 @@
     <!-- User -->
     <li class="nav-item navbar-dropdown dropdown-user dropdown">
       <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
-        <span>John Doe</span>
+        <span>@userName</span>
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
-        <li>
-          <a class="dropdown-item" href="javascript:void(0);">
-            <div class="d-flex">
-              <div class="flex-shrink-0 me-3">
-              </div>
-            </div>
-          </a>
-        </li>
-        <li>
-          <div class="dropdown-divider my-1"></div>
-        </li>
         <li>
           <a class="dropdown-item" href="javascript:void(0);">
             <i class="bx bx-user bx-md me-2"></i>

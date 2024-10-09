@@ -1,53 +1,138 @@
 ﻿@model CodeNest.DTO.Models.JsonDto
+@inject IHttpContextAccessor _httpContextAccessor
+@{
+    string? workSpace = _httpContextAccessor.HttpContext.Session.GetString("workspaceId");
+}
 
-<form method="post" asp-action="JsonFormatter">
 <div class="container-fluid text-center">
-    @* @Html.AntiForgeryToken() *@
     <div class="card">
         <div class="card-header">
-           @*  @if (Model != null && !string.IsNullOrEmpty())
+            @if (TempData["Success"] != null)
             {
-                <div class="alert @(Model.IsValid ? "alert-success" : "alert-danger")" role="alert">
-                    @Model.Message
+                <div class="alert alert-success" role="alert">
+                    @TempData["Success"]
                 </div>
-            } *@
+            }
+            else if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["Error"]
+                </div>
+            }
         </div>
         <div class="card-body">
-            
+            <form id="jsonForm" method="post">
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="JsonInput" rows="23" class="form-control"  placeholder="Enter JSON data">@Model?.JsonInput</textarea>
+                        <textarea id="inputJson" name="JsonInput" rows="23" class="form-control" placeholder="Enter JSON data">@Model?.JsonInput</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
                     </div>
+
                     <!-- Actions Column -->
                     <div class="col-2">
                         <h5></h5>
                         <br />
                         <br />
                         <br />
-                        <button id="validateBtn" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
+                        <button id="validateBtn" asp-action="JsonFormatter" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
                         <button id="minifyBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="minifyJson()">Minify</button>
                         <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
-                        <button id="saveJsonBtn" type="submit" asp-action="SaveJson" asp-controller="Formatter" class="btn btn-primary w-100">Save</button>
+                        <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()">Save</button>
                     </div>
+
+                    <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Formatted JSON</h5>
-                        <textarea name="JsonOutput" id="formattedJson" rows="23" class="form-control" >@Model?.JsonOutput</textarea>
+                        <textarea id="formattedJson" name="JsonOutput" rows="23" class="form-control" placeholder="Formatted JSON will appear here">@Model?.JsonOutput</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
                         </div>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 </div>
-</form>
+
+<!-- Modal for Workspace Information -->
+<div class="modal fade" id="workspaceModal" tabindex="-1" aria-labelledby="workspaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="workspaceModalLabel">Enter Workspace Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="workspaceName" class="form-label">Workspace Name</label>
+                    <input type="text" class="form-control" id="workspaceName" placeholder="Enter Workspace Name">
+                </div>
+                <div class="mb-3">
+                    <label for="workspaceDescription" class="form-label">Workspace Description</label>
+                    <input type="text" class="form-control" id="workspaceDescription" placeholder="Enter Workspace Description">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
+        // Function to check if workspaceId exists and handle saving
+        function checkWorkspaceAndSave() {
+            const workspaceId = '@workSpace';
+
+            if (workspaceId === '' || workspaceId === null) {
+                // Open the modal to enter Workspace Name and Description
+                var modal = new bootstrap.Modal(document.getElementById('workspaceModal'), {});
+                modal.show();
+            } else {
+                // If workspaceId exists, submit the form to SaveJson action
+                var form = document.getElementById('jsonForm');
+                form.action = "/Formatter/SaveJson"; // Set action URL dynamically
+                form.submit();
+            }
+        }
+
+        // Function to submit the form after filling Workspace details in the modal
+        function submitForm() {
+            const workspaceName = document.getElementById('workspaceName').value;
+            const workspaceDescription = document.getElementById('workspaceDescription')?.value;
+
+            if (workspaceName && workspaceDescription) {
+                // Append hidden fields to the form to include workspace details
+                const form = document.getElementById('jsonForm');
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'hidden';
+                nameInput.name = 'Name';
+                nameInput.value = workspaceName;
+
+                const descriptionInput = document.createElement('input');
+                descriptionInput.type = 'hidden';
+                descriptionInput.name = 'Description';
+                descriptionInput.value = workspaceDescription;
+
+                form.appendChild(nameInput);
+                form.appendChild(descriptionInput);
+
+                // Set action URL to SaveJson and submit the form
+                form.action = "/Formatter/SaveJson";
+                form.submit();
+            } else {
+                alert('Please fill out both the Name and Description fields.');
+            }
+        }
+
+        // Function to minify the JSON input
         function minifyJson() {
             const inputJson = document.getElementById('inputJson').value;
             try {
@@ -58,8 +143,8 @@
             }
         }
 
+        // Function to clear both input and formatted JSON text areas
         function clearJson() {
-            console.log(document.getElementById('inputJson').value, );
             document.getElementById('inputJson').value = '';
             document.getElementById('formattedJson').value = '';
         }
