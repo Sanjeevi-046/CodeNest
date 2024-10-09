@@ -10,6 +10,7 @@
 // ***********************************************************************************************
 
 using CodeNest.BLL.Service;
+using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -18,10 +19,14 @@ namespace CodeNest.UI.Controllers
     public class FormatterController : Controller
     {
         private readonly IFormatterServices _formatterServices;
+        private readonly IWorkspaceService _workspaceService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FormatterController(IFormatterServices formatterServices)
+        public FormatterController(IFormatterServices formatterServices , IWorkspaceService workspaceService, IHttpContextAccessor httpContextAccessor)
         {
             _formatterServices = formatterServices;
+            _workspaceService = workspaceService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> JsonFormatter()
         {
@@ -46,14 +51,29 @@ namespace CodeNest.UI.Controllers
         }
        
         [HttpPost]
-        public async Task<IActionResult> SaveJson(JsonDto jsonDto)
+        public async Task<IActionResult> SaveJson(JsonDto jsonDto , string? Name  ,string? Description)
         {
             string? userId = HttpContext.Session.GetString("userId");
             string? workspaceId = HttpContext.Session.GetString("workspaceId");
-            ValidationDto result = await _formatterServices.Save(jsonDto, new ObjectId(workspaceId), ObjectId.Parse(userId));
-            if (result.IsValid)
+            if(workspaceId == null) 
             {
-                TempData["Success"] = result.Message;
+                WorkspacesDto workspace = new()
+                {
+                    Name = Name,
+                    Description = Description,
+                };
+                WorkspacesDto result = await _workspaceService.CreateWorkspace(workspace, new ObjectId(userId));
+                if (result != null)
+                {
+                    string workSpaceId = result.Id.ToString();
+                    _httpContextAccessor.HttpContext.Session.SetString("workspaceId", workSpaceId);
+                    workspaceId = HttpContext.Session.GetString("workspaceId");
+                }
+            }
+            ValidationDto jsonResult = await _formatterServices.Save(jsonDto, new ObjectId(workspaceId), ObjectId.Parse(userId));
+            if (jsonResult.IsValid)
+            {
+                TempData["Success"] = jsonResult.Message;
                 return RedirectToAction("Index", "Home");
             }
             return View("JsonFormatter");
