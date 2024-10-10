@@ -16,32 +16,44 @@ using MongoDB.Bson;
 
 namespace CodeNest.UI.Controllers
 {
+    [Route("api/[controller]")]
     public class WorkSpaceController : Controller
     {
         private readonly IWorkspaceService _workspaceService;
         private readonly IHttpContextAccessor _contextAccessor;
+
         public WorkSpaceController(IWorkspaceService workspaceService, IHttpContextAccessor contextAccessor)
         {
             _workspaceService = workspaceService;
             _contextAccessor = contextAccessor;
         }
-        public async Task<IActionResult> WorkSpaces()
+
+        [HttpGet("GetWorkSpaces")]
+        public async Task<IActionResult> GetWorkSpaces()
         {
             string? user = HttpContext.Session.GetString("userId");
-             
-            List<WorkspacesDto> workspaces = await _workspaceService.GetWorkspaces(new ObjectId(user));
-            return Json(new 
+
+            if (string.IsNullOrEmpty(user))
             {
-                workspaces 
-            });    
+                return Unauthorized();
+            }
+
+            List<WorkspacesDto> workspaces = await _workspaceService.GetWorkspaces(new ObjectId(user));
+            return Json(new { workspaces });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(WorkspacesDto workspace)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] WorkspacesDto workspace)
         {
             string? user = HttpContext.Session.GetString("userId");
+
+            if (string.IsNullOrEmpty(user))
+            {
+                return Unauthorized();
+            }
+
             WorkspacesDto result = await _workspaceService.CreateWorkspace(workspace, new ObjectId(user));
-            if (result!=null)
+            if (result != null)
             {
                 string workSpaceId = result.Id.ToString();
                 _contextAccessor.HttpContext.Session.SetString("workspaceId", workSpaceId);
