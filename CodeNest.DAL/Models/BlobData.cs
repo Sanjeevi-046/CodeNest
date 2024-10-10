@@ -9,23 +9,24 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.CommonDto;
+using CodeNest.DAL.Common;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace CodeNest.DTO.Models
+namespace CodeNest.DAL.Models
 {
-    public class XmlDto : AuditDto
+    public class BlobData : Audit
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = string.Empty;
+        public ObjectId Id { get; set; }
         public string? Name { get; set; }
-        public string? XmlInput { get; set; }
-        public string? XmlOutput { get; set; }
+        public string? Input { get; set; }
+        public string? Output { get; set; }
+        public string Type { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId? Workspaces { get; set; }
+        public ObjectId Workspaces { get; set; }
         public string? Version { get; set; }
     }
 }

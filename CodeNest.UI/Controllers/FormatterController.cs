@@ -35,15 +35,13 @@ namespace CodeNest.UI.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> JsonFormatter(JsonDto? jsonDto)
+        public async Task<IActionResult> JsonFormatter(BlobDto? jsonDto)
         {
             ValidationDto result = await _formatterServices.JsonValidate(jsonDto);
-            jsonDto.JsonOutput = result.JsonDto?.JsonOutput ?? string.Empty;
-            JsonDto json = result.JsonDto;
             if (result.IsValid)
             {
                 TempData["Success"] = result.Message;
-                return View(json);
+                return View(result.Blobs);
             }
 
             TempData["Error"] = result.Message;
@@ -51,7 +49,7 @@ namespace CodeNest.UI.Controllers
         }
        
         [HttpPost]
-        public async Task<IActionResult> SaveJson(JsonDto jsonDto , string? Name  ,string? Description)
+        public async Task<IActionResult> SaveJson(BlobDto jsonDto , string? Name  ,string? Description)
         {
             string? userId = HttpContext.Session.GetString("userId");
             string? workspaceId = HttpContext.Session.GetString("workspaceId");

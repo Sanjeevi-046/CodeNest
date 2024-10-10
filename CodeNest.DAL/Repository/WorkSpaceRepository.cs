@@ -29,7 +29,8 @@ namespace CodeNest.DAL.Repository
         }
         public async Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user)
         {
-            List<Workspaces> workspaces = await _mongoDbService.WorkSpaces.Find(x=>x.CreatedBy == user).ToListAsync(); 
+            List<Workspaces> workspaces = await _mongoDbService.WorkSpaces
+                .Find(x=>x.CreatedBy == user).ToListAsync(); 
             return _mapper.Map<List<WorkspacesDto>>(workspaces);
         }
         public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)

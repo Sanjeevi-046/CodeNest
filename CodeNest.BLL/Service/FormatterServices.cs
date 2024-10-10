@@ -28,9 +28,9 @@ namespace CodeNest.BLL.Service
             _logger = logger;
             _jsonRepository = jsonRepository;
         }
-        public async Task<ValidationDto> JsonValidate(JsonDto jsonDto)
+        public async Task<ValidationDto> JsonValidate(BlobDto jsonDto)
         {
-            if (string.IsNullOrWhiteSpace(jsonDto.JsonInput))
+            if (string.IsNullOrWhiteSpace(jsonDto.Input))
             {
                 return new ValidationDto
                 {
@@ -38,9 +38,9 @@ namespace CodeNest.BLL.Service
                     Message = "Not Valid Json"
                 };
             }
-            jsonDto.JsonInput = jsonDto.JsonInput.Trim();
-            char firstChar = jsonDto.JsonInput[0];
-            char lastChar = jsonDto.JsonInput[^1];
+            jsonDto.Input = jsonDto.Input.Trim();
+            char firstChar = jsonDto.Input[0];
+            char lastChar = jsonDto.Input[^1];
 
             if ((firstChar == '{' && lastChar == '}') ||
                 (firstChar == '[' && lastChar == ']'))
@@ -48,7 +48,7 @@ namespace CodeNest.BLL.Service
 
                 try
                 {
-                    JToken parsedJson = JToken.Parse(jsonDto.JsonInput);
+                    JToken parsedJson = JToken.Parse(jsonDto.Input);
 
                     string beautifiedJson = parsedJson.ToString(Formatting.Indented);
 
@@ -56,10 +56,10 @@ namespace CodeNest.BLL.Service
                     {
                         IsValid = true,
                         Message = "Valid JSON",
-                        JsonDto = new JsonDto
+                        Blobs = new BlobDto
                         {
-                            JsonInput = jsonDto.JsonInput,
-                            JsonOutput = beautifiedJson
+                            Input = jsonDto.Input,
+                            Output = beautifiedJson
                         }
                     };
                 }
@@ -69,9 +69,9 @@ namespace CodeNest.BLL.Service
                     {
                         IsValid = false,
                         Message = ex.ToString(),
-                        JsonDto = new JsonDto
+                        Blobs = new BlobDto
                         {
-                            JsonInput = jsonDto.JsonInput
+                            Input = jsonDto.Input
                         }
                     };
                 }
@@ -82,9 +82,9 @@ namespace CodeNest.BLL.Service
                 {
                     IsValid = false,
                     Message = "Not a Valid Json",
-                    JsonDto = new JsonDto
+                    Blobs = new BlobDto
                     {
-                        JsonInput = jsonDto.JsonInput
+                        Input = jsonDto.Input
                     }
                 };
             }
@@ -97,7 +97,7 @@ namespace CodeNest.BLL.Service
         /// <param name="workSpace"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workSpace, ObjectId user)
+        public async Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user)
         {
             try
             {

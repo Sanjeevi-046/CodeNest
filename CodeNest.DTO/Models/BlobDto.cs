@@ -9,20 +9,26 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.CommonDto;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CodeNest.DTO.CommonDto;
 
 namespace CodeNest.DTO.Models
 {
-    public class HtmlDto : AuditDto
+    public class BlobDto : AuditDto
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; }
         public string? Name { get; set; }
-        public string? HtmlInput { get; set; }
-        public string? HtmlOutput { get; set; }
+        public string? Input { get; set; }
+        public string? Output { get; set; }
+        public string Type { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId? Workspaces { get; set; }
