@@ -35,9 +35,10 @@ namespace CodeNest.BLL.Service
                 return new ValidationDto
                 {
                     IsValid = false,
-                    Message = "Not Valid Json"
+                    Message = "Please Enter Input"
                 };
             }
+
             jsonDto.Input = jsonDto.Input.Trim();
             char firstChar = jsonDto.Input[0];
             char lastChar = jsonDto.Input[^1];

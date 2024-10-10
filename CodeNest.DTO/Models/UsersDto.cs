@@ -56,7 +56,6 @@ namespace CodeNest.DTO.Models
         public string Country { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public List<ObjectId> Workspaces { get; set; } = new List<ObjectId>();
-
+        public List<ObjectId>? Workspaces { get; set; } 
     }
 }

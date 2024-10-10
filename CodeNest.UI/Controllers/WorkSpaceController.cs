@@ -46,6 +46,7 @@ namespace CodeNest.UI.Controllers
                 string workSpaceId = result.Id.ToString();
                 _contextAccessor.HttpContext.Session.SetString("workspaceId", workSpaceId);
             }
+
             return RedirectToAction("Index", "Home");
         }
     }
