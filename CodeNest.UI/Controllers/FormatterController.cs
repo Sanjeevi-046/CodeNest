@@ -68,12 +68,14 @@ namespace CodeNest.UI.Controllers
                     workspaceId = HttpContext.Session.GetString("workspaceId");
                 }
             }
+
             ValidationDto jsonResult = await _formatterServices.Save(jsonDto, new ObjectId(workspaceId), ObjectId.Parse(userId));
             if (jsonResult.IsValid)
             {
                 TempData["Success"] = jsonResult.Message;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("JsonFormatter", "Formatter");
             }
+
             return View("JsonFormatter");
         }
     }

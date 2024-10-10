@@ -9,6 +9,7 @@
 //
 // ***********************************************************************************************
 
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,9 @@ namespace CodeNest.DTO.Models
 {
     public class UserWorkspaceFilesDto
     {
-        //List<WorkspacesDto>? Workspaces {  get; set; }
-        //List<JsonDto>? Jsonfiles { get; set; }
+        public ObjectId WorkspaceId { get; set; }
+        public string WorkspaceName { get; set; }
+        public string WorkspaceDescription { get; set; }
+        public List<BlobDto> Blobs { get; set; } = new List<BlobDto>();
     }
 }

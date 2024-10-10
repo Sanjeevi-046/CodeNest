@@ -42,6 +42,7 @@ namespace CodeNest.UI.Controllers
                 _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
                 return RedirectToAction("Index", "Home");
             }
+
             return View();
         }
 
@@ -59,6 +60,7 @@ namespace CodeNest.UI.Controllers
                     return RedirectToAction("Login");
                 }
             }
+
             return View(user);
         }
     }

@@ -26,6 +26,7 @@ namespace CodeNest.UI.Controllers
 
         public IActionResult Index()
         {
+
             return View();
         }
 

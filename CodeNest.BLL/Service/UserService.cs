@@ -54,9 +54,7 @@ namespace CodeNest.BLL.Service
         /// <returns>gets the value from <see cref="IUserRepository"/> and returns the vale </returns>
         public async Task<UsersDto?> Register(UsersDto newUser)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             UsersDto user = await _userRepository.Register(newUser);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             return user;
         }
     }
