@@ -9,6 +9,7 @@
 //
 // ***********************************************************************************************
 
+using CodeNest.DAL.Models;
 using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
 using MongoDB.Bson;
@@ -24,7 +25,7 @@ namespace CodeNest.BLL.Service
         {
             _jsonRepository = jsonRepository;
         }
-        public async Task<ValidationDto> Validate(JsonDto jsonDto)
+        public async Task<ValidationDto> Validate(BlobDto jsonDto)
         {
             if (string.IsNullOrWhiteSpace(jsonDto.Input))
             {
@@ -52,7 +53,7 @@ namespace CodeNest.BLL.Service
                     {
                         IsValid = true,
                         Message = "Valid JSON",
-                        JsonDto = new JsonDto
+                        Blobs = new BlobDto
                         {
                             Input = jsonDto.Input,
                             Output = beautifiedJson
@@ -65,7 +66,7 @@ namespace CodeNest.BLL.Service
                     {
                         IsValid = false,
                         Message = ex.ToString(),
-                        JsonDto = new JsonDto
+                        Blobs = new BlobDto
                         {
                             Input = jsonDto.Input
                         }
@@ -78,7 +79,7 @@ namespace CodeNest.BLL.Service
                 {
                     IsValid = false,
                     Message = "Not a Valid Json",
-                    JsonDto = new JsonDto
+                    Blobs = new BlobDto
                     {
                         Input = jsonDto.Input
                     }
@@ -92,7 +93,7 @@ namespace CodeNest.BLL.Service
         /// <param name="workspaceId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workspaceId, ObjectId userId)
+        public async Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workspaceId, ObjectId userId)
         {
             bool result = await _jsonRepository.SaveAsync(jsonDto, workspaceId, userId);
             if (result)

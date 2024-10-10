@@ -27,22 +27,23 @@ namespace CodeNest.DAL.Repository
 
         }
 
-        public async Task<bool> SaveAsync(JsonDto jsonData, ObjectId workSpace, ObjectId user)
+        public async Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user)
         {
             Workspaces workspaceName = await _mongoDbService.WorkSpaces
                 .Find(x => x.Id == workSpace).FirstOrDefaultAsync();
-            CustomJson jsonUser = new()
+            BlobData jsonUser = new()
             {
                 Name = workspaceName.Name,
-                JsonInput = jsonData.JsonInput,
-                JsonOutput = jsonData.JsonOutput,
+                Input = jsonData.Input,
+                Output = jsonData.Output,
+                Type = "Json",
                 Workspaces = workSpace,
                 CreatedBy = user,
                 CreatedOn = DateTime.UtcNow
             };
             try
             {
-                await _mongoDbService.Json.InsertOneAsync(jsonUser);
+                await _mongoDbService.BlobDatas.InsertOneAsync(jsonUser);
                 return true;
             }
             catch

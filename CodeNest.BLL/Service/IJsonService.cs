@@ -17,7 +17,7 @@ namespace CodeNest.BLL.Service
     public interface IJsonService
     {
 
-        Task<ValidationDto> Validate(JsonDto jsonDto);
-        Task<ValidationDto> Save(JsonDto jsonDto, ObjectId workspaceId, ObjectId userId);
+        Task<ValidationDto> Validate(BlobDto jsonDto);
+        Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workspaceId, ObjectId userId);
     }
 }

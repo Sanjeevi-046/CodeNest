@@ -20,13 +20,9 @@ namespace CodeNest.BLL.AutoMapper
         public MappingProfiles()
         {
             _ = CreateMap<UsersDto, Users>().ReverseMap();
-            _ = CreateMap<CustomJson, JsonDto>().ReverseMap();
-            _ = CreateMap<BaseToString, BaseToStringDto>().ReverseMap();
             _ = CreateMap<Workspaces, WorkspacesDto>().ReverseMap();
-            _ = CreateMap<CustomHtml, HtmlDto>().ReverseMap();
-            _ = CreateMap<CustomJavascript, JavascriptDto>().ReverseMap();
-            _ = CreateMap<Jwt, JwtDto>().ReverseMap();
-            _ = CreateMap<CustomXml, XmlDto>().ReverseMap();
+            _ = CreateMap<BlobDto, BlobData>().ReverseMap();
+           
         }
     }
 }
