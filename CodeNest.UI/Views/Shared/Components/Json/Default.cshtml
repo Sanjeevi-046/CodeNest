@@ -1,0 +1,21 @@
+﻿@model List<CodeNest.DTO.Models.BlobDto>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <li class="menu-item">
+            <a  class="menu-link">
+                <div>@item.Name</div>  
+            </a>
+        </li>
+    }
+}
+else
+{
+    <li class="menu-item">
+        <a class="menu-link">
+            <div>No JSON items available</div>
+        </a>
+    </li>
+}
