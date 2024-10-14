@@ -16,7 +16,6 @@ using MongoDB.Bson;
 
 namespace CodeNest.UI.Controllers
 {
-    [Route("api/[controller]")]
     public class WorkSpaceController : Controller
     {
         private readonly IWorkspaceService _workspaceService;
@@ -28,7 +27,7 @@ namespace CodeNest.UI.Controllers
             _contextAccessor = contextAccessor;
         }
 
-        [HttpGet("GetWorkSpaces")]
+        [HttpGet]
         public async Task<IActionResult> GetWorkSpaces()
         {
             string? user = HttpContext.Session.GetString("userId");
@@ -42,8 +41,8 @@ namespace CodeNest.UI.Controllers
             return Json(new { workspaces });
         }
 
-        [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] WorkspacesDto workspace)
+        [HttpPost]
+        public async Task<IActionResult> Create(WorkspacesDto workspace)
         {
             string? user = HttpContext.Session.GetString("userId");
 

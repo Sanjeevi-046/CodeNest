@@ -32,6 +32,7 @@ namespace CodeNest.UI.ViewComponents
                 List<DTO.Models.BlobDto> jsonData = await _jsonService.GetJson(workspaceId);
                 return View(jsonData); // Return the Default view with the jsonData model
             }
+
             return View("Default", new List<DTO.Models.BlobDto>()); // Return empty list if workspaceId is null or empty
         }
     }
