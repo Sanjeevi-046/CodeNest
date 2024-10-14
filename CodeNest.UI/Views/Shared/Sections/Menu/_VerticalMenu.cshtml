@@ -5,10 +5,8 @@
 }
 
 <!-- Menu -->
-@* ! Do this simple *@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
-  @* ! Hide app brand if navbar-full *@
   <div
     class='app-brand demo @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
     <a asp-controller="Dashboards" asp-action="Index" class="app-brand-link">
@@ -25,18 +23,17 @@
 
   <div class="menu-inner-shadow"></div>
 
-  @* ! Full version menu-items *@
   <ul class="menu-inner py-1">
     <!-- Pages -->
-        <li class='menu-item@(currentPage == "/Formatter/JsonFormatter" ? " active open" : "")'>
-            <a asp-controller="Formatter" asp-action="JsonFormatter" class="menu-link menu-toggle">
+    <li class='menu-item@(currentPage == "/Formatter/JsonFormatter" ? " active open" : "")'>
+      <a asp-controller="Formatter" asp-action="JsonFormatter" class="menu-link">
         <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                <div>JSON</div>
+        <div>JSON</div>
       </a>
-            <ul class="menu-sub">
-                <!-- Dynamically load JsonViewComponent here -->
-                @await Component.InvokeAsync("Json")
-            </ul>
+      <ul class="menu-sub">
+        <!-- Dynamically load JsonViewComponent here -->
+        @await Component.InvokeAsync("Json")
+      </ul>
     </li>
   </ul>
 </aside>
