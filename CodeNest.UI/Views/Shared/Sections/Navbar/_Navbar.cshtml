@@ -1,10 +1,8 @@
 @{
   TempData.Keep();
   ViewData["navbarDetached"] = (ViewData["navbarDetached"] ??= null);
-  ViewData["containerNav"] = "container-fluid";
 }
-<nav
-  class='layout-navbar @((@ViewData["navbarDetached"] != null) ? @ViewData["navbarDetached"] : "") @ViewData["containerNav"] navbar navbar-expand-xl align-items-center bg-navbar-theme'
+<nav class='layout-navbar container-fluid navbar navbar-expand-xl align-items-center bg-navbar-theme'
   id="layout-navbar">
   @await Html.PartialAsync("Sections/Navbar/_NavbarPartial")
 </nav>
