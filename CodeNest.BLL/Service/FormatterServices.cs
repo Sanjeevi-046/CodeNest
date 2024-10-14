@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace CodeNest.BLL.Service
 {
@@ -28,10 +29,19 @@ namespace CodeNest.BLL.Service
             _logger = logger;
             _jsonRepository = jsonRepository;
         }
+
+        /// <summary>
+        /// Validates the provided JSON data.
+        /// </summary>
+        /// <param name="jsonDto">The JSON data to validate.</param>
+        /// <returns>A ValidationDto indicating whether the JSON is valid and any relevant messages.</returns>
         public async Task<ValidationDto> JsonValidate(BlobDto jsonDto)
         {
+            _logger.LogInformation("JsonValidate: Starting JSON validation.");
+
             if (string.IsNullOrWhiteSpace(jsonDto.Input))
             {
+                _logger.LogWarning("JsonValidate: Input is null or whitespace.");
                 return new ValidationDto
                 {
                     IsValid = false,
@@ -46,13 +56,12 @@ namespace CodeNest.BLL.Service
             if ((firstChar == '{' && lastChar == '}') ||
                 (firstChar == '[' && lastChar == ']'))
             {
-
                 try
                 {
                     JToken parsedJson = JToken.Parse(jsonDto.Input);
-
                     string beautifiedJson = parsedJson.ToString(Formatting.Indented);
 
+                    _logger.LogInformation("JsonValidate: JSON is valid.");
                     return new ValidationDto
                     {
                         IsValid = true,
@@ -66,10 +75,11 @@ namespace CodeNest.BLL.Service
                 }
                 catch (JsonReaderException ex)
                 {
+                    _logger.LogError(ex, "JsonValidate: JSON parsing failed.");
                     return new ValidationDto
                     {
                         IsValid = false,
-                        Message = ex.ToString(),
+                        Message = "Invalid JSON format.",
                         Blobs = new BlobDto
                         {
                             Input = jsonDto.Input
@@ -79,10 +89,11 @@ namespace CodeNest.BLL.Service
             }
             else
             {
+                _logger.LogWarning("JsonValidate: Input is not a valid JSON.");
                 return new ValidationDto
                 {
                     IsValid = false,
-                    Message = "Not a Valid Json",
+                    Message = "Not a Valid JSON",
                     Blobs = new BlobDto
                     {
                         Input = jsonDto.Input
@@ -92,14 +103,16 @@ namespace CodeNest.BLL.Service
         }
 
         /// <summary>
-        /// Save the json data
+        /// Saves the provided JSON data.
         /// </summary>
-        /// <param name="jsonDto"></param>
-        /// <param name="workSpace"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="jsonDto">The JSON data to save.</param>
+        /// <param name="workSpace">The workspace identifier.</param>
+        /// <param name="user">The user identifier.</param>
+        /// <returns>A ValidationDto indicating whether the save operation was successful and any relevant messages.</returns>
         public async Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user)
         {
+            _logger.LogInformation("Save: Starting save operation.");
+
             try
             {
                 if (jsonDto == null)

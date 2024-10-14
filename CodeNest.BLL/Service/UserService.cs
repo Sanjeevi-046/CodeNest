@@ -11,51 +11,91 @@
 
 using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
+using Microsoft.Extensions.Logging;
 
 namespace CodeNest.BLL.Service
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILogger<UserService> _logger;
+
         /// <summary>
-        /// Initializing instance of <see cref="IUserRepository"/> for accessing the functionality
+        /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
-        /// <param name="userRepository"></param>
-        public UserService(IUserRepository userRepository)
+        /// <param name="userRepository">The user repository.</param>
+        /// <param name="logger">The logger instance.</param>
+        public UserService(IUserRepository userRepository, ILogger<UserService> logger)
         {
             _userRepository = userRepository;
-
+            _logger = logger;
         }
+
         /// <summary>
-        /// Gets the user detail by ID
+        /// Gets the user detail by ID.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns>gets the value from <see cref="IUserRepository"/></returns>
+        /// <param name="id">The user ID.</param>
+        /// <returns>The user details.</returns>
         public async Task<UsersDto> GetUserById(string id)
         {
-            UsersDto result = await _userRepository.GetUserById(id);
-            return result;
+            _logger.LogInformation("GetUserById: Retrieving user with ID.");
+
+            try
+            {
+                UsersDto result = await _userRepository.GetUserById(id);
+                _logger.LogInformation("GetUserById: Successfully retrieved user.");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetUserById: An error occurred while retrieving user.");
+                throw;
+            }
         }
+
         /// <summary>
-        /// Checks the User whether already in db or not
+        /// Checks if the user exists in the database and returns the user details.
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns>gets the value from <see cref="IUserRepository"/></returns>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>The user details if the user exists.</returns>
         public async Task<UsersDto> Login(string username, string password)
         {
-            UsersDto user = await _userRepository.Login(username, password);
-            return user;
+            _logger.LogInformation("Login: Attempting login for user.");
+
+            try
+            {
+                UsersDto user = await _userRepository.Login(username, password);
+                _logger.LogInformation("Login: Successfully logged in user.");
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Login: An error occurred while logging in user.");
+                throw;
+            }
         }
+
         /// <summary>
-        /// Adding the User in mongo Database
+        /// Registers a new user in the database.
         /// </summary>
-        /// <param name="newUser"></param>
-        /// <returns>gets the value from <see cref="IUserRepository"/> and returns the vale </returns>
+        /// <param name="newUser">The new user details.</param>
+        /// <returns>The registered user details.</returns>
         public async Task<UsersDto?> Register(UsersDto newUser)
         {
-            UsersDto user = await _userRepository.Register(newUser);
-            return user;
+            _logger.LogInformation("Register: Attempting to register user.");
+
+            try
+            {
+                UsersDto user = await _userRepository.Register(newUser);
+                _logger.LogInformation("Register: Successfully registered user.");
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Register: An error occurred while registering user.");
+                throw;
+            }
         }
     }
 }
