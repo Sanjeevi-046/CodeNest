@@ -32,7 +32,7 @@ namespace CodeNest.UI.ViewComponents
 
             if (string.IsNullOrEmpty(user))
             {
-                return Content(string.Empty); // Or show a message if needed
+                return Content(string.Empty); 
             }
 
             List<WorkspacesDto> workspaces = await _workspaceService.GetWorkspaces(new ObjectId(user));

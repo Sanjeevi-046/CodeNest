@@ -45,7 +45,7 @@ namespace CodeNest.UI.Controllers
             }
 
             TempData["Error"] = result.Message;
-            return View(jsonDto);
+            return View(result.Blobs);
         }
        
         [HttpPost]

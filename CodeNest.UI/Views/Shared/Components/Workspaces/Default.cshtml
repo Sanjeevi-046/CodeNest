@@ -3,9 +3,6 @@
 
 @{
     string userName = _httpContextAccessor.HttpContext?.Session.GetString("userName") ?? "User";
-    TempData.Keep();
-    string? currentPage = ViewContext.HttpContext.Request.Path;
-    
 }
 
 <ul class="navbar-nav flex-row align-items-center ms-auto">

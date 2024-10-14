@@ -9,6 +9,7 @@
 //
 // ***********************************************************************************************
 
+using CodeNest.DTO.Models;
 using CodeNest.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -26,7 +27,6 @@ namespace CodeNest.UI.Controllers
 
         public IActionResult Index()
         {
-
             return View();
         }
 
