@@ -56,17 +56,3 @@
         </ul>
     </li>
 </ul>
-<script>
-    function loadJson(workspaceId) {
-        $.ajax({
-            url: '/CodeNest/UI/ViewComponents/Json?workspaceId=' + workspaceId, // Adjust the URL according to your routing
-            type: 'GET',
-            success: function (data) {
-                console.log("Loaded the data");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error loading View Component:", error);
-            }
-        });
-    }
-</script>
