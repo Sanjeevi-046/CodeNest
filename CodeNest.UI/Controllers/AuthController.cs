@@ -63,5 +63,15 @@ namespace CodeNest.UI.Controllers
 
             return View(user);
         }
+
+        /// <summary>
+        /// User Logout
+        /// </summary>
+        /// <returns>Redirects to Login page</returns>
+        public IActionResult Logout()
+        {
+            _httpContextAccessor.HttpContext?.Session.Clear();
+            return RedirectToAction("Login");
+        }
     }
 }
