@@ -22,38 +22,47 @@ namespace CodeNest.UI.Controllers
         private readonly IWorkspaceService _workspaceService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FormatterController(IFormatterServices formatterServices , IWorkspaceService workspaceService, IHttpContextAccessor httpContextAccessor)
+        public FormatterController(IFormatterServices formatterServices, IWorkspaceService workspaceService, IHttpContextAccessor httpContextAccessor)
         {
             _formatterServices = formatterServices;
             _workspaceService = workspaceService;
             _httpContextAccessor = httpContextAccessor;
         }
+
         public async Task<IActionResult> JsonFormatter()
         {
             // Simulate an asynchronous operation to avoid CS1998 warning
             await Task.CompletedTask;
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> JsonFormatter(BlobDto? jsonDto)
         {
+            if (jsonDto == null)
+            {
+                TempData["Error"] = "Invalid JSON data.";
+                return View(new BlobDto()); // Return an empty BlobDto
+            }
+
             ValidationDto result = await _formatterServices.JsonValidate(jsonDto);
             if (result.IsValid)
             {
                 TempData["Success"] = result.Message;
-                return View(result.Blobs);
+                return View(result.Blobs); // Pass the validated BlobDto to the view
             }
 
             TempData["Error"] = result.Message;
-            return View(jsonDto);
+            return View(result.Blobs); // Pass the original BlobDto to the view
         }
-       
+
         [HttpPost]
-        public async Task<IActionResult> SaveJson(BlobDto jsonDto , string? Name  ,string? Description)
+        public async Task<IActionResult> SaveJson(BlobDto jsonDto, string? Name, string? Description)
         {
             string? userId = HttpContext.Session.GetString("userId");
             string? workspaceId = HttpContext.Session.GetString("workspaceId");
-            if(workspaceId == null) 
+
+            if (workspaceId == null)
             {
                 WorkspacesDto workspace = new()
                 {
@@ -64,7 +73,10 @@ namespace CodeNest.UI.Controllers
                 if (result != null)
                 {
                     string workSpaceId = result.Id.ToString();
-                    _httpContextAccessor.HttpContext.Session.SetString("workspaceId", workSpaceId);
+                    if (_httpContextAccessor.HttpContext != null)
+                    {
+                        _httpContextAccessor.HttpContext.Session.SetString("workspaceId", workSpaceId);
+                    }
                     workspaceId = HttpContext.Session.GetString("workspaceId");
                 }
             }
