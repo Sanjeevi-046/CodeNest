@@ -1,99 +1,35 @@
+@model List<CodeNest.DTO.Models.WorkspacesDto>
 @inject IHttpContextAccessor _httpContextAccessor
 @* ! Brand demo (display only for navbar-full and hide on below xl) *@
 @{
     string userName = _httpContextAccessor.HttpContext?.Session.GetString("userName") ?? "User";
+    TempData.Keep();
+    string? currentPage = ViewContext.HttpContext.Request.Path;
 }
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch('/api/WorkSpace/GetWorkSpaces')
-            .then(response => response.json())
-            .then(data => {
-                const workspaces = data.workspaces; // Access the workspaces array from the JSON response
-                const workspaceList = document.getElementById('workspaceList');
-                workspaceList.innerHTML = ''; // Clear existing list
-
-                if (Array.isArray(workspaces)) {
-                    workspaces.forEach(workspace => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `${workspace.name}`; // Assuming workspace has "userName" and "name" properties
-                        workspaceList.appendChild(listItem);
-                    });
-                } else {
-                    console.error('Workspaces is not an array:', workspaces);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching workspaces:', error);
-            });
-    });
-</script>
-
-@if (ViewData["navbarFull"] != null)
-{
-    <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-        <a asp-controller="Dashboards" asp-action="Index" class="app-brand-link gap-2">
-            <span class="app-brand-logo demo">
-            </span>
-            <span class="app-brand-text demo menu-text fw-bold">CodeNest</span>
-        </a>
-    </div>
-}
-
-@* ! Not required for layout-without-menu *@
-@if (ViewData["navbarHideToggle"] == null)
-{
-    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
-        <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
-            <i class="bx bx-menu bx-md"></i>
-        </a>
-    </div>
-}
-
+<!-- Navbar -->
 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-
-    <!-- Search -->
-    <div class="navbar-nav align-items-center">
-        <div class="nav-item d-flex align-items-center">
-        </div>
-    </div>
-    <!-- /Search -->
-
-    <ul class="navbar-nav flex-row align-items-center ms-auto">
-        <!-- Dropdown -->
-        <li class="nav-item dropdown me-3">
-            <span class="btn btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                WorkSpace
-            </span>
-            <ul class="dropdown-menu float-end" id="workspaceList">
-                <!-- Workspace items will be appended here by JavaScript -->
-            </ul>
-        </li>
-        <!--/ Dropdown -->
-
-        <!-- User -->
-        <li class="nav-item navbar-dropdown dropdown-user dropdown">
-            <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
-                <span>@userName</span>
+    @if (ViewData["navbarFull"] != null)
+    {
+        <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
+            <a asp-controller="Home" asp-action="Index" class="app-brand-link gap-2">
+                <span class="app-brand-logo demo"></span>
+                <span class="app-brand-text demo menu-text fw-bold">CodeNest</span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <i class="bx bx-user bx-md me-2"></i>
-                        <span>My Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <div class="dropdown-divider my-1"></div>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <i class="bx bx-power-off bx-md me-2"></i>
-                        <span>Log Out</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <!--/ User -->
-    </ul>
+        </div>
+    }
+
+    <!-- Navbar Toggle -->
+    @if (ViewData["navbarHideToggle"] == null)
+    {
+        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
+                <i class="bx bx-menu bx-md"></i>
+            </a>
+        </div>
+    }
+
+
+    @await Component.InvokeAsync("Workspaces")
 </div>
+

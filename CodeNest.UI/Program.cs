@@ -33,6 +33,14 @@ builder.Services.AddHttpClient("", _client =>
 {
     _client.Timeout = TimeSpan.FromMinutes(5);
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout period
@@ -49,6 +57,7 @@ if (!app.Environment.IsDevelopment())
     _ = app.UseHsts();
 }
 
+app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();

@@ -26,142 +26,15 @@
   @* ! Full version menu-items *@
   <ul class="menu-inner py-1">
     <!-- Pages -->
-    <li class='menu-item@(currentPage.StartsWith("/Pages/Account") ? " active open" : "")'>
+        <li class='menu-item@(currentPage == "/Formatter/JsonFormatter" ? " active open" : "")'>
             <a asp-controller="Formatter" asp-action="JsonFormatter" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div>JSON</div>
       </a>
-      <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/Formatter/JsonFormatter" ? " active" : "")'>
-                    <a asp-controller="Formatter" asp-action="JsonFormatter" class="menu-link">
-            <div>JSON</div>
-          </a>
-        </li>
-        <li class='menu-item@(currentPage == "/Pages/AccountSettingsNotifications" ? " active" : "")'>
-          <a asp-controller="Pages" asp-action="AccountSettingsNotifications" class="menu-link">
-                        <div>item2</div>
-          </a>
-        </li>
-        <li class='menu-item@(currentPage == "/Pages/AccountSettingsConnections" ? " active" : "")'>
-          <a asp-controller="Pages" asp-action="AccountSettingsConnections" class="menu-link">
-                        <div>item3</div>
-          </a>
-        </li>
-      </ul>
+            <ul class="menu-sub">
+                <!-- Dynamically load JsonViewComponent here -->
+                @await Component.InvokeAsync("Json", new { workspaceId = ""})
+            </ul>
     </li>
-  @*   <li class='menu-item@(currentPage.StartsWith("/Auth") ? " active open" : "")'>
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-        <div>XMl</div>
-      </a>
-      <ul class="menu-sub">
-        <li class='menu-item@(currentPage == "/Auth/Login" ? " active" : "")'>
-          <a asp-controller="Auth" asp-action="Login" class="menu-link" target="_blank">
-            <div>Login</div>
-          </a>
-        </li>
-        <li class='menu-item@(currentPage == "/Auth/Register" ? " active" : "")'>
-          <a asp-controller="Auth" asp-action="Register" class="menu-link" target="_blank">
-            <div>Register</div>
-          </a>
-        </li>
-        <li class='menu-item@(currentPage == "/Auth/ForgotPasswordBasic" ? " active" : "")'>
-          <a asp-controller="Auth" asp-action="ForgotPasswordBasic" class="menu-link" target="_blank">
-            <div>Forgot Password</div>
-          </a>
-        </li>
-      </ul>
-    </li> *@
-@*     <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-        <div>Html</div>
-      </a>
-      <ul class="menu-sub">
-        <li class='menu-item@(currentPage == "/Pages/MiscError" ? " active" : "")'>
-          <a asp-controller="Pages" asp-action="MiscError" class="menu-link" target="_blank">
-            <div>Error</div>
-          </a>
-        </li>
-        <li class='menu-item@(currentPage == "/Pages/MiscUnderMaintenance" ? " active" : "")'>
-          <a asp-controller="Pages" asp-action="MiscUnderMaintenance" class="menu-link" target="_blank">
-          <div>Under Maintenance</div>
-          </a>
-        </li>
-      </ul>
-    </li> *@
-@*     <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-            <div>JavaScript</div>
-        </a>
-        <ul class="menu-sub">
-            <li class='menu-item@(currentPage == "/Pages/MiscError" ? " active" : "")'>
-                <a asp-controller="Pages" asp-action="MiscError" class="menu-link" target="_blank">
-                    <div>Error</div>
-                </a>
-            </li>
-            <li class='menu-item@(currentPage == "/Pages/MiscUnderMaintenance" ? " active" : "")'>
-                <a asp-controller="Pages" asp-action="MiscUnderMaintenance" class="menu-link" target="_blank">
-                    <div>Under Maintenance</div>
-                </a>
-            </li>
-        </ul>
-    </li> *@
-     @*    <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div>Jwt</div>
-            </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/Pages/MiscError" ? " active" : "")'>
-                    <a asp-controller="Pages" asp-action="MiscError" class="menu-link" target="_blank">
-                        <div>Error</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/Pages/MiscUnderMaintenance" ? " active" : "")'>
-                    <a asp-controller="Pages" asp-action="MiscUnderMaintenance" class="menu-link" target="_blank">
-                        <div>Under Maintenance</div>
-                    </a>
-                </li>
-            </ul>
-        </li> *@
-       @*  <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div>Base64ToString</div>
-            </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/Pages/MiscError" ? " active" : "")'>
-                    <a asp-controller="Pages" asp-action="MiscError" class="menu-link" target="_blank">
-                        <div>Error</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/Pages/MiscUnderMaintenance" ? " active" : "")'>
-                    <a asp-controller="Pages" asp-action="MiscUnderMaintenance" class="menu-link" target="_blank">
-                        <div>Under Maintenance</div>
-                    </a>
-                </li>
-            </ul>
-        </li> *@
-      @*   <li class='menu-item@(currentPage.StartsWith("/Pages/Misc") ? " active open" : "")'>
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div>StringToBase64</div>
-            </a>
-            <ul class="menu-sub">
-                <li class='menu-item@(currentPage == "/Pages/MiscError" ? " active" : "")'>
-                    <a asp-controller="Pages" asp-action="MiscError" class="menu-link" target="_blank">
-                        <div>Error</div>
-                    </a>
-                </li>
-                <li class='menu-item@(currentPage == "/Pages/MiscUnderMaintenance" ? " active" : "")'>
-                    <a asp-controller="Pages" asp-action="MiscUnderMaintenance" class="menu-link" target="_blank">
-                        <div>Under Maintenance</div>
-                    </a>
-                </li>
-            </ul>
-        </li> *@
   </ul>
 </aside>
-<!-- / Menu -->

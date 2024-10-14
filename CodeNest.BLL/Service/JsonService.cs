@@ -25,6 +25,13 @@ namespace CodeNest.BLL.Service
         {
             _jsonRepository = jsonRepository;
         }
+
+        public async Task<List<BlobDto>> GetJson(ObjectId workspaceId)
+        {
+            return await _jsonRepository
+                .GetJsonList(workspaceId);
+        }
+
         public async Task<ValidationDto> Validate(BlobDto jsonDto)
         {
             if (string.IsNullOrWhiteSpace(jsonDto.Input))

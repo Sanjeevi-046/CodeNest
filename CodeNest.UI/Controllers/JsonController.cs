@@ -9,14 +9,16 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
-namespace CodeNest.DAL.Repository
+namespace CodeNest.UI.Controllers
 {
-    public interface IJsonRepository
+    public class JsonController : Controller
     {
-        Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user);
-        Task<List<BlobDto>> GetJsonList(ObjectId workspaceId);
+        public IActionResult Index(ObjectId workspace)
+        {
+            return ViewComponent("Json",new { workspaceId = workspace});
+        }
     }
 }
