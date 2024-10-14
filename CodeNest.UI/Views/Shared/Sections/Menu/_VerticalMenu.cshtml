@@ -1,3 +1,4 @@
+@model CodeNest.DTO.Models.BlobDto;
 @{
   TempData.Keep();
   string? currentPage = ViewContext.HttpContext.Request.Path;
@@ -33,7 +34,7 @@
       </a>
             <ul class="menu-sub">
                 <!-- Dynamically load JsonViewComponent here -->
-                @await Component.InvokeAsync("Json", new { workspaceId = ""})
+                @await Component.InvokeAsync("Json", new { workspaceId  = Model.Id})
             </ul>
     </li>
   </ul>
