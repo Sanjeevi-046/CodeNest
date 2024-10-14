@@ -10,6 +10,7 @@
 // ***********************************************************************************************
 
 using CodeNest.BLL.Service;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -29,7 +30,7 @@ namespace CodeNest.UI.ViewComponents
             if (workspaceId != null)
             {
                 List<DTO.Models.BlobDto> jsonData = await _jsonService.GetJson(workspaceId);
-                return View("Default", jsonData); // Return the Default view with the jsonData model
+                return View(jsonData); // Return the Default view with the jsonData model
             }
             return View("Default", new List<DTO.Models.BlobDto>()); // Return empty list if workspaceId is null or empty
         }

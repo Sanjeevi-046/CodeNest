@@ -20,7 +20,7 @@
                 @foreach (var workspace in Model)
                 {
                     <li >
-                        <a class="dropdown-item" href="javascript:void(0);" onclick="loadJson('@workspace.Id')">
+                        <a class="dropdown-item" asp-action="Index" asp-controller="Json" asp-route-workspace="@workspace.Id">
                             <i class="bx bx-user bx-md me-2"></i>
                             <span>@workspace.Name</span>
                         </a>

@@ -33,7 +33,7 @@
       </a>
             <ul class="menu-sub">
                 <!-- Dynamically load JsonViewComponent here -->
-                @await Component.InvokeAsync("Json")
+                @await Component.InvokeAsync("Json", new { workspaceId = ""})
             </ul>
     </li>
   </ul>
