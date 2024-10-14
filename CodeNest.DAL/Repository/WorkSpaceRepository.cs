@@ -13,6 +13,7 @@ using AutoMapper;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -23,75 +24,103 @@ namespace CodeNest.DAL.Repository
     {
         private readonly MongoDbService _mongoDbService;
         private readonly IMapper _mapper;
-        public WorkSpaceRepository(MongoDbService mongoDbService, IMapper mapper)
+        private readonly ILogger<WorkSpaceRepository> _logger;
+
+        public WorkSpaceRepository(MongoDbService mongoDbService, IMapper mapper, ILogger<WorkSpaceRepository> logger)
         {
             _mongoDbService = mongoDbService;
             _mapper = mapper;
+            _logger = logger;
         }
+
+        /// <summary>
+        /// Retrieves the list of workspaces created by a specific user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>A list of workspaces.</returns>
         public async Task<List<WorkspacesDto>> GetWorkspaces(ObjectId userId)
         {
-            // Query Workspaces created by the specific userId
-            List<Workspaces> workspaces = await _mongoDbService.WorkSpaces
-                .AsQueryable()
-                .Where(w => w.CreatedBy == userId)
-                .ToListAsync();
+            _logger.LogInformation("GetWorkspaces: Retrieving workspaces for user.");
 
-            return _mapper.Map<List<WorkspacesDto>>(workspaces);
+            try
+            {
+                List<Workspaces> workspaces = await _mongoDbService.WorkSpaces
+                    .AsQueryable()
+                    .Where(w => w.CreatedBy == userId)
+                    .ToListAsync();
+
+                _logger.LogInformation("GetWorkspaces: Successfully retrieved workspaces.");
+                return _mapper.Map<List<WorkspacesDto>>(workspaces);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetWorkspaces: An error occurred while retrieving workspaces.");
+                throw;
+            }
         }
 
         /// <summary>
-        /// Fetches the Workspace and BlobDatas 
+        /// Fetches the workspaces and associated blob data for a specific user.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns> returns the </returns>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>A list of user workspace files.</returns>
         public async Task<List<UserWorkspaceFilesDto>> GetUserWorkSpace(ObjectId userId)
         {
-            // Query Workspaces created by the specific userId
-            List<Workspaces> workspaces = await _mongoDbService.WorkSpaces
-                .AsQueryable()
-                .Where(w => w.CreatedBy == userId)
-                .ToListAsync();
+            _logger.LogInformation("GetUserWorkSpace: Retrieving user workspaces and associated blob data.");
 
-            // Get workspace IDs for fetching blob data
-            List<ObjectId> workspaceIds = workspaces.Select(w => w.Id).ToList();
+            try
+            {
+                List<Workspaces> workspaces = await _mongoDbService.WorkSpaces
+                    .AsQueryable()
+                    .Where(w => w.CreatedBy == userId)
+                    .ToListAsync();
 
-            // Query BlobData related to the workspace IDs
-            List<BlobData> blobs = await _mongoDbService.BlobDatas
-                .AsQueryable()
-                .Where(b => workspaceIds.Contains(b.Workspaces))
-                .ToListAsync();
+                List<ObjectId> workspaceIds = workspaces.Select(w => w.Id).ToList();
 
-            // Create a list of UserWorkspaceFilesDto using LINQ query syntax
-            List<UserWorkspaceFilesDto> UserWorkSpace =  (from workspace in workspaces
-                          select new UserWorkspaceFilesDto
-                          {
-                              WorkspaceId = workspace.Id,
-                              WorkspaceName = workspace.Name,
-                              WorkspaceDescription = workspace.Description,
-                              Blobs = blobs
-                                  .Where(b => b.Workspaces == workspace.Id)
-                                  .Select(blob => new BlobDto
-                                  {
-                                      Id = blob.Id,
-                                      Name = blob.Name,
-                                      Input = blob.Input,
-                                      Output = blob.Output,
-                                      Type = blob.Type,
-                                      Version = blob.Version
-                                  }).ToList()
-                          }).ToList();
+                List<BlobData> blobs = await _mongoDbService.BlobDatas
+                    .AsQueryable()
+                    .Where(b => workspaceIds.Contains(b.Workspaces))
+                    .ToListAsync();
 
-            return UserWorkSpace;
+                List<UserWorkspaceFilesDto> userWorkSpace = (from workspace in workspaces
+                                                             select new UserWorkspaceFilesDto
+                                                             {
+                                                                 WorkspaceId = workspace.Id,
+                                                                 WorkspaceName = workspace.Name,
+                                                                 WorkspaceDescription = workspace.Description,
+                                                                 Blobs = blobs
+                                                                     .Where(b => b.Workspaces == workspace.Id)
+                                                                     .Select(blob => new BlobDto
+                                                                     {
+                                                                         Id = blob.Id,
+                                                                         Name = blob.Name,
+                                                                         Input = blob.Input,
+                                                                         Output = blob.Output,
+                                                                         Type = blob.Type,
+                                                                         Version = blob.Version
+                                                                     }).ToList()
+                                                             }).ToList();
+
+                _logger.LogInformation("GetUserWorkSpace: Successfully retrieved user workspaces and blob data.");
+                return userWorkSpace;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetUserWorkSpace: An error occurred while retrieving user workspaces and blob data.");
+                throw;
+            }
         }
-        /// <summary>
-        /// Inserting the Newly Created WorkSpaces 
-        /// </summary>
-        /// <param name="workspacesDto"></param>
-        /// <param name="user"></param>
-        /// <returns>returns the inserted Workspaces in <see cref="WorkspacesDto"/> else <see cref="WorkspacesDto=null"/></returns>
-        public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
 
+        /// <summary>
+        /// Inserts a newly created workspace.
+        /// </summary>
+        /// <param name="workspacesDto">The workspace details.</param>
+        /// <param name="user">The user identifier.</param>
+        /// <returns>The inserted workspace details if successful, otherwise null.</returns>
+        public async Task<WorkspacesDto?> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
         {
+            _logger.LogInformation("CreateWorkspace: Attempting to create a new workspace.");
+
             try
             {
                 Workspaces workspaces = new()
@@ -101,13 +130,15 @@ namespace CodeNest.DAL.Repository
                     CreatedBy = user,
                     CreatedOn = DateTime.UtcNow
                 };
-                await _mongoDbService.WorkSpaces
-                    .InsertOneAsync(workspaces);
+
+                await _mongoDbService.WorkSpaces.InsertOneAsync(workspaces);
+                _logger.LogInformation("CreateWorkspace: Successfully created new workspace.");
                 return _mapper.Map<WorkspacesDto>(workspaces);
             }
-            catch
+            catch (Exception ex)
             {
-                return new WorkspacesDto();
+                _logger.LogError(ex, "CreateWorkspace: An error occurred while creating the workspace.");
+                throw;
             }
         }
     }
