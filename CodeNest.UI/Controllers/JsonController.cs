@@ -18,7 +18,7 @@ namespace CodeNest.UI.Controllers
     {
         public IActionResult Index(ObjectId workspace)
         {
-            return ViewComponent("Json",new { workspaceId = workspace});
+            return ViewComponent("Json", new { workspaceId = workspace });
         }
     }
 }

@@ -40,13 +40,11 @@ namespace CodeNest.DAL.Repository
         /// <returns>A list of workspaces.</returns>
         public async Task<List<WorkspacesDto>> GetWorkspaces(ObjectId userId)
         {
-            _logger.LogInformation("GetWorkspaces: Retrieving workspaces for user.");
-
             try
             {
                 List<Workspaces> workspaces = await _mongoDbService.WorkSpaces
                     .AsQueryable()
-                    .Where(w => w.CreatedBy == userId)
+                    .Where(w => w.CreatedBy == userId).OrderByDescending(w => w.CreatedOn)
                     .ToListAsync();
 
                 _logger.LogInformation("GetWorkspaces: Successfully retrieved workspaces.");
@@ -86,9 +84,7 @@ namespace CodeNest.DAL.Repository
                                                              select new UserWorkspaceFilesDto
                                                              {
                                                                  WorkspaceId = workspace.Id,
-                                                                 WorkspaceName = workspace.Name,
-                                                                 WorkspaceDescription = workspace.Description,
-                                                                 Blobs = blobs
+                                                                 BlobsList = blobs
                                                                      .Where(b => b.Workspaces == workspace.Id)
                                                                      .Select(blob => new BlobDto
                                                                      {
