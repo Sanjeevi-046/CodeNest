@@ -1,78 +1,141 @@
+@model CodeNest.DTO.Models.UserWorkspaceFilesDto
+@inject IHttpContextAccessor _httpContextAccessor
 @await Html.PartialAsync("Sections/_Variables")
 @{
-  TempData.Keep();
-  Layout = "_CommonMasterLayout";
+    Console.WriteLine(Model);
+    TempData.Keep();
+    string userName = _httpContextAccessor.HttpContext?.Session.GetString("userName") ?? "User";
+    Layout = "_CommonMasterLayout";
+    ViewData["contentNavbar"] = true;
 
-  ViewData["contentNavbar"] = true;
-
-  @* Display elements *@
-  ViewData["isNavbar"] = (ViewData["isNavbar"] ??= true);
-  ViewData["isMenu"] = (ViewData["isMenu"] ??= true);
-  ViewData["isFlex"] = (ViewData["isFlex"] ??= false);
-  @* ViewData["customizerHidden"] = (ViewData["customizerHidden"] ??= "customizer-hide"); *@
+    @* Display elements *@
+    ViewData["isMenu"] = (ViewData["isMenu"] ??= true);
+    ViewData["isFlex"] = (ViewData["isFlex"] ??= false);
+    @* ViewData["customizerHidden"] = (ViewData["customizerHidden"] ??= "customizer-hide"); *@
 
 
-  @*HTML Classes *@
-  ViewData["navbarDetached"] = (ViewData["navbarDetached"] ?? "navbar-detached");
+    @*HTML Classes *@
+    ViewData["navbarDetached"] = (ViewData["navbarDetached"] ?? "navbar-detached");
 
-  @*Content classes *@
-  ViewData["container"] = (ViewData["container"] ?? "container-xxl");
-  ViewData["containerNav"] = (ViewData["containerNav"] ?? "container-xxl");
+    @*Content classes *@
+    ViewData["container"] = (ViewData["container"] ?? "container-xxl");
+    ViewData["containerNav"] = (ViewData["containerNav"] ?? "container-xxl");
 }
 
-@section VendorStyles{ @RenderSection("VendorStyles", required: false) }
+@section VendorStyles {
+    @RenderSection("VendorStyles", required: false)
+}
 
-@section PageStyles{ @RenderSection("PageStyles", required: false) }
+@section PageStyles {
+    @RenderSection("PageStyles", required: false)
+}
 
-@section VendorScripts{ @RenderSection("VendorScripts", required: false) }
+@section VendorScripts {
+    @RenderSection("VendorScripts", required: false)
+}
 
-@section PageScripts{ @RenderSection("PageScripts", required: false) }
+@section PageScripts {
+    @RenderSection("PageScripts", required: false)
+}
 @RenderSection("Scripts", required: false)
 
 
 @{
-  bool isMenu = ViewData["isMenu"] != null && Convert.ToBoolean(ViewData["isMenu"]);
+    bool isMenu = ViewData["isMenu"] != null && Convert.ToBoolean(ViewData["isMenu"]);
 }
+<!--NavBar Start-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false"> WorkSpace </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                        <li>
+                            <a class="dropdown-item" asp-action="Create" asp-controller="WorkSpace">
+                                <i class="bx bx-user bx-md me-2"></i>
+                                <span>Create WorkSpace</span>
+                            </a>
+                        </li>
+                        @if (Model?.Workspaces.Count > 0)
+                        {
+                            @foreach (var workspace in Model.Workspaces)
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-action="JsonFormatter" asp-controller="Formatter" asp-route-userId="@workspace.CreatedBy" asp-route-workSpaceId="@workspace.Id">
+                                        <i class="bx bx-user bx-md me-2"></i>
+                                        <span>@workspace.Name</span>
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li><a class="dropdown-item" href="javascript:void(0);">No Workspaces Available</a></li>
+                        }
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @userName
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="javascript:void(0);">
+                                <i class="bx bx-user bx-md me-2"></i>
+                                <span>My Profile</span>
+                            </a>
+                        </li>
+                        <li><div class="dropdown-divider my-1"></div></li>
+                        <li>
+                            <a class="dropdown-item" asp-action="Logout" asp-controller="Auth">
+                                <i class="bx bx-power-off bx-md me-2"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!--NavBar End-->
 
 <div class='layout-wrapper layout-content-navbar @(isMenu ? "" : "layout-without-menu")'>
-  <div class='layout-container'>
+    <div class='layout-container'>
 
-    @if (isMenu)
-    {
-      @await Html.PartialAsync("Sections/Menu/_VerticalMenu")
-    }
+        @if (isMenu)
+        {
+            @await Html.PartialAsync("~/Views/Formatter/_Vertical.cshtml", Model?.BlobsList)
+        }
 
-    <!-- Layout page -->
-    <div class="layout-page">
-      <!-- Navbar -->
-      @if (@ViewData["isNavbar"] != null && Convert.ToBoolean(@ViewData["isNavbar"]))
-      {
-        @await Html.PartialAsync("Sections/Navbar/_Navbar")
-      }
-      <!-- / Navbar -->
+        <!-- Layout page -->
+        <div class="layout-page">
 
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
 
-      <!-- Content wrapper -->
-      <div class="content-wrapper">
+                <!-- Content -->
+                <div class='@ViewData["container"] @(Convert.ToBoolean(@ViewData["isFlex"]) ? "d-flex align-items-stretch flex-grow-1 p-0" : "flex-grow-1 container-p-y")'>
+                    @RenderBody()
+                </div>
+                <!-- / Content -->
 
-        <!-- Content -->
-        <div class='@ViewData["container"] @(Convert.ToBoolean(@ViewData["isFlex"]) ? "d-flex align-items-stretch flex-grow-1 p-0" : "flex-grow-1 container-p-y")'>
-          @RenderBody()
+                <div class="content-backdrop fade"></div>
+            </div>
+            <!--/ Content wrapper -->
         </div>
-        <!-- / Content -->
-
-        <div class="content-backdrop fade"></div>
-      </div>
-      <!--/ Content wrapper -->
+        <!-- / Layout page -->
     </div>
-    <!-- / Layout page -->
-  </div>
 
-  <!-- Overlay -->
-  @if (@ViewData["isMenu"] != null && Convert.ToBoolean(@ViewData["isMenu"]))
-  {
-    <div class="layout-overlay layout-menu-toggle"></div>
-  }
-  <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-  <div class="drag-target"></div>
+    <!-- Overlay -->
+    @if (@ViewData["isMenu"] != null && Convert.ToBoolean(@ViewData["isMenu"]))
+    {
+        <div class="layout-overlay layout-menu-toggle"></div>
+    }
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
 </div>

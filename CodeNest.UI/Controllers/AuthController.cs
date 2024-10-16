@@ -40,7 +40,7 @@ namespace CodeNest.UI.Controllers
             {
                 _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
-                return RedirectToAction("Index", "Home", new { userId = result.Id });
+                return RedirectToAction("JsonFormatter", "Formatter", new { userId = result.Id });
             }
 
             return View();

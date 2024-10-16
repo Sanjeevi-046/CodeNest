@@ -1,13 +1,53 @@
-﻿@model CodeNest.DTO.Models.BlobDto
+﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @inject IHttpContextAccessor _httpContextAccessor
+@using MongoDB.Bson
 @{
-    string? workSpace = _httpContextAccessor.HttpContext.Session.GetString("workspaceId");
+    //Console.WriteLine(typeof(Model.WorkspaceId));
+}
+@if (Model.WorkspaceId == null)
+{
+    <div class="col-lg-4 col-md-6">
+        <div class="mt-4">
+            <!-- Modal -->
+            <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalCenterTitle">WorkSpace</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form asp-action="Create" asp-controller="WorkSpace" method="post">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col mb-6">
+                                        <label  class="form-label">Name</label>
+                                        <input type="text" name="Name" class="form-control" placeholder="Enter the Name">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col mb-6">
+                                        <label  class="form-label">Description</label>
+                                        <input type="text" name="Description" class="form-control" placeholder="Enter the Description...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
 
 <div class="container-fluid text-center">
     <div class="card">
         <div class="card-header">
-            @if (TempData["Success"] != null)
+            @* @if (TempData["Success"] != null)
             {
                 <div class="alert alert-success" role="alert">
                     @TempData["Success"]
@@ -18,15 +58,17 @@
                 <div class="alert alert-danger" role="alert">
                     @TempData["Error"]
                 </div>
-            }
+            } *@
         </div>
         <div class="card-body">
             <form id="jsonForm" method="post">
+                <input type="hidden" name="UserId" value="@Model.UserId" />
+                <input type="hidden" name="WorkspaceId" value="@Model.WorkspaceId" />
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="Input" rows="23" class="form-control" placeholder="Enter JSON data">@Model?.Input</textarea>
+                        <textarea id="inputJson" name="Input" rows="23" class="form-control" placeholder="Enter JSON data">@Model?.Blob?.Input</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
@@ -47,7 +89,7 @@
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Formatted JSON</h5>
-                        <textarea id="formattedJson" name="Output" rows="23" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Output</textarea>
+                        <textarea id="formattedJson" name="Output" rows="23" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Blob?.Output</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
                         </div>
@@ -86,10 +128,17 @@
 
 @section Scripts {
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
+                keyboard: false
+            });
+            myModal.show();
+        });
         // Function to check if workspaceId exists and handle saving
         function checkWorkspaceAndSave() {
-            const workspaceId = '@workSpace';
+            const model = '@Model?.WorkspaceId';
 
+            const workspaceId = model.workspaceId;
             if (workspaceId === '' || workspaceId === null) {
                 // Open the modal to enter Workspace Name and Description
                 var modal = new bootstrap.Modal(document.getElementById('workspaceModal'), {});

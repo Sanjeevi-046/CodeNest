@@ -84,7 +84,7 @@ namespace CodeNest.DAL.Repository
                                                              select new UserWorkspaceFilesDto
                                                              {
                                                                  WorkspaceId = workspace.Id,
-                                                                 Blobs = blobs
+                                                                 BlobsList = blobs
                                                                      .Where(b => b.Workspaces == workspace.Id)
                                                                      .Select(blob => new BlobDto
                                                                      {

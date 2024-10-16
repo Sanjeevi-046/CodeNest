@@ -46,7 +46,7 @@ namespace CodeNest.UI.Controllers
                 UserId = userId,
                 WorkspaceId = workspaceObjectId,
                 Workspaces = workspaces,
-                Blobs = jsonData
+                BlobsList = jsonData
             };
 
             return View(userWorkspace);

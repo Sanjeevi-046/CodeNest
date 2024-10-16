@@ -17,7 +17,9 @@ namespace CodeNest.DTO.Models
     {
         public ObjectId? UserId { get; set; }
         public ObjectId? WorkspaceId { get; set; }
-        public List<BlobDto>? Blobs { get; set; }
+        public ObjectId? BlobId { get; set; }
+        public List<BlobDto>? BlobsList { get; set; }
         public List<WorkspacesDto>? Workspaces { get; set; }
+        public BlobDto? Blob { get; set; }
     }
 }
