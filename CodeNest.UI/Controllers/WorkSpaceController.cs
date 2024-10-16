@@ -40,7 +40,11 @@ namespace CodeNest.UI.Controllers
             List<WorkspacesDto> workspaces = await _workspaceService.GetWorkspaces(new ObjectId(user));
             return Json(new { workspaces });
         }
-
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Create(WorkspacesDto workspace)
         {

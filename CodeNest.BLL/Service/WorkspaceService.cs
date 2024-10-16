@@ -9,14 +9,10 @@
 //
 // ***********************************************************************************************
 
-using AutoMapper;
-using CodeNest.DAL.Context;
-using CodeNest.DAL.Models;
 using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
-using MongoDB.Driver;
 namespace CodeNest.BLL.Service
 {
     public class WorkspaceService : IWorkspaceService
@@ -37,11 +33,10 @@ namespace CodeNest.BLL.Service
         /// <returns>A list of workspaces.</returns>
         public async Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user)
         {
-            _logger.LogInformation("GetWorkspaces: Retrieving workspaces for user.");
-
             try
             {
-                List<WorkspacesDto> userWorkspace = await _workSpaceRepository.GetWorkspaces(user);
+                List<WorkspacesDto> userWorkspace = await _workSpaceRepository
+                    .GetWorkspaces(user);
                 _logger.LogInformation("GetWorkspaces: Successfully retrieved workspaces.");
                 return userWorkspace;
             }

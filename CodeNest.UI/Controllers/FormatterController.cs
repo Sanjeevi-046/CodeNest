@@ -10,7 +10,6 @@
 // ***********************************************************************************************
 
 using CodeNest.BLL.Service;
-using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -29,10 +28,8 @@ namespace CodeNest.UI.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IActionResult> JsonFormatter()
+        public IActionResult JsonFormatter()
         {
-            // Simulate an asynchronous operation to avoid CS1998 warning
-            await Task.CompletedTask;
             return View();
         }
 
@@ -77,6 +74,7 @@ namespace CodeNest.UI.Controllers
                     {
                         _httpContextAccessor.HttpContext.Session.SetString("workspaceId", workSpaceId);
                     }
+
                     workspaceId = HttpContext.Session.GetString("workspaceId");
                 }
             }

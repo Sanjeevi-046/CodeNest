@@ -22,7 +22,7 @@ namespace CodeNest.BLL.AutoMapper
             _ = CreateMap<UsersDto, Users>().ReverseMap();
             _ = CreateMap<Workspaces, WorkspacesDto>().ReverseMap();
             _ = CreateMap<BlobDto, BlobData>().ReverseMap();
-           
+
         }
     }
 }

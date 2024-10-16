@@ -39,8 +39,6 @@ namespace CodeNest.DAL.Repository
         /// <returns>A list of JSON data.</returns>
         public async Task<List<BlobDto>> GetJsonList(ObjectId workspaceId)
         {
-            _logger.LogInformation("GetJsonList: Retrieving JSON list for workspace.");
-
             try
             {
                 List<BlobData> jsonData = await _mongoDbService.BlobDatas

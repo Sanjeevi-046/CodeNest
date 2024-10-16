@@ -9,9 +9,11 @@
 //
 // ***********************************************************************************************
 
+using CodeNest.BLL.Service;
 using CodeNest.DTO.Models;
 using CodeNest.UI.Models;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using System.Diagnostics;
 
 namespace CodeNest.UI.Controllers
@@ -19,15 +21,35 @@ namespace CodeNest.UI.Controllers
     public class HomeController : Controller
     {
         public ILogger<HomeController> Logger;
+        private readonly IWorkspaceService _workspaceService;
+        private readonly IJsonService _jsonService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IWorkspaceService workspaceService, IJsonService jsonService)
         {
             Logger = logger;
+            _workspaceService = workspaceService;
+            _jsonService = jsonService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(ObjectId userId, ObjectId? workSpaceId)
         {
-            return View();
+            List<WorkspacesDto> workspaces = await _workspaceService
+                .GetWorkspaces(userId);
+
+            ObjectId workspaceObjectId = workSpaceId == null || workSpaceId == ObjectId.Empty
+            ? workspaces[0].Id : workSpaceId.Value;
+
+            List<BlobDto> jsonData = await _jsonService.GetJson(workspaceObjectId);
+
+            UserWorkspaceFilesDto userWorkspace = new()
+            {
+                UserId = userId,
+                WorkspaceId = workspaceObjectId,
+                Workspaces = workspaces,
+                Blobs = jsonData
+            };
+
+            return View(userWorkspace);
         }
 
         public IActionResult Privacy()

@@ -5,8 +5,8 @@
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: This repository provides functionalities to manage user data, including retrieval,
-//  login, and registration of users.
+//  Description: Sample Description.
+//
 // ***********************************************************************************************
 
 using AutoMapper;

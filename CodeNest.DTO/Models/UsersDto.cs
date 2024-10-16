@@ -19,7 +19,7 @@ namespace CodeNest.DTO.Models
     {
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; } 
+        public ObjectId Id { get; set; }
         [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "Name must be alphabetic characters.")]
         [Required(ErrorMessage = "Name is required")]
         [BsonElement("Name")]
@@ -56,6 +56,6 @@ namespace CodeNest.DTO.Models
         public string Country { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public List<ObjectId>? Workspaces { get; set; } 
+        public List<ObjectId>? Workspaces { get; set; }
     }
 }
