@@ -112,7 +112,7 @@ namespace CodeNest.DAL.Repository
                 .Find(x=>x.Name == name).FirstOrDefaultAsync();
             return _mapper.Map<WorkspacesDto>(workspaces);
         }
- 
+
         /// <summary>
         /// Inserts a newly created workspace.
         /// </summary>
@@ -124,7 +124,7 @@ namespace CodeNest.DAL.Repository
             try
             {
                 WorkspacesDto workSpace = await this.GetWorkspacebyName(workspacesDto.Name);
-                if (string.IsNullOrEmpty(workSpace.Name)) 
+                if (workSpace == null || string.IsNullOrEmpty(workSpace.Name))
                 {
                     Workspaces workspaces = new()
                     {
@@ -146,6 +146,7 @@ namespace CodeNest.DAL.Repository
                 throw;
             }
         }
+
         /// <summary>
         /// gets Workspace
         /// </summary>

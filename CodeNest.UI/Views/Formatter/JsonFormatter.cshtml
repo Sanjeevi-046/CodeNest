@@ -30,9 +30,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col mb-6">
-                                        <label  class="form-label">Description</label>
-                                        <input type="text" name="Workspace.Description" class="form-control" placeholder="Enter the Description...">
+                                        <label asp-for="Workspace.Description" class="form-label">Description</label>
+                                        <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
                                     </div>
+
+
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -120,7 +122,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="workspaceDescription" class="form-label">Workspace Description</label>
-                    <input type="text" class="form-control" id="workspaceDescription" placeholder="Enter Workspace Description">
+                    <textarea class="form-control" id="workspaceDescription" placeholder="Enter Workspace Description"></textarea>
                 </div>
             </div>
             <div class="modal-footer">

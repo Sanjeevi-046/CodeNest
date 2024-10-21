@@ -19,10 +19,12 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col mb-6">
-                                        <label asp-for="Workspace.Description" class="form-label">Description</label>
-                                        <input type="text" asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description...">
-                                    </div>
+                                <div class="col mb-6">
+                                    <label asp-for="Workspace.Description" class="form-label">Description</label>
+                                    <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
+                                </div>
+
+
                                 </div>
                             </div>
                             <div class="modal-footer">
