@@ -28,6 +28,7 @@ builder.Services.AddTransient<IWorkspaceService, WorkspaceService>();
 builder.Services.AddTransient<IWorkSpaceRepository, WorkSpaceRepository>();
 builder.Services.AddTransient<IJsonService, JsonService>();
 builder.Services.AddTransient<IJsonRepository, JsonRepository>();
+builder.Services.AddTransient<IFormatterRepository, FormatterRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("", _client =>
 {

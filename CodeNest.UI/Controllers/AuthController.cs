@@ -70,6 +70,7 @@ namespace CodeNest.UI.Controllers
         public IActionResult Logout()
         {
             _httpContextAccessor.HttpContext?.Session.Clear();
+            TempData.Clear();
             return RedirectToAction("Login");
         }
     }

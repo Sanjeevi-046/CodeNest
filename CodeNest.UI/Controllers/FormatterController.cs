@@ -10,8 +10,10 @@
 // ***********************************************************************************************
 
 using CodeNest.BLL.Service;
+using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using MongoDB.Bson;
 namespace CodeNest.UI.Controllers
 {
@@ -19,93 +21,104 @@ namespace CodeNest.UI.Controllers
     {
         private readonly IFormatterServices _formatterServices;
         private readonly IWorkspaceService _workspaceService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IJsonService _jsonService;
 
-        public FormatterController(IFormatterServices formatterServices, IWorkspaceService workspaceService, IHttpContextAccessor httpContextAccessor, IJsonService jsonService)
+        public FormatterController(IFormatterServices formatterServices, IWorkspaceService workspaceService, IJsonService jsonService)
         {
             _formatterServices = formatterServices;
             _workspaceService = workspaceService;
-            _httpContextAccessor = httpContextAccessor;
             _jsonService = jsonService;
         }
-
-        public async Task<IActionResult> JsonFormatter(ObjectId userId, ObjectId? workSpaceId)
+        private async Task<UserWorkspaceFilesDto> GetUserWorkSpaceDetails(ObjectId? workSpaceId, ObjectId userId , ObjectId? blobId = null)
         {
-            List<WorkspacesDto> workspaces = await _workspaceService
+            List<WorkspacesDto> workspaces = new();
+            ObjectId workspaceObjectId = ObjectId.Empty;
+            WorkspacesDto workspace = new ();
+            List<BlobDto> blobsList = new ();
+            if (workSpaceId != null)
+            {
+                workspaces = await _workspaceService
                 .GetWorkspaces(userId);
+                workspaceObjectId = workSpaceId == ObjectId.Empty
+           ? workspaces[0].Id : workSpaceId.Value;
+                workspace = await _workspaceService.GetWorkspace(workspaceObjectId);
+                blobsList = await _jsonService.GetJson(workspaceObjectId);
+            }
 
-            ObjectId workspaceObjectId = workSpaceId == null || workSpaceId == ObjectId.Empty
-            ? workspaces[0].Id : workSpaceId.Value;
+            BlobDto blob = new();
+            if(blobId!=null)
+            {
+                blob = await _formatterServices.GetBlob(blobId.Value);
+            }
 
-            List<BlobDto> blobsList = await _jsonService.GetJson(workspaceObjectId);
-            //_httpContextAccessor.HttpContext.Session.SetString("workspaceId", workspaceObjectId.ToString());
             UserWorkspaceFilesDto userWorkspace = new()
             {
                 UserId = userId,
+                WorkspaceName =workspace.Name,
                 WorkspaceId = workspaceObjectId,
                 Workspaces = workspaces,
-                BlobsList = blobsList
+                BlobsList = blobsList,
+                Blob = blob 
             };
 
-            return View(userWorkspace);
+            return userWorkspace;
+        }
+        public async Task<IActionResult> JsonFormatter(ObjectId userId, ObjectId? workSpaceId=null , ObjectId? blobId = null)
+        {
+            UserWorkspaceFilesDto workSpaceDetails = await this.GetUserWorkSpaceDetails(workSpaceId, userId,blobId);
+            return View(workSpaceDetails);
         }
 
         [HttpPost]
         public async Task<IActionResult> JsonFormatter(UserWorkspaceFilesDto userWorkspaceFiles)
         {
+            UserWorkspaceFilesDto userWorkspaceFilesDto = await this
+                .GetUserWorkSpaceDetails(userWorkspaceFiles.WorkspaceId.Value, userWorkspaceFiles.UserId.Value);
             if (userWorkspaceFiles.Blob == null)
             {
                 TempData["Error"] = "Invalid JSON data.";
-                return View(new BlobDto()); // Return an empty BlobDto
+                return View(userWorkspaceFilesDto); 
             }
 
             ValidationDto result = await _formatterServices.JsonValidate(userWorkspaceFiles.Blob);
             if (result.IsValid)
             {
                 TempData["Success"] = result.Message;
-                return View(result.Blobs); // Pass the validated BlobDto to the view
-            }
+                userWorkspaceFilesDto.Blob = result.Blobs;
 
+                return View(userWorkspaceFilesDto); 
+            }
+            userWorkspaceFilesDto.Blob = userWorkspaceFiles.Blob;
             TempData["Error"] = result.Message;
-            return View(result.Blobs); // Pass the original BlobDto to the view
+            return View(userWorkspaceFilesDto); // Pass the original BlobDto to the view
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveJson(UserWorkspaceFilesDto userWorkspaceDetail, string? Name, string? Description)
         {
-            string? userId = HttpContext.Session.GetString("userId");
-            string? workspaceId = HttpContext.Session.GetString("workspaceId");
-
-            if (workspaceId == null)
+            
+            if (userWorkspaceDetail.WorkspaceId == null)
             {
                 WorkspacesDto workspace = new()
                 {
                     Name = Name,
                     Description = Description,
                 };
-
-                WorkspacesDto result = await _workspaceService.CreateWorkspace(workspace, new ObjectId(userId));
-                if (result != null)
-                {
-                    string workSpaceId = result.Id.ToString();
-                    if (_httpContextAccessor.HttpContext != null)
-                    {
-                        _httpContextAccessor.HttpContext.Session.SetString("workspaceId", workSpaceId);
-                    }
-
-                    workspaceId = HttpContext.Session.GetString("workspaceId");
-                }
+                WorkspacesDto result = await _workspaceService.CreateWorkspace(workspace, userWorkspaceDetail.UserId.Value);
+                userWorkspaceDetail.WorkspaceId = result.Id;
             }
 
-            ValidationDto jsonResult = await _formatterServices.Save(userWorkspaceDetail.Blob, new ObjectId(workspaceId), ObjectId.Parse(userId));
-            if (jsonResult.IsValid)
+            bool jsonResult = await _formatterServices
+                .Save(userWorkspaceDetail.Blob,userWorkspaceDetail.WorkspaceId.Value , userWorkspaceDetail.UserId.Value);
+            if (jsonResult)
             {
-                TempData["Success"] = jsonResult.Message;
-                return RedirectToAction("JsonFormatter", "Formatter");
+                TempData["Success"] = "Success";
+                return RedirectToAction("JsonFormatter", "Formatter", 
+                    new { userId=userWorkspaceDetail.UserId, workSpaceId=userWorkspaceDetail.WorkspaceId });
             }
-
-            return View("JsonFormatter");
+            TempData["Error"] = "Error Occured";
+            return RedirectToAction("JsonFormatter", "Formatter",
+                    new { userId = userWorkspaceDetail.UserId, workSpaceId = userWorkspaceDetail.WorkspaceId });
         }
     }
 }

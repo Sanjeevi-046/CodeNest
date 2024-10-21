@@ -55,25 +55,14 @@ namespace CodeNest.BLL.Service
         /// <returns>The created workspace details.</returns>
         public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
         {
-            _logger.LogInformation("CreateWorkspace: Creating a new workspace.");
-
-            try
-            {
                 WorkspacesDto workSpace = await _workSpaceRepository.CreateWorkspace(workspacesDto, user);
-                if (workSpace != null)
-                {
-                    _logger.LogInformation("CreateWorkspace: Successfully created workspace.");
-                    return workSpace;
-                }
+                return workSpace;
+        }
 
-                _logger.LogWarning("CreateWorkspace: Workspace creation returned null.");
-                return new WorkspacesDto();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "CreateWorkspace: An error occurred while creating workspace.");
-                throw;
-            }
+        public async Task<WorkspacesDto> GetWorkspace(ObjectId id)
+        {
+            WorkspacesDto workspace = await _workSpaceRepository.GetWorkspace(id);
+            return workspace;
         }
     }
 }
