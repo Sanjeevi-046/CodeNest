@@ -1,4 +1,7 @@
 ﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
+
+
+
     <div class="col-lg-4 col-md-6">
         <div class="mt-4">
             <!-- Modal -->
@@ -15,14 +18,17 @@
                                 <div class="row">
                                     <div class="col mb-6">
                                         <label asp-for="Workspace.Name" class="form-label">Name</label>
-                                    <input type="text" asp-for="Workspace.Name" class="form-control" placeholder="Enter the Name">
+                                        <input type="text" asp-for="Workspace.Name" class="form-control" placeholder="Enter the Name">
                                     </div>
                                 </div>
                                 <div class="row">
                                 <div class="col mb-6">
                                     <label asp-for="Workspace.Description" class="form-label">Description</label>
-                                    <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
+                                    <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350" id="descriptionTextarea"></textarea>
+                                    <small id="charCount" class="form-text text-muted" style="position: absolute; right: 10px; bottom: 10px; background: white; padding: 2px;">0/350</small>
+
                                 </div>
+
 
 
                                 </div>
@@ -40,6 +46,18 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var textarea = document.getElementById('descriptionTextarea');
+        var charCount = document.getElementById('charCount');
+
+        textarea.addEventListener('input', function () {
+            charCount.textContent = textarea.value.length + '/350';
+        });
+
+        // Initialize the character count on page load
+        charCount.textContent = textarea.value.length + '/350';
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
             keyboard: false

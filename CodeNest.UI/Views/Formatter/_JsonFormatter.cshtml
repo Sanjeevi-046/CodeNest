@@ -24,7 +24,9 @@
                                 <div class="row">
                                     <div class="col mb-6">
                                         <label class="form-label">Description</label>
-                                        <textarea name="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
+                                        <textarea name="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350" id="workspaceDescription"></textarea>
+                                        <small id="charCount" class="form-text text-muted" style="position: absolute; right: 10px; bottom: 10px; background: white; padding: 2px;">0/350</small>
+
                                     </div>
 
                                 </div>
@@ -112,7 +114,9 @@
                 </div>
                 <div class="mb-3">
                     <label for="workspaceDescription" class="form-label">Workspace Description</label>
-                    <textarea name="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
+                    <textarea name="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350" id="workspaceDescriptionModal"></textarea>
+                    <small id="charCount" class="form-text text-muted" style="position: absolute; right: 10px; bottom: 10px; background: white; padding: 2px;">0/350</small>
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -125,6 +129,21 @@
 
 @section Scripts {
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var textarea = document.getElementById('workspaceDescription');
+            var charCount = document.getElementById('charCount');
+
+            textarea.addEventListener('input', function () {
+                charCount.textContent = textarea.value.length + '/350';
+            });
+
+            // Initialize the character count on page load
+            charCount.textContent = textarea.value.length + '/350';
+        });
+
+
+
+
         document.addEventListener('DOMContentLoaded', function () {
             var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
                 keyboard: false

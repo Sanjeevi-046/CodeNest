@@ -31,8 +31,11 @@
                                 <div class="row">
                                     <div class="col mb-6">
                                         <label asp-for="Workspace.Description" class="form-label">Description</label>
-                                        <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
+                                        <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350" oninput="updateCharCount(this)"></textarea>
+                                        <small id="charCount" class="form-text text-muted" style="position: absolute; right: 10px; bottom: 10px; background: white; padding: 2px;">0/350</small>
+
                                     </div>
+
 
 
                                 </div>
@@ -135,12 +138,20 @@
 
 @section Scripts {
     <script>
+        function updateCharCount(textarea) {
+            const maxLength = textarea.getAttribute('maxlength');
+            const currentLength = textarea.value.length;
+            const charCountElement = document.getElementById('charCount');
+            charCountElement.textContent = `${currentLength}/${maxLength}`;
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
                 keyboard: false
             });
             myModal.show();
         });
+
         // Function to check if workspaceId exists and handle saving
         function checkWorkspaceAndSave() {
             const model = '@Model?.WorkspaceId';
@@ -181,7 +192,7 @@
                 form.appendChild(descriptionInput);
 
                 // Set action URL to SaveJson and submit the form
-                form.action = "/Formatter/SaveJson";
+                form.action = '@Url.Action("SaveJson", "Formatter")';
                 form.submit();
             } else {
                 alert('Please fill out both the Name and Description fields.');
@@ -206,3 +217,4 @@
         }
     </script>
 }
+
