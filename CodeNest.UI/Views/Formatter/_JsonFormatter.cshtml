@@ -1,9 +1,6 @@
 ﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @inject IHttpContextAccessor _httpContextAccessor
 @using MongoDB.Bson
-@{
-    //Console.WriteLine(typeof(Model.WorkspaceId));
-}
 @if (Model.WorkspaceId == null)
 {
     <div class="col-lg-4 col-md-6">
@@ -27,8 +24,9 @@
                                 <div class="row">
                                     <div class="col mb-6">
                                         <label class="form-label">Description</label>
-                                        <input type="text" name="Workspace.Description" class="form-control" placeholder="Enter the Description...">
+                                        <textarea name="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -114,7 +112,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="workspaceDescription" class="form-label">Workspace Description</label>
-                    <input type="text" class="form-control" id="workspaceDescription" placeholder="Enter Workspace Description">
+                    <textarea name="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
