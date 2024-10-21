@@ -1,13 +1,10 @@
 ﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @inject IHttpContextAccessor _httpContextAccessor
+@using MongoDB.Bson
 @{
-    Console.WriteLine(Model.WorkspaceId);
-    if (Model.WorkspaceId == null || Model.WorkspaceId == MongoDB.Bson.ObjectId.Empty)
-    {
-        Console.WriteLine("Not Null");
-    }
+    //Console.WriteLine(typeof(Model.WorkspaceId));
 }
-@if (Model.WorkspaceId == null || Model.WorkspaceId == MongoDB.Bson.ObjectId.Empty)
+@if (Model.WorkspaceId == null)
 {
     <div class="col-lg-4 col-md-6">
         <div class="mt-4">
@@ -16,21 +13,20 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Workspace</h5>
+                            <h5 class="modal-title" id="modalCenterTitle">WorkSpace</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form asp-action="Create" asp-controller="WorkSpace" method="post">
-                            <input type="hidden" name="UserId" value="@Model.UserId" />
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col mb-6">
-                                        <label  class="form-label">Name</label>
+                                        <label class="form-label">Name</label>
                                         <input type="text" name="Workspace.Name" class="form-control" placeholder="Enter the Name">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col mb-6">
-                                        <label  class="form-label">Description</label>
+                                        <label class="form-label">Description</label>
                                         <input type="text" name="Workspace.Description" class="form-control" placeholder="Enter the Description...">
                                     </div>
                                 </div>
@@ -67,13 +63,11 @@
             <form id="jsonForm" method="post">
                 <input type="hidden" name="UserId" value="@Model.UserId" />
                 <input type="hidden" name="WorkspaceId" value="@Model.WorkspaceId" />
-                <input type="hidden" name="Workspaces" value="@Model.Workspaces" />
-                <input type="hidden" name="BlobsList" value="@Model.BlobsList" />
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="Blob.Input" rows="20" class="form-control" placeholder="Enter JSON data">@Model?.Blob?.Input</textarea>
+                        <textarea id="inputJson" name="Blob.Input" rows="23" class="form-control" placeholder="Enter JSON data">@Model?.Blob?.Input</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
@@ -94,7 +88,7 @@
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Formatted JSON</h5>
-                        <textarea id="formattedJson" name="Blob.Output" rows="20" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Blob?.Output</textarea>
+                        <textarea id="formattedJson" name="Blob.Output" rows="23" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Blob?.Output</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
                         </div>
@@ -151,7 +145,7 @@
             } else {
                 // If workspaceId exists, submit the form to SaveJson action
                 var form = document.getElementById('jsonForm');
-                form.action = '@Url.Action("SaveJson", "Formatter")'; // Set action URL dynamically
+                form.action = "/Formatter/SaveJson"; // Set action URL dynamically
                 form.submit();
             }
         }

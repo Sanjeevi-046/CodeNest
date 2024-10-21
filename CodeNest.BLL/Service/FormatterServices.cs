@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ZstdSharp.Unsafe;
 
 namespace CodeNest.BLL.Service
 {
@@ -22,11 +23,13 @@ namespace CodeNest.BLL.Service
     {
         private readonly ILogger<FormatterServices> _logger;
         private readonly IJsonRepository _jsonRepository;
+        private readonly IFormatterRepository _formatterRepository;
 
-        public FormatterServices(ILogger<FormatterServices> logger, IJsonRepository jsonRepository)
+        public FormatterServices(ILogger<FormatterServices> logger, IJsonRepository jsonRepository, IFormatterRepository formatterRepository)
         {
             _logger = logger;
             _jsonRepository = jsonRepository;
+            _formatterRepository = formatterRepository;
         }
 
         /// <summary>
@@ -108,7 +111,7 @@ namespace CodeNest.BLL.Service
         /// <param name="workSpace">The workspace identifier.</param>
         /// <param name="user">The user identifier.</param>
         /// <returns>A ValidationDto indicating whether the save operation was successful and any relevant messages.</returns>
-        public async Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user)
+        public async Task<bool> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user)
         {
             _logger.LogInformation("Save: Starting save operation.");
 
@@ -117,11 +120,7 @@ namespace CodeNest.BLL.Service
                 if (jsonDto == null)
                 {
                     _logger.LogWarning("Save: Received null JsonDto.");
-                    return new ValidationDto
-                    {
-                        IsValid = false,
-                        Message = "Data cannot be null."
-                    };
+                    return true;
                 }
 
                 bool saveResult = await _jsonRepository.SaveAsync(jsonDto, workSpace, user);
@@ -129,31 +128,29 @@ namespace CodeNest.BLL.Service
                 if (saveResult)
                 {
                     _logger.LogInformation("Save: Successfully saved JSON data.");
-                    return new ValidationDto
-                    {
-                        IsValid = true,
-                        Message = "Data saved successfully."
-                    };
+                    return true;
                 }
                 else
                 {
                     _logger.LogError("Save: Failed to save JSON data.");
-                    return new ValidationDto
-                    {
-                        IsValid = false,
-                        Message = "Failed to save data."
-                    };
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Save: An unexpected error occurred.");
-                return new ValidationDto
-                {
-                    IsValid = false,
-                    Message = "An unexpected error occurred."
-                };
+                return false;
             }
+        }
+        /// <summary>
+        /// gets blob data
+        /// </summary>
+        /// <param name="blobId"></param>
+        /// <returns></returns>
+        public async Task<BlobDto> GetBlob(ObjectId blobId)
+        {
+            BlobDto blobDto = await _formatterRepository.GetBlob(blobId);
+            return blobDto;
         }
     }
 }

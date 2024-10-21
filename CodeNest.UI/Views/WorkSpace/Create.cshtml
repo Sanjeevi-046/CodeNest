@@ -1,5 +1,47 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
+    <div class="col-lg-4 col-md-6">
+        <div class="mt-4">
+            <!-- Modal -->
+            <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalCenterTitle">Workspace</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form asp-action="Create" asp-controller="WorkSpace" method="post">
+                            <input type="hidden" name="UserId" value="@Model.UserId" />
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col mb-6">
+                                        <label asp-for="Workspace.Name" class="form-label">Name</label>
+                                    <input type="text" asp-for="Workspace.Name" class="form-control" placeholder="Enter the Name">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col mb-6">
+                                        <label asp-for="Workspace.Description" class="form-label">Description</label>
+                                        <input type="text" asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
+            keyboard: false
+        });
+        myModal.show();
+    });
+</script>

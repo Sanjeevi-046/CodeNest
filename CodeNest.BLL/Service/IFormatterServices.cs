@@ -17,6 +17,7 @@ namespace CodeNest.BLL.Service
     public interface IFormatterServices
     {
         Task<ValidationDto> JsonValidate(BlobDto jsonDto);
-        Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user);
+        Task<bool> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user);
+        Task<BlobDto> GetBlob(ObjectId blobId);
     }
 }

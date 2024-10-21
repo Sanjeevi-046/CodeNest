@@ -9,19 +9,13 @@
 //
 // ***********************************************************************************************
 
+using CodeNest.DTO.Models;
 using MongoDB.Bson;
 
-namespace CodeNest.DTO.Models
+namespace CodeNest.DAL.Repository
 {
-    public class UserWorkspaceFilesDto
+    public interface IFormatterRepository
     {
-        public ObjectId? UserId { get; set; }
-        public ObjectId? WorkspaceId { get; set; }
-        public String? WorkspaceName {  get; set; }
-        public ObjectId? BlobId { get; set; }
-        public List<BlobDto>? BlobsList { get; set; }
-        public List<WorkspacesDto>? Workspaces { get; set; }
-        public BlobDto? Blob { get; set; }
-        public WorkspacesDto? Workspace { get; set; }
+       Task<BlobDto> GetBlob(ObjectId blobId);
     }
 }

@@ -106,7 +106,13 @@ namespace CodeNest.DAL.Repository
                 throw;
             }
         }
-
+        public async Task<WorkspacesDto> GetWorkspacebyName(string name)
+        {
+            Workspaces workspaces = await _mongoDbService.WorkSpaces
+                .Find(x=>x.Name == name).FirstOrDefaultAsync();
+            return _mapper.Map<WorkspacesDto>(workspaces);
+        }
+ 
         /// <summary>
         /// Inserts a newly created workspace.
         /// </summary>
@@ -115,27 +121,42 @@ namespace CodeNest.DAL.Repository
         /// <returns>The inserted workspace details if successful, otherwise null.</returns>
         public async Task<WorkspacesDto?> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
         {
-            _logger.LogInformation("CreateWorkspace: Attempting to create a new workspace.");
-
             try
             {
-                Workspaces workspaces = new()
+                WorkspacesDto workSpace = await this.GetWorkspacebyName(workspacesDto.Name);
+                if (string.IsNullOrEmpty(workSpace.Name)) 
                 {
-                    Name = workspacesDto.Name,
-                    Description = workspacesDto.Description,
-                    CreatedBy = user,
-                    CreatedOn = DateTime.UtcNow
-                };
+                    Workspaces workspaces = new()
+                    {
+                        Name = workspacesDto.Name,
+                        Description = workspacesDto.Description,
+                        CreatedBy = user,
+                        CreatedOn = DateTime.UtcNow
+                    };
 
-                await _mongoDbService.WorkSpaces.InsertOneAsync(workspaces);
-                _logger.LogInformation("CreateWorkspace: Successfully created new workspace.");
-                return _mapper.Map<WorkspacesDto>(workspaces);
+                    await _mongoDbService.WorkSpaces.InsertOneAsync(workspaces);
+                    _logger.LogInformation("CreateWorkspace: Successfully created new workspace.");
+                    return _mapper.Map<WorkspacesDto>(workspaces);
+                }
+                return null;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "CreateWorkspace: An error occurred while creating the workspace.");
                 throw;
             }
+        }
+        /// <summary>
+        /// gets Workspace
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>r<see cref="WorkspacesDto"/></returns>
+        public async Task<WorkspacesDto> GetWorkspace(ObjectId id)
+        {
+            Workspaces workspace = await _mongoDbService.WorkSpaces
+                .Find(x=>x.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<WorkspacesDto>(workspace);
+                  
         }
     }
 }
