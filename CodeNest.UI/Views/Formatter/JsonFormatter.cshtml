@@ -24,20 +24,18 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col mb-6">
-                                        <label  class="form-label">Name</label>
-                                        <input type="text" name="Workspace.Name" class="form-control" placeholder="Enter the Name">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" name="WorkspaceName" class="form-control" placeholder="Enter the Name" required>
+                                        <span class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col mb-6">
-                                        <label asp-for="Workspace.Description" class="form-label">Description</label>
-                                        <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350" oninput="updateCharCount(this)"></textarea>
+                                        <label class="form-label">Description</label>
+                                        <textarea name="WorkspaceDescription" class="form-control" placeholder="Enter the Description..." maxlength="350" oninput="updateCharCount(this)" required></textarea>
                                         <small id="charCount" class="form-text text-muted" style="position: absolute; right: 10px; bottom: 10px; background: white; padding: 2px;">0/350</small>
-
+                                        <span class="text-danger"></span>
                                     </div>
-
-
-
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -78,10 +76,14 @@
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="Blob.Input" rows="20" class="form-control" placeholder="Enter JSON data">@Model?.Blob?.Input</textarea>
+                        <textarea id="inputJson" name="Blob.Input" rows="20" class="form-control" placeholder="Enter JSON data" required>@Model?.Blob?.Input</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
+                        @if (Model?.Blob?.Input != null)
+                        {
+                            <span class="text-danger"></span>
+                        }
                     </div>
 
                     <!-- Actions Column -->
@@ -103,6 +105,10 @@
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
                         </div>
+                        @if (Model?.Blob?.Output != null)
+                        {
+                            <span class="text-danger"></span>
+                        }
                     </div>
                 </div>
             </form>
@@ -121,11 +127,13 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="workspaceName" class="form-label">Workspace Name</label>
-                    <input type="text" class="form-control" id="workspaceName" placeholder="Enter Workspace Name">
+                    <input type="text" class="form-control" id="workspaceName" placeholder="Enter Workspace Name" required>
+                    <span class="text-danger" id="workspaceNameError"></span>
                 </div>
                 <div class="mb-3">
                     <label for="workspaceDescription" class="form-label">Workspace Description</label>
-                    <textarea class="form-control" id="workspaceDescription" placeholder="Enter Workspace Description"></textarea>
+                    <textarea class="form-control" id="workspaceDescription" placeholder="Enter Workspace Description" required></textarea>
+                    <span class="text-danger" id="workspaceDescriptionError"></span>
                 </div>
             </div>
             <div class="modal-footer">
@@ -217,4 +225,3 @@
         }
     </script>
 }
-

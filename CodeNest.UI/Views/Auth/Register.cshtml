@@ -32,10 +32,12 @@
                             <div class="col-md-6">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="name" name="Name" placeholder="Enter your name" value="@Model?.Name" required pattern="^[A-Za-z\s]+$" title="Name must be alphabetic characters.">
+                                <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="firstName" class="form-label">First Name</label>
                                 <input type="text" class="form-control" id="firstName" name="FirstName" placeholder="Enter your first name" value="@Model?.FirstName" required pattern="^[A-Za-z\s]+$" title="First name must be alphabetic characters.">
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                         </div>
 
@@ -43,10 +45,12 @@
                             <div class="col-md-6">
                                 <label for="lastName" class="form-label">Last Name</label>
                                 <input type="text" class="form-control" id="lastName" name="LastName" placeholder="Enter your last name" value="@Model?.LastName" required pattern="^[A-Za-z\s]+$" title="Last name must be alphabetic characters.">
+                                <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="Email" placeholder="Enter your email" value="@Model?.Email" required maxlength="50" title="Invalid email address!">
+                                <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                         </div>
 
@@ -54,16 +58,19 @@
                             <div class="col-md-6">
                                 <label for="mobileNumber" class="form-label">Mobile Number</label>
                                 <input type="text" class="form-control" id="mobileNumber" name="MobileNumber" placeholder="Enter your mobile number" value="@Model?.MobileNumber" required maxlength="10" pattern="^\d{10}$" title="Mobile number must be exactly 10 digits.">
+                                <span asp-validation-for="MobileNumber" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="country" class="form-label">Country</label>
                                 <input type="text" class="form-control" id="country" name="Country" placeholder="Enter your country" value="@Model?.Country" required maxlength="50" pattern="^[A-Za-z\s]{1,50}$" title="Country must be up to 50 alphabetic characters.">
+                                <span asp-validation-for="Country" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-6">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="Password" placeholder="Enter your password" title="Password must be minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character!">
+                            <input type="password" class="form-control" id="password" name="Password" placeholder="Enter your password" required title="Password must be minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character!">
+                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
                         <div class="my-8">
@@ -73,6 +80,7 @@
                                     I agree to
                                     <a href="javascript:void(0);">privacy policy & terms</a>
                                 </label>
+                               
                             </div>
                         </div>
                         <button class="btn btn-primary d-grid w-100">
