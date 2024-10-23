@@ -25,17 +25,19 @@
           </div>
           <!-- /Logo -->
           <h4 class="mb-1 justify-content-center">Login</h4>
-                    <form id="formAuthentication" class="mb-6" asp-action="Login" asp-controller="Auth" method="POST">
+          <form id="formAuthentication" class="mb-6" asp-action="Login" asp-controller="Auth" method="POST">
             <div class="mb-6">
               <label for="email" class="form-label">Email or Username</label>
-              <input type="text" class="form-control" id="email" asp-for="Name" placeholder="Enter your email or username" autofocus>
+              <input type="text" class="form-control" id="email" asp-for="Name" placeholder="Enter your email or username" required autofocus>
+              <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="mb-6 form-password-toggle">
               <label class="form-label" for="password">Password</label>
               <div class="input-group input-group-merge">
-                <input type="password" id="password" class="form-control" asp-for="Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                <input type="password" id="password" class="form-control" asp-for="Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" required />
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
               </div>
+              <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="mb-8">
               <div class="d-flex justify-content-between mt-8">

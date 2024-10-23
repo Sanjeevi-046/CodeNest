@@ -18,6 +18,7 @@ namespace CodeNest.BLL.Service
     {
         Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user);
         Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user);
-        Task<WorkspacesDto> GetWorkspace(ObjectId id);
+
+        Task<WorkspacesDto?> GetWorkspaceByName(ObjectId user, string workspaceName);
     }
 }

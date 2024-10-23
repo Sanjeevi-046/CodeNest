@@ -1,53 +1,5 @@
 ﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @inject IHttpContextAccessor _httpContextAccessor
-@{
-    Console.WriteLine(Model.WorkspaceId);
-    if (Model.WorkspaceId == null || Model.WorkspaceId == MongoDB.Bson.ObjectId.Empty)
-    {
-        Console.WriteLine("Not Null");
-    }
-}
-@if (Model.WorkspaceId == null || Model.WorkspaceId == MongoDB.Bson.ObjectId.Empty)
-{
-    <div class="col-lg-4 col-md-6">
-        <div class="mt-4">
-            <!-- Modal -->
-            <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Workspace</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form asp-action="Create" asp-controller="WorkSpace" method="post">
-                            <input type="hidden" name="UserId" value="@Model.UserId" />
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col mb-6">
-                                        <label  class="form-label">Name</label>
-                                        <input type="text" name="Workspace.Name" class="form-control" placeholder="Enter the Name">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col mb-6">
-                                        <label asp-for="Workspace.Description" class="form-label">Description</label>
-                                        <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                                <input type="submit" class="btn btn-primary" value="Save" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
 <div class="container-fluid text-center">
     <div class="card">
@@ -58,7 +10,7 @@
                     @TempData["Success"]
                 </div>
             }
-            else if (TempData["Error"] != null)
+            @if (TempData["Error"] != null)
             {
                 <div class="alert alert-danger" role="alert">
                     @TempData["Error"]
@@ -69,13 +21,11 @@
             <form id="jsonForm" method="post">
                 <input type="hidden" name="UserId" value="@Model.UserId" />
                 <input type="hidden" name="WorkspaceId" value="@Model.WorkspaceId" />
-                <input type="hidden" name="Workspaces" value="@Model.Workspaces" />
-                <input type="hidden" name="BlobsList" value="@Model.BlobsList" />
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="Blob.Input" rows="20" class="form-control" placeholder="Enter JSON data">@Model?.Blob?.Input</textarea>
+                        <textarea id="inputJson" name="Blob.Input" rows="20" class="form-control" placeholder="Enter JSON data" required>@Model?.Blob?.Input</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
@@ -106,28 +56,25 @@
         </div>
     </div>
 </div>
-
-<!-- Modal for Workspace Information -->
-<div class="modal fade" id="workspaceModal" tabindex="-1" aria-labelledby="workspaceModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="filenameInputModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="workspaceModalLabel">Enter Workspace Details</h5>
+                <h5 class="modal-title" id="filenameInputModalTitle">Enter Filename</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label for="workspaceName" class="form-label">Workspace Name</label>
-                    <input type="text" class="form-control" id="workspaceName" placeholder="Enter Workspace Name">
-                </div>
-                <div class="mb-3">
-                    <label for="workspaceDescription" class="form-label">Workspace Description</label>
-                    <textarea class="form-control" id="workspaceDescription" placeholder="Enter Workspace Description"></textarea>
+                <div class="row">
+                    <div class="col mb-6">
+                        <label class="form-label">Filename</label>
+                        <input type="text" id="filenameInput" class="form-control" placeholder="Enter the Filename" required>
+                        <span class="text-danger" id="filenameError"></span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitForm()">Save</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveJsonWithFilename()">Save</button>
             </div>
         </div>
     </div>
@@ -135,71 +82,85 @@
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
-                keyboard: false
-            });
-            myModal.show();
-        });
-        // Function to check if workspaceId exists and handle saving
+
         function checkWorkspaceAndSave() {
-            const model = '@Model?.WorkspaceId';
+            var userId = document.querySelector('input[name="UserId"]').value;
+            var workspaceId = document.querySelector('input[name="WorkspaceId"]').value;
+            var inputJson = document.getElementById('inputJson').value;
+            var outputJson = document.getElementById('formattedJson').value;
 
-            const workspaceId = model.workspaceId;
-            if (workspaceId === '' || workspaceId === null) {
-                // Open the modal to enter Workspace Name and Description
-                var modal = new bootstrap.Modal(document.getElementById('workspaceModal'), {});
-                modal.show();
-            } else {
-                // If workspaceId exists, submit the form to SaveJson action
-                var form = document.getElementById('jsonForm');
-                form.action = '@Url.Action("SaveJson", "Formatter")'; // Set action URL dynamically
-                form.submit();
-            }
+            // Store values in a global object for later use
+            window.jsonDataToSave = {
+                userId: userId,
+                workspaceId: workspaceId,
+                inputJson: inputJson,
+                outputJson: outputJson
+            };
+
+            // Show the filename input modal
+            var filenameInputModal = new bootstrap.Modal(document.getElementById('filenameInputModal'));
+            filenameInputModal.show();
         }
 
-        // Function to submit the form after filling Workspace details in the modal
-        function submitForm() {
-            const workspaceName = document.getElementById('workspaceName').value;
-            const workspaceDescription = document.getElementById('workspaceDescription')?.value;
+        function saveJsonWithFilename() {
+            var filename = document.getElementById('filenameInput').value;
+            var filenameError = document.getElementById('filenameError');
 
-            if (workspaceName && workspaceDescription) {
-                // Append hidden fields to the form to include workspace details
-                const form = document.getElementById('jsonForm');
-
-                const nameInput = document.createElement('input');
-                nameInput.type = 'hidden';
-                nameInput.name = 'Name';
-                nameInput.value = workspaceName;
-
-                const descriptionInput = document.createElement('input');
-                descriptionInput.type = 'hidden';
-                descriptionInput.name = 'Description';
-                descriptionInput.value = workspaceDescription;
-
-                form.appendChild(nameInput);
-                form.appendChild(descriptionInput);
-
-                // Set action URL to SaveJson and submit the form
-                form.action = "/Formatter/SaveJson";
-                form.submit();
+            if (!filename) {
+                filenameError.textContent = "Filename is required.";
+                return;
             } else {
-                alert('Please fill out both the Name and Description fields.');
+                filenameError.textContent = "";
             }
+
+            var formData = new FormData();
+            formData.append("UserId", window.jsonDataToSave.userId);
+            formData.append("WorkspaceId", window.jsonDataToSave.workspaceId);
+            formData.append("Blob.Input", window.jsonDataToSave.inputJson);
+            formData.append("Blob.Output", window.jsonDataToSave.outputJson);
+            formData.append("Filename", filename);
+
+            fetch('/Formatter/SaveJson', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                        showTempDataMessage("JSON saved successfully.", "alert-success");
+                    } else {
+                        showTempDataMessage("Error saving JSON: " + data.message, "alert-danger");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showTempDataMessage("An error occurred while saving JSON.", "alert-danger");
+                });
+
+            // Hide the modal after saving
+            var filenameInputModal = bootstrap.Modal.getInstance(document.getElementById('filenameInputModal'));
+            filenameInputModal.hide();
         }
 
-        // Function to minify the JSON input
+
+        function showTempDataMessage(message, alertClass) {
+            const tempDataMessageElement = document.getElementById('tempDataMessage');
+            tempDataMessageElement.className = 'alert ' + alertClass;
+            tempDataMessageElement.textContent = message;
+            tempDataMessageElement.style.display = 'block';
+        }
+
         function minifyJson() {
             const inputJson = document.getElementById('inputJson').value;
             try {
                 const minifiedJson = JSON.stringify(JSON.parse(inputJson));
                 document.getElementById('inputJson').value = minifiedJson;
             } catch (e) {
-                alert('Invalid JSON');
+                showTempDataMessage('Invalid JSON', 'alert-danger');
             }
         }
 
-        // Function to clear both input and formatted JSON text areas
         function clearJson() {
             document.getElementById('inputJson').value = '';
             document.getElementById('formattedJson').value = '';

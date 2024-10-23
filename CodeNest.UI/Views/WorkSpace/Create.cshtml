@@ -1,49 +1,80 @@
 ﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
-    <div class="col-lg-4 col-md-6">
-        <div class="mt-4">
-            <!-- Modal -->
-            <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Workspace</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form asp-action="Create" asp-controller="WorkSpace" method="post">
-                            <input type="hidden" name="UserId" value="@Model.UserId" />
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col mb-6">
-                                        <label asp-for="Workspace.Name" class="form-label">Name</label>
-                                    <input type="text" asp-for="Workspace.Name" class="form-control" placeholder="Enter the Name">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                <div class="col mb-6">
-                                    <label asp-for="Workspace.Description" class="form-label">Description</label>
-                                    <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350"></textarea>
-                                </div>
+@{
+    Layout = "_ContentNavbarLayout";
+    var jsonFormatterUrl = Url.Action("JsonFormatter", "Formatter", new { userId = Model.UserId });
+}
 
-
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                                <input type="submit" class="btn btn-primary" value="Save" />
-                            </div>
-                        </form>
+<div class="col-lg-4 col-md-6">
+    <div class="mt-4">
+        <!-- Modal -->
+        <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" style="background-color: #f8f9fa;">
+                    <!-- Set background color -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCenterTitle">Workspace</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="redirectToJsonFormatter()"></button>
                     </div>
+                    <form asp-action="Create" asp-controller="WorkSpace" method="post" id="workspaceForm">
+                        <input type="hidden" asp-for="UserId" />
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col mb-6">
+                                    <label asp-for="Workspace.Name" class="form-label"></label>
+                                    <input asp-for="Workspace.Name" class="form-control" placeholder="Enter the Name" required>
+                                    <span asp-validation-for="Workspace.Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-6">
+                                    <label asp-for="Workspace.Description" class="form-label"></label>
+                                    <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350" id="descriptionTextarea" required></textarea>
+                                    <small id="charCount" class="form-text text-muted" style="position: absolute; right: 10px; bottom: 10px; background: white; padding: 2px;">0/350</small>
+                                    <span asp-validation-for="Workspace.Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="redirectToJsonFormatter()">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Save" />
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        var textarea = document.getElementById('descriptionTextarea');
+        var charCount = document.getElementById('charCount');
+
+        textarea.addEventListener('input', function () {
+            charCount.textContent = textarea.value.length + '/350';
+        });
+
+        // Initialize the character count on page load
+        charCount.textContent = textarea.value.length + '/350';
+
         var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
             keyboard: false
         });
         myModal.show();
+
+        // Form validation
+        var form = document.getElementById('workspaceForm');
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
     });
+
+    function redirectToJsonFormatter() {
+        var jsonFormatterUrl = '@jsonFormatterUrl';
+        window.location.href = jsonFormatterUrl;
+    }
 </script>

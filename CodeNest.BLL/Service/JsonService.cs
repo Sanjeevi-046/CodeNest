@@ -100,9 +100,9 @@ namespace CodeNest.BLL.Service
         /// <param name="workspaceId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workspaceId, ObjectId userId)
+        public async Task<ValidationDto> Save(BlobDto jsonDto, ObjectId workspaceId, ObjectId userId, string filename)
         {
-            bool result = await _jsonRepository.SaveAsync(jsonDto, workspaceId, userId);
+            bool result = await _jsonRepository.SaveAsync(jsonDto, workspaceId, userId, filename); 
             if (result)
             {
                 return new ValidationDto
