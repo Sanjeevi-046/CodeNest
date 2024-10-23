@@ -111,7 +111,7 @@ namespace CodeNest.BLL.Service
         /// <param name="workSpace">The workspace identifier.</param>
         /// <param name="user">The user identifier.</param>
         /// <returns>A ValidationDto indicating whether the save operation was successful and any relevant messages.</returns>
-        public async Task<bool> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user)
+        public async Task<bool> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user, string filename)
         {
             _logger.LogInformation("Save: Starting save operation.");
 
@@ -123,7 +123,7 @@ namespace CodeNest.BLL.Service
                     return true;
                 }
 
-                bool saveResult = await _jsonRepository.SaveAsync(jsonDto, workSpace, user);
+                bool saveResult = await _jsonRepository.SaveAsync(jsonDto, workSpace, user,filename);
 
                 if (saveResult)
                 {

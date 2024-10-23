@@ -1,20 +1,12 @@
-﻿// ***********************************************************************************************
-//
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
-//
-//  This software is licensed under a commercial license agreement. For the full copyright and
-//  license information, please contact CTG for more information.
-//
-//  Description: Sample Description.
-//
-// ***********************************************************************************************
-
-using CodeNest.BLL.Service;
+﻿using CodeNest.BLL.Service;
 using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using MongoDB.Bson;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace CodeNest.UI.Controllers
 {
     public class FormatterController : Controller
@@ -29,11 +21,12 @@ namespace CodeNest.UI.Controllers
             _workspaceService = workspaceService;
             _jsonService = jsonService;
         }
+
         private async Task<UserWorkspaceFilesDto> GetUserWorkSpaceDetails(ObjectId? workSpaceId, ObjectId userId, ObjectId? blobId = null)
         {
             List<WorkspacesDto> workspaces = new();
             ObjectId workspaceObjectId = ObjectId.Empty;
-            WorkspacesDto workspace = new();
+            WorkspacesDto? workspace = null;
             List<BlobDto> blobsList = new();
 
             // Fetch workspaces for the given userId
@@ -46,31 +39,28 @@ namespace CodeNest.UI.Controllers
             }
             else if (workspaces.Any())
             {
-                // Get the latest workspace based on some criteria, e.g., last modified date
+               
                 workspace = workspaces.OrderByDescending(w => w.CreatedOn).FirstOrDefault();
                 workspaceObjectId = workspace?.Id ?? ObjectId.Empty;
             }
 
-            // Fetch the workspace details and blobs if a valid workspaceObjectId is found
             if (workspaceObjectId != ObjectId.Empty)
             {
-                workspace = await _workspaceService.GetWorkspace(workspaceObjectId);
+                workspace = workspaces.FirstOrDefault(w => w.Id == workspaceObjectId);
                 blobsList = await _jsonService.GetJson(workspaceObjectId);
             }
 
-            // Fetch the blob data if blobId is provided
-            BlobDto blob = new();
+ 
+            BlobDto? blob = null;
             if (blobId != null)
             {
                 blob = await _formatterServices.GetBlob(blobId.Value);
             }
             else if (blobsList.Any())
             {
-                // Get the latest blob based on some criteria, e.g., creation date
                 blob = blobsList.OrderByDescending(b => b.CreatedOn).FirstOrDefault();
             }
 
-            // Create the UserWorkspaceFilesDto object
             UserWorkspaceFilesDto userWorkspace = new()
             {
                 UserId = userId,
@@ -84,21 +74,36 @@ namespace CodeNest.UI.Controllers
             return userWorkspace;
         }
 
-        public async Task<IActionResult> JsonFormatter(ObjectId userId, ObjectId? workSpaceId=null , ObjectId? blobId = null)
+        public async Task<IActionResult> JsonFormatter(ObjectId userId, ObjectId? workSpaceId = null, ObjectId? blobId = null)
         {
-            UserWorkspaceFilesDto workSpaceDetails = await this.GetUserWorkSpaceDetails(workSpaceId, userId,blobId);
+            UserWorkspaceFilesDto workSpaceDetails = await this.GetUserWorkSpaceDetails(workSpaceId, userId, blobId);
+
+            // Check if there are no workspaces and set a flag
+            if (workSpaceDetails.Workspaces == null || !workSpaceDetails.Workspaces.Any())
+            {
+                TempData["NoWorkspace"] = true;
+                return RedirectToAction("Create", "WorkSpace", new { userId = userId });
+            }
+
             return View(workSpaceDetails);
         }
 
         [HttpPost]
         public async Task<IActionResult> JsonFormatter(UserWorkspaceFilesDto userWorkspaceFiles)
         {
+            if (userWorkspaceFiles.WorkspaceId == null || userWorkspaceFiles.UserId == null)
+            {
+                TempData["Error"] = "WorkspaceId or UserId is null.";
+                return View(userWorkspaceFiles);
+            }
+
             UserWorkspaceFilesDto userWorkspaceFilesDto = await this
                 .GetUserWorkSpaceDetails(userWorkspaceFiles.WorkspaceId.Value, userWorkspaceFiles.UserId.Value);
+
             if (userWorkspaceFiles.Blob == null)
             {
                 TempData["Error"] = "Invalid JSON data.";
-                return View(userWorkspaceFilesDto); 
+                return View(userWorkspaceFilesDto);
             }
 
             ValidationDto result = await _formatterServices.JsonValidate(userWorkspaceFiles.Blob);
@@ -107,7 +112,7 @@ namespace CodeNest.UI.Controllers
                 TempData["Success"] = result.Message;
                 userWorkspaceFilesDto.Blob = result.Blobs;
 
-                return View(userWorkspaceFilesDto); 
+                return View(userWorkspaceFilesDto);
             }
             userWorkspaceFilesDto.Blob = userWorkspaceFiles.Blob;
             TempData["Error"] = result.Message;
@@ -115,9 +120,14 @@ namespace CodeNest.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveJson(UserWorkspaceFilesDto userWorkspaceDetail, string? Name, string? Description)
+        public async Task<IActionResult> SaveJson(UserWorkspaceFilesDto userWorkspaceDetail, string? Name, string? Description, string filename)
         {
-            
+            if (userWorkspaceDetail.UserId == null)
+            {
+                TempData["Error"] = "UserId is null.";
+                return Json(new { success = false, message = "UserId is null." });
+            }
+
             if (userWorkspaceDetail.WorkspaceId == null)
             {
                 WorkspacesDto workspace = new()
@@ -130,16 +140,15 @@ namespace CodeNest.UI.Controllers
             }
 
             bool jsonResult = await _formatterServices
-                .Save(userWorkspaceDetail.Blob,userWorkspaceDetail.WorkspaceId.Value , userWorkspaceDetail.UserId.Value);
+                .Save(userWorkspaceDetail.Blob, userWorkspaceDetail.WorkspaceId.Value, userWorkspaceDetail.UserId.Value, filename);
             if (jsonResult)
             {
-                TempData["Success"] = "Success";
-                return RedirectToAction("JsonFormatter", "Formatter", 
-                    new { userId=userWorkspaceDetail.UserId, workSpaceId=userWorkspaceDetail.WorkspaceId });
+                TempData["Success"] = "JSON saved successfully.";
+
+                return Json(new { success = true});
             }
-            TempData["Error"] = "Error Occured";
-            return RedirectToAction("JsonFormatter", "Formatter",
-                    new { userId = userWorkspaceDetail.UserId, workSpaceId = userWorkspaceDetail.WorkspaceId });
+            TempData["Error"] = "Error occurred while saving JSON.";
+            return Json(new { success = false, message = "Error occurred while saving JSON." });
         }
     }
 }

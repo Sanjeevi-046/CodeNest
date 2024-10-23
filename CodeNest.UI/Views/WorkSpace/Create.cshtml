@@ -15,22 +15,22 @@
                         <h5 class="modal-title" id="modalCenterTitle">Workspace</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="redirectToJsonFormatter()"></button>
                     </div>
-                    <form asp-action="Create" asp-controller="WorkSpace" method="post">
-                        <input type="hidden" name="UserId" value="@Model.UserId" />
+                    <form asp-action="Create" asp-controller="WorkSpace" method="post" id="workspaceForm">
+                        <input type="hidden" asp-for="UserId" />
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col mb-6">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" name="WorkspaceName" class="form-control" placeholder="Enter the Name" required>
-                                    <span class="text-danger"></span>
+                                    <label asp-for="Workspace.Name" class="form-label"></label>
+                                    <input asp-for="Workspace.Name" class="form-control" placeholder="Enter the Name" required>
+                                    <span asp-validation-for="Workspace.Name" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col mb-6">
-                                    <label class="form-label">Description</label>
-                                    <textarea name="WorkspaceDescription" class="form-control" placeholder="Enter the Description..." maxlength="350" id="descriptionTextarea" required></textarea>
+                                    <label asp-for="Workspace.Description" class="form-label"></label>
+                                    <textarea asp-for="Workspace.Description" class="form-control" placeholder="Enter the Description..." maxlength="350" id="descriptionTextarea" required></textarea>
                                     <small id="charCount" class="form-text text-muted" style="position: absolute; right: 10px; bottom: 10px; background: white; padding: 2px;">0/350</small>
-                                    <span class="text-danger"></span>
+                                    <span asp-validation-for="Workspace.Description" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -56,13 +56,21 @@
 
         // Initialize the character count on page load
         charCount.textContent = textarea.value.length + '/350';
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
         var myModal = new bootstrap.Modal(document.getElementById('modalCenter'), {
             keyboard: false
         });
         myModal.show();
+
+        // Form validation
+        var form = document.getElementById('workspaceForm');
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
     });
 
     function redirectToJsonFormatter() {

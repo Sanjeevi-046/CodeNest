@@ -13,6 +13,7 @@ using CodeNest.BLL.AutoMapper;
 using CodeNest.BLL.Service;
 using CodeNest.DAL.Context;
 using CodeNest.DAL.Repository;
+using CodeNest.UI.tempdata;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,8 @@ app.UseSession();
 app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
+
+app.UseMiddleware<TempDataMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
