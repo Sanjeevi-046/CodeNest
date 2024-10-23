@@ -60,27 +60,19 @@ namespace CodeNest.DAL.Repository
         /// <param name="workSpace">The workspace identifier.</param>
         /// <param name="user">The user identifier.</param>
         /// <returns>A boolean indicating whether the save operation was successful.</returns>
-        public async Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user)
+        public async Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user,string filename)
         {
             _logger.LogInformation("SaveAsync: Starting save operation.");
 
             try
             {
-                Workspaces workspaceName = await _mongoDbService.WorkSpaces
-                    .Find(x => x.Id == workSpace).FirstOrDefaultAsync();
-
-                if (workspaceName == null)
-                {
-                    _logger.LogWarning("SaveAsync: Workspace not found.");
-                    return false;
-                }
 
                 BlobData jsonUser = new()
                 {
-                    Name = workspaceName.Name,
+                    Name = filename, 
                     Input = jsonData.Input,
                     Output = jsonData.Output,
-                    Type = "Json",
+                    Type = "json",
                     Workspaces = workSpace,
                     CreatedBy = user,
                     CreatedOn = DateTime.UtcNow

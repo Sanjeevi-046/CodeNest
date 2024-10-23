@@ -16,7 +16,7 @@ namespace CodeNest.DAL.Repository
 {
     public interface IJsonRepository
     {
-        Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user);
+        Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user, string filename);
         Task<List<BlobDto>> GetJsonList(ObjectId workspaceId);
     }
 }

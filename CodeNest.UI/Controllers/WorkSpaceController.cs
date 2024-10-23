@@ -47,14 +47,35 @@ namespace CodeNest.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserWorkspaceFilesDto userWorkspace)
         {
-            WorkspacesDto result = await _workspaceService.CreateWorkspace(userWorkspace.Workspace, userWorkspace.UserId.Value);
+            if (!userWorkspace.UserId.HasValue)
+            {
+                TempData["Error"] = "User ID is required";
+                return RedirectToAction("JsonFormatter", "Formatter");
+            }
+
+            // Check if a workspace with the same name already exists
+            WorkspacesDto? existingWorkspace = await _workspaceService.GetWorkspaceByName(userWorkspace.UserId.Value, userWorkspace.Workspace.Name);
+            if (existingWorkspace != null)
+            {
+                // Map the existing workspace
+                return RedirectToAction("JsonFormatter", "Formatter", new { userId = existingWorkspace.CreatedBy, workSpaceId = existingWorkspace.Id });
+            }
+
+            // Create a new workspace if it doesn't exist
+            WorkspacesDto workspaceDto = new()
+            {
+                Name = userWorkspace.Workspace.Name,
+                CreatedBy = userWorkspace.UserId.Value
+            };
+
+            WorkspacesDto result = await _workspaceService.CreateWorkspace(workspaceDto, userWorkspace.UserId.Value);
             if (result != null)
             {
-
                 return RedirectToAction("JsonFormatter", "Formatter", new { userId = result.CreatedBy, workSpaceId = result.Id });
             }
-            TempData["Error"] = "Already have workspace in same name";
-            return RedirectToAction("JsonFormatter", "Formatter", new { userId = userWorkspace.UserId.Value});
+
+            TempData["Error"] = "Failed to create workspace";
+            return RedirectToAction("JsonFormatter", "Formatter", new { userId = userWorkspace.UserId.Value });
         }
     }
 }
