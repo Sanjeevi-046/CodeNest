@@ -152,5 +152,11 @@ namespace CodeNest.BLL.Service
             BlobDto blobDto = await _formatterRepository.GetBlob(blobId);
             return blobDto;
         }
+
+        public async Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID , ObjectId userId)
+        {
+            BlobDto result = await _formatterRepository.Update(blobDto, blobID,userId);
+            return result;
+        }
     }
 }

@@ -43,10 +43,18 @@
             <ul class="menu-sub" style="display:none;">
                 @if (Model != null && Model.Count > 0)
                 {
+                    <li class="menu-item">
+                        <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-userId="@(Model[0].CreatedBy)" asp-route-workSpaceId="@Model[0].Workspaces" class="menu-link">
+                            <div>
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Add</span>
+                            </div>
+                        </a>
+                    </li>
                     foreach (var item in Model)
                     {
                         <li class="menu-item">
-                            <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-blobId="@item.Id" asp-route-userId="@item.CreatedBy" asp-route-workSpaceId="@item.Workspaces" class="menu-link">
+                            <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-blobId="@(item.Id)" asp-route-userId="@(item.CreatedBy)" asp-route-workSpaceId="@(item.Workspaces)" class="menu-link">
                                 <div>
                                     <i class="bi bi-filetype-json"></i> <!-- Font Awesome icon for JSON files -->
                                     @item.Name

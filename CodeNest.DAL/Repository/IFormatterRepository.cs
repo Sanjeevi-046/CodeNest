@@ -17,5 +17,6 @@ namespace CodeNest.DAL.Repository
     public interface IFormatterRepository
     {
        Task<BlobDto> GetBlob(ObjectId blobId);
+        Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID, ObjectId userId);
     }
 }

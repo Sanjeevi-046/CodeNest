@@ -1,6 +1,8 @@
 ﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @inject IHttpContextAccessor _httpContextAccessor
-
+@{
+    Console.WriteLine(Model);
+}
 <div class="container-fluid text-center">
     <div class="card">
         <div class="card-header">
@@ -21,11 +23,12 @@
             <form id="jsonForm" method="post">
                 <input type="hidden" name="UserId" value="@Model.UserId" />
                 <input type="hidden" name="WorkspaceId" value="@Model.WorkspaceId" />
+                <input type="hidden" name="BlobId" value="@Model?.Blob?.Id" />
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="Blob.Input" rows="20" class="form-control" placeholder="Enter JSON data" required>@Model?.Blob?.Input</textarea>
+                        <textarea id="inputJson" name="Blob.Input" rows="22" class="form-control" placeholder="Enter JSON data" required>@Model?.Blob?.Input</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
@@ -40,13 +43,21 @@
                         <button id="validateBtn" asp-action="JsonFormatter" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
                         <button id="minifyBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="minifyJson()">Minify</button>
                         <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
-                        <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()">Save</button>
+                        @if (Model?.Blob?.Id != null)
+                        {
+                            <button asp-action="Update" asp-controller="Formatter" type="submit" class="btn btn-primary w-100">Update</button>
+                        }
+                        else
+                        {
+                            <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()">Save</button>
+                        }
+                        
                     </div>
 
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Formatted JSON</h5>
-                        <textarea id="formattedJson" name="Blob.Output" rows="20" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Blob?.Output</textarea>
+                        <textarea id="formattedJson" name="Blob.Output" rows="22" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Blob?.Output</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
                         </div>
