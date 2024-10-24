@@ -39,8 +39,7 @@ namespace CodeNest.UI.Controllers
             }
             else if (workspaces.Any())
             {
-               
-                workspace = workspaces.OrderByDescending(w => w.CreatedOn).FirstOrDefault();
+                workspace = workspaces.FirstOrDefault();
                 workspaceObjectId = workspace?.Id ?? ObjectId.Empty;
             }
 
