@@ -33,5 +33,24 @@ namespace CodeNest.DAL.Repository
                 .Find(x => x.Id == blobId).FirstOrDefaultAsync();
             return _mapper.Map<BlobDto>(blobData);
         }
+        public async Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID ,ObjectId userId)
+        {
+            UpdateDefinition<BlobData> updateDefinition = Builders<BlobData>.Update
+                        .Set(x => x.Input, blobDto.Input)
+                        .Set(x => x.Output, blobDto.Output)
+                        .Set(x => x.ModifiedBy, userId)
+                        .Set(x => x.ModifiedOn, DateTime.UtcNow);
+
+            UpdateResult result = await _mongoDbService.BlobDatas
+                .UpdateOneAsync(x => x.Id == blobID, updateDefinition);
+
+            BlobDto blobData = await this.GetBlob(blobID);
+
+            if (result.IsAcknowledged && result.ModifiedCount > 0)
+            {
+                return _mapper.Map<BlobDto>(blobData);
+            }
+            return new BlobDto();   
+        }
     }
 }

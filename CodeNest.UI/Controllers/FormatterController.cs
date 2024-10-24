@@ -28,7 +28,7 @@ namespace CodeNest.UI.Controllers
             ObjectId workspaceObjectId = ObjectId.Empty;
             WorkspacesDto? workspace = null;
             List<BlobDto> blobsList = new();
-
+            BlobDto? blob = null;
             // Fetch workspaces for the given userId
             workspaces = await _workspaceService.GetWorkspaces(userId);
 
@@ -49,16 +49,11 @@ namespace CodeNest.UI.Controllers
                 blobsList = await _jsonService.GetJson(workspaceObjectId);
             }
 
- 
-            BlobDto? blob = null;
             if (blobId != null)
             {
                 blob = await _formatterServices.GetBlob(blobId.Value);
             }
-            else if (blobsList.Any())
-            {
-                blob = blobsList.OrderByDescending(b => b.CreatedOn).FirstOrDefault();
-            }
+            
 
             UserWorkspaceFilesDto userWorkspace = new()
             {
@@ -119,7 +114,7 @@ namespace CodeNest.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveJson(UserWorkspaceFilesDto userWorkspaceDetail, string? Name, string? Description, string filename)
+        public async Task<IActionResult> SaveJson(UserWorkspaceFilesDto userWorkspaceDetail, string filename , string? Name, string? Description)
         {
             if (userWorkspaceDetail.UserId == null)
             {
@@ -148,6 +143,27 @@ namespace CodeNest.UI.Controllers
             }
             TempData["Error"] = "Error occurred while saving JSON.";
             return Json(new { success = false, message = "Error occurred while saving JSON." });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UserWorkspaceFilesDto userWorkspaceDetail)
+        {
+            BlobDto result = await _formatterServices.Update(blobDto: userWorkspaceDetail.Blob, blobID: userWorkspaceDetail.BlobId.Value, userId: userWorkspaceDetail.UserId.Value);
+            if (result != null) 
+            {
+                TempData["Success"] = "Saved successfully!";
+                return RedirectToAction("JsonFormatter", new {
+                    userId=userWorkspaceDetail.UserId.Value,
+                    workSpaceId=userWorkspaceDetail.WorkspaceId.Value,
+                });
+            }
+            TempData["Error"] = "Error occured while saving!";
+            return RedirectToAction("JsonFormatter", new
+            {
+                userId = userWorkspaceDetail.UserId.Value,
+                workSpaceId = userWorkspaceDetail.WorkspaceId.Value,
+                blobId = result.Id
+            });
         }
     }
 }

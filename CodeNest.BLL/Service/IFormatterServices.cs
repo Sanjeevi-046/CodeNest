@@ -19,5 +19,6 @@ namespace CodeNest.BLL.Service
         Task<ValidationDto> JsonValidate(BlobDto jsonDto);
         Task<bool> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user, string filename);
         Task<BlobDto> GetBlob(ObjectId blobId);
+        Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID , ObjectId userId);
     }
 }
