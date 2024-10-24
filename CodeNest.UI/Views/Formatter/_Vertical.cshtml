@@ -1,7 +1,5 @@
 ﻿@model List<CodeNest.DTO.Models.BlobDto>
 @{
-    Console.WriteLine(Model);
-    // TempData.Keep();
     string? currentPage = ViewContext.HttpContext.Request.Path;
 }
 
@@ -9,16 +7,30 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
     <div class='app-brand demo @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
-        <a asp-controller="Dashboards" asp-action="Index" class="app-brand-link">
+        @if (Model != null && Model.Count > 0)
+        {
+        <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-userId="@Model[0]?.CreatedBy" class="app-brand-link">
             <span class="app-brand-logo demo">
             </span>
-
             <span class="app-brand-text demo menu-text fw-bold ms-2">@TempData.Peek("appName")</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
             <i class="bx bx-chevron-left bx-sm d-flex align-items-center justify-content-center"></i>
-        </a>
+            </a>
+        }
+        else
+        {
+            <a  class="app-brand-link">
+                <span class="app-brand-logo demo">
+                </span>
+                <span class="app-brand-text demo menu-text fw-bold ms-2">@TempData.Peek("appName")</span>
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                <i class="bx bx-chevron-left bx-sm d-flex align-items-center justify-content-center"></i>
+            </a>
+        }
     </div>
 
     <div class="menu-inner-shadow"></div>
