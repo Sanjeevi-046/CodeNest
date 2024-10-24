@@ -3,7 +3,7 @@
 @* ! Brand demo (display only for navbar-full and hide on below xl) *@
 @{
     string userName = _httpContextAccessor.HttpContext?.Session.GetString("userName") ?? "User";
-    TempData.Keep();
+    // TempData.Keep();
     string? currentPage = ViewContext.HttpContext.Request.Path;
 }
 
