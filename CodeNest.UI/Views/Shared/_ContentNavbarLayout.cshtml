@@ -3,7 +3,7 @@
 @await Html.PartialAsync("Sections/_Variables")
 @{
     Console.WriteLine(Model);
-    TempData.Keep();
+    // TempData.Keep();
     string userName = _httpContextAccessor.HttpContext?.Session.GetString("userName") ?? "User";
     Layout = "_CommonMasterLayout";
     ViewData["contentNavbar"] = true;
