@@ -20,7 +20,7 @@ insert_final_newline = false
 # Organize usings
 dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = false
-file_header_template =  ***********************************************************************************************\n\n (c) Copyright 2023, Computer Task Group, Inc. (CTG)\n\n This software is licensed under a commercial license agreement. For the full copyright and\n license information, please contact CTG for more information.\n\n Description: Sample Description.\n\n***********************************************************************************************
+file_header_template =  ***********************************************************************************************\n\n (c) Copyright 2024, Computer Task Group, Inc. (CTG)\n\n This software is licensed under a commercial license agreement. For the full copyright and\n license information, please contact CTG for more information.\n\n Description: CodeNest .\n\n***********************************************************************************************
 
 
 # this. and Me. preferences
