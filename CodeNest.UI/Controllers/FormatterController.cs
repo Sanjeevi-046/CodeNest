@@ -1,11 +1,7 @@
 ﻿using CodeNest.BLL.Service;
-using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CodeNest.UI.Controllers
 {
@@ -157,7 +153,7 @@ namespace CodeNest.UI.Controllers
                     workSpaceId=userWorkspaceDetail.WorkspaceId.Value,
                 });
             }
-            TempData["Error"] = "Error occured while saving!";
+            TempData["Error"] = "Error occured while updating!";
             return RedirectToAction("JsonFormatter", new
             {
                 userId = userWorkspaceDetail.UserId.Value,
