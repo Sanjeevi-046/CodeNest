@@ -9,16 +9,13 @@
 //
 // ***********************************************************************************************
 
-using CodeNest.DTO.Models;
-using MongoDB.Bson;
-
-namespace CodeNest.BLL.Service
+namespace CodeNest.UI.Enum
 {
-    public interface IWorkspaceService
+    public enum TypeEnum
     {
-        Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user);
-        Task<List<WorkspacesDto>> GetWorkspaces(ObjectId user);
-
-        Task<WorkspacesDto?> GetWorkspaceByName(ObjectId user, string workspaceName);
+       json = 1,
+       javascript = 2,
+       xml = 3,
+       html = 4
     }
 }

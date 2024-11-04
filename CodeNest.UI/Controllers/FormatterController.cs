@@ -1,4 +1,15 @@
-﻿using CodeNest.BLL.Service;
+﻿// ***********************************************************************************************
+//
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
+//
+//  This software is licensed under a commercial license agreement. For the full copyright and
+//  license information, please contact CTG for more information.
+//
+//  Description: CodeNest .
+//
+// ***********************************************************************************************
+
+using CodeNest.BLL.Service;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -49,11 +60,11 @@ namespace CodeNest.UI.Controllers
             {
                 blob = await _formatterServices.GetBlob(blobId.Value);
             }
-            
 
             UserWorkspaceFilesDto userWorkspace = new()
             {
                 UserId = userId,
+                BlobId = blobId,
                 WorkspaceName = workspace?.Name,
                 WorkspaceId = workspaceObjectId,
                 Workspaces = workspaces,
@@ -110,7 +121,7 @@ namespace CodeNest.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveJson(UserWorkspaceFilesDto userWorkspaceDetail, string filename , string? Name, string? Description)
+        public async Task<IActionResult> Save(UserWorkspaceFilesDto userWorkspaceDetail, string filename, string? Name, string? Description)
         {
             if (userWorkspaceDetail.UserId == null)
             {
@@ -125,7 +136,8 @@ namespace CodeNest.UI.Controllers
                     Name = Name,
                     Description = Description,
                 };
-                WorkspacesDto result = await _workspaceService.CreateWorkspace(workspace, userWorkspaceDetail.UserId.Value);
+                WorkspacesDto result = await _workspaceService
+                    .CreateWorkspace(workspace, userWorkspaceDetail.UserId.Value);
                 userWorkspaceDetail.WorkspaceId = result.Id;
             }
 
@@ -133,10 +145,12 @@ namespace CodeNest.UI.Controllers
                 .Save(userWorkspaceDetail.Blob, userWorkspaceDetail.WorkspaceId.Value, userWorkspaceDetail.UserId.Value, filename);
             if (jsonResult)
             {
-                TempData["Success"] = "JSON saved successfully.";
+                TempData.Clear();
+                TempData["Success"] = "Data saved successfully.";
 
-                return Json(new { success = true});
+                return Json(new { success = true });
             }
+
             TempData["Error"] = "Error occurred while saving JSON.";
             return Json(new { success = false, message = "Error occurred while saving JSON." });
         }
@@ -144,15 +158,18 @@ namespace CodeNest.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(UserWorkspaceFilesDto userWorkspaceDetail)
         {
-            BlobDto result = await _formatterServices.Update(blobDto: userWorkspaceDetail.Blob, blobID: userWorkspaceDetail.BlobId.Value, userId: userWorkspaceDetail.UserId.Value);
-            if (result != null) 
+            BlobDto result = await _formatterServices
+                .Update(blobDto: userWorkspaceDetail.Blob, blobID: userWorkspaceDetail.BlobId.Value, userId: userWorkspaceDetail.UserId.Value);
+            if (result != null)
             {
                 TempData["Success"] = "Saved successfully!";
-                return RedirectToAction("JsonFormatter", new {
-                    userId=userWorkspaceDetail.UserId.Value,
-                    workSpaceId=userWorkspaceDetail.WorkspaceId.Value,
+                return RedirectToAction("JsonFormatter", new
+                {
+                    userId = userWorkspaceDetail.UserId.Value,
+                    workSpaceId = userWorkspaceDetail.WorkspaceId.Value,
                 });
             }
+
             TempData["Error"] = "Error occured while updating!";
             return RedirectToAction("JsonFormatter", new
             {
@@ -160,6 +177,52 @@ namespace CodeNest.UI.Controllers
                 workSpaceId = userWorkspaceDetail.WorkspaceId.Value,
                 blobId = result.Id
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Javascript(ObjectId userId, ObjectId? workSpaceId = null, ObjectId? blobId = null)
+        {
+            UserWorkspaceFilesDto workSpaceDetails = await this.GetUserWorkSpaceDetails(workSpaceId, userId, blobId);
+
+            // Check if there are no workspaces and set a flag
+            if (workSpaceDetails.Workspaces == null || !workSpaceDetails.Workspaces.Any())
+            {
+                TempData["NoWorkspace"] = true;
+                return RedirectToAction("Create", "WorkSpace", new { userId = userId });
+            }
+
+            return View(workSpaceDetails);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Javascript(UserWorkspaceFilesDto userWorkspaceFiles)
+        {
+            if (userWorkspaceFiles.WorkspaceId == null || userWorkspaceFiles.UserId == null)
+            {
+                TempData["Error"] = "WorkspaceId or UserId is null.";
+                return View(userWorkspaceFiles);
+            }
+
+            UserWorkspaceFilesDto userWorkspaceFilesDto = await this
+                .GetUserWorkSpaceDetails(userWorkspaceFiles.WorkspaceId.Value, userWorkspaceFiles.UserId.Value);
+
+            if (userWorkspaceFiles.Blob == null)
+            {
+                TempData["Error"] = "Invalid JSON data.";
+                return View(userWorkspaceFilesDto);
+            }
+            
+            ValidationDto result = await _formatterServices.JavascriptValidate(userWorkspaceFiles.Blob);
+            if (result.IsValid)
+            {
+                TempData["Success"] = result.Message;
+                userWorkspaceFilesDto.Blob = result.Blobs;
+
+                return View(userWorkspaceFilesDto);
+            }
+            userWorkspaceFilesDto.Blob = userWorkspaceFiles.Blob;
+            TempData["Error"] = result.Message;
+            return View(userWorkspaceFilesDto);
         }
     }
 }

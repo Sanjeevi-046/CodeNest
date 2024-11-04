@@ -1,11 +1,11 @@
 ﻿// ***********************************************************************************************
 //
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
 //
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: Sample Description.
+//  Description: CodeNest .
 //
 // ***********************************************************************************************
 
@@ -23,7 +23,7 @@ namespace CodeNest.DTO.Models
         public string? Name { get; set; }
         public string? Input { get; set; }
         public string? Output { get; set; }
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId? Workspaces { get; set; }

@@ -1,21 +1,22 @@
 ﻿// ***********************************************************************************************
 //
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
 //
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: Sample Description.
+//  Description: CodeNest .
 //
 // ***********************************************************************************************
 
 using CodeNest.DAL.Repository;
 using CodeNest.DTO.Models;
+using Esprima;
+using Jsbeautifier;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ZstdSharp.Unsafe;
 
 namespace CodeNest.BLL.Service
 {
@@ -123,7 +124,7 @@ namespace CodeNest.BLL.Service
                     return true;
                 }
 
-                bool saveResult = await _jsonRepository.SaveAsync(jsonDto, workSpace, user,filename);
+                bool saveResult = await _jsonRepository.SaveAsync(jsonDto, workSpace, user, filename);
 
                 if (saveResult)
                 {
@@ -153,10 +154,63 @@ namespace CodeNest.BLL.Service
             return blobDto;
         }
 
-        public async Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID , ObjectId userId)
+        public async Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID, ObjectId userId)
         {
-            BlobDto result = await _formatterRepository.Update(blobDto, blobID,userId);
+            BlobDto result = await _formatterRepository.Update(blobDto, blobID, userId);
             return result;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blobDto"></param>
+        /// <returns></returns>
+        public async Task<ValidationDto> JavascriptValidate(BlobDto blobDto)
+        {
+            if (string.IsNullOrWhiteSpace(blobDto.Input))
+            {
+                _logger.LogWarning("JavascriptValidate: Input is null or whitespace.");
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Please enter input."
+                };
+            }
+
+            blobDto.Input = blobDto.Input.Trim();
+
+            try
+            {
+                //using (Engine engine = new())
+                //engine.Execute(blobDto.Input);
+                JavaScriptParser js = new();
+                js.ParseScript(blobDto.Input);
+                Beautifier beautifier = new();
+                string beautifiedCode = beautifier.Beautify(blobDto.Input);
+                _logger.LogInformation("JavascriptValidate: JavaScript is valid.");
+                return new ValidationDto
+                {
+                    IsValid = true,
+                    Message = "Valid JavaScript",
+                    Blobs = new BlobDto
+                    {
+                        Input = blobDto.Input,
+                        Output = beautifiedCode
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "JavascriptValidate: JavaScript parsing failed.");
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Invalid JavaScript format.",
+                    Blobs = new BlobDto
+                    {
+                        Input = blobDto.Input
+                    }
+                };
+            }
         }
     }
 }

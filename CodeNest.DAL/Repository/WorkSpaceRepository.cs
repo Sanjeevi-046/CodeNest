@@ -1,11 +1,11 @@
 ﻿// ***********************************************************************************************
 //
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
 //
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: Sample Description.
+//  Description: CodeNest .
 //
 // ***********************************************************************************************
 
@@ -109,7 +109,7 @@ namespace CodeNest.DAL.Repository
         public async Task<WorkspacesDto> GetWorkspacebyName(string name)
         {
             Workspaces workspaces = await _mongoDbService.WorkSpaces
-                .Find(x=>x.Name == name).FirstOrDefaultAsync();
+                .Find(x => x.Name == name).FirstOrDefaultAsync();
             return _mapper.Map<WorkspacesDto>(workspaces);
         }
 
@@ -155,9 +155,9 @@ namespace CodeNest.DAL.Repository
         public async Task<WorkspacesDto> GetWorkspace(ObjectId id)
         {
             Workspaces workspace = await _mongoDbService.WorkSpaces
-                .Find(x=>x.Id == id).FirstOrDefaultAsync();
+                .Find(x => x.Id == id).FirstOrDefaultAsync();
             return _mapper.Map<WorkspacesDto>(workspace);
-                  
+
         }
     }
 }
