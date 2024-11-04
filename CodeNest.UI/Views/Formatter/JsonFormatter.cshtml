@@ -43,7 +43,7 @@
                         <br />
                         <br />
                         <button id="validateBtn" asp-action="JsonFormatter" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
-                        <button id="minifyBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="minifyJson()">Minify</button>
+                        <button id="minifyUndoBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="toggleMinifyUndo()">Minify</button>
                         <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
                         @if (Model?.BlobId != null)
                         {
@@ -166,15 +166,34 @@
             tempDataMessageElement.style.display = 'block';
         }
 
-        function minifyJson() {
-            const inputJson = document.getElementById('inputJson').value;
-            try {
-                const minifiedJson = JSON.stringify(JSON.parse(inputJson));
-                document.getElementById('inputJson').value = minifiedJson;
-            } catch (e) {
-                showTempDataMessage('Invalid JSON', 'alert-danger');
+        let originalJson = ''; // Variable to store the original JSON
+
+        function toggleMinifyUndo() {
+            const button = document.getElementById('minifyUndoBtn');
+            const inputJsonElement = document.getElementById('inputJson');
+
+            if (button.textContent === 'Minify') {
+                // Store the original JSON only if it hasn't been stored yet
+                originalJson = inputJsonElement.value;
+
+                try {
+                    const minifiedJson = JSON.stringify(JSON.parse(originalJson));
+                    inputJsonElement.value = minifiedJson;
+                    button.textContent = 'Undo';
+                } catch (e) {
+                    showTempDataMessage('Invalid JSON', 'alert-danger');
+                }
+            } else if (button.textContent === 'Undo') {
+                if (originalJson) {
+                    inputJsonElement.value = originalJson;
+                    originalJson = ''; // Clear the stored original after undoing
+                    button.textContent = 'Minify';
+                } else {
+                    showTempDataMessage('No action to undo', 'alert-warning');
+                }
             }
         }
+
 
         function clearJson() {
             document.getElementById('inputJson').value = '';
