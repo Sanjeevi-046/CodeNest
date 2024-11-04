@@ -30,6 +30,7 @@ namespace CodeNest.UI.Controllers
             {
                 return View(result);
             }
+
             return View();
         }
     }
