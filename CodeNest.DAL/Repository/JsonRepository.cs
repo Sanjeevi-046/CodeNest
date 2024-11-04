@@ -1,11 +1,11 @@
 ﻿// ***********************************************************************************************
 //
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
 //
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: Sample Description.
+//  Description: CodeNest .
 //
 // ***********************************************************************************************
 
@@ -60,7 +60,7 @@ namespace CodeNest.DAL.Repository
         /// <param name="workSpace">The workspace identifier.</param>
         /// <param name="user">The user identifier.</param>
         /// <returns>A boolean indicating whether the save operation was successful.</returns>
-        public async Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user,string filename)
+        public async Task<bool> SaveAsync(BlobDto jsonData, ObjectId workSpace, ObjectId user, string filename)
         {
             _logger.LogInformation("SaveAsync: Starting save operation.");
 
@@ -69,10 +69,10 @@ namespace CodeNest.DAL.Repository
 
                 BlobData jsonUser = new()
                 {
-                    Name = filename, 
+                    Name = filename,
                     Input = jsonData.Input,
                     Output = jsonData.Output,
-                    Type = "json",
+                    Type = jsonData.Type.ToString(),
                     Workspaces = workSpace,
                     CreatedBy = user,
                     CreatedOn = DateTime.UtcNow

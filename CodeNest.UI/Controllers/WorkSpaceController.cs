@@ -1,16 +1,15 @@
 ﻿// ***********************************************************************************************
 //
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
 //
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: Sample Description.
+//  Description: CodeNest .
 //
 // ***********************************************************************************************
 
 using CodeNest.BLL.Service;
-using CodeNest.DAL.Models;
 using CodeNest.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -20,7 +19,7 @@ namespace CodeNest.UI.Controllers
     public class WorkSpaceController : Controller
     {
         private readonly IWorkspaceService _workspaceService;
-       
+
         public WorkSpaceController(IWorkspaceService workspaceService)
         {
             _workspaceService = workspaceService;
@@ -43,7 +42,7 @@ namespace CodeNest.UI.Controllers
         [HttpGet]
         public IActionResult Create(ObjectId userId)
         {
-            return View(new UserWorkspaceFilesDto { UserId=userId});
+            return View(new UserWorkspaceFilesDto { UserId = userId });
         }
 
         [HttpPost]

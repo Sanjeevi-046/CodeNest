@@ -6,7 +6,7 @@
 }
 <div class="container-fluid text-center">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header" style="padding:10px">
             @if (TempData["Success"] != null)
             {
                 <div class="alert alert-success" role="alert">
@@ -25,12 +25,12 @@
                 <input type="hidden" name="UserId" value="@Model.UserId" />
                 <input type="hidden" name="WorkspaceId" value="@Model.WorkspaceId" />
                 <input type="hidden" name="BlobId" value="@Model?.Blob?.Id" />
-                <input type="hidden" name="Blob.Type" value="json" />
+                <input type="hidden" name="Blob.Type" value="@TypeEnum.javascript" />
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
-                        <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="Blob.Input" rows="22" class="form-control" placeholder="Enter JSON data" required>@Model?.Blob?.Input</textarea>
+                        <h5>Input </h5>
+                        <textarea id="input" name="Blob.Input" rows="22" class="form-control" placeholder="Enter Javascript data" required>@Model?.Blob?.Input</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
                         </div>
@@ -42,7 +42,7 @@
                         <br />
                         <br />
                         <br />
-                        <button id="validateBtn" asp-action="JsonFormatter" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
+                        <button id="validateBtn" asp-action="Javascript" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
                         <button id="minifyBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="minifyJson()">Minify</button>
                         <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
                         @if (Model?.BlobId != null)
@@ -53,13 +53,13 @@
                         {
                             <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()">Save</button>
                         }
-                        
+
                     </div>
 
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
-                        <h5>Formatted JSON</h5>
-                        <textarea id="formattedJson" name="Blob.Output" rows="22" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Blob?.Output</textarea>
+                        <h5>Output</h5>
+                        <textarea id="formatted" name="Blob.Output" rows="22" class="form-control" placeholder="Output will appear here">@Model?.Blob?.Output</textarea>
                         <div class="mt-2 d-flex justify-content-between">
                             <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
                         </div>
@@ -95,20 +95,20 @@
 
 @section Scripts {
     <script>
-
+        
         function checkWorkspaceAndSave() {
             var userId = document.querySelector('input[name="UserId"]').value;
             var workspaceId = document.querySelector('input[name="WorkspaceId"]').value;
-            var inputJson = document.getElementById('inputJson').value;
-            var outputJson = document.getElementById('formattedJson').value;
+            var input = document.getElementById('input').value;
+            var output = document.getElementById('formatted').value;
 
             // Store values in a global object for later use
-            window.jsonDataToSave = {
+            window.DataToSave = {
                 userId: userId,
                 workspaceId: workspaceId,
-                inputJson: inputJson,
-                outputJson: outputJson,
-                Type:"json"
+                input: input,
+                output: output,
+                Type:"javascript"
             };
 
             // Show the filename input modal
@@ -128,11 +128,11 @@
             }
 
             var formData = new FormData();
-            formData.append("UserId", window.jsonDataToSave.userId);
-            formData.append("WorkspaceId", window.jsonDataToSave.workspaceId);
-            formData.append("Blob.Type", window.jsonDataToSave.Type);
-            formData.append("Blob.Input", window.jsonDataToSave.inputJson);
-            formData.append("Blob.Output", window.jsonDataToSave.outputJson);
+            formData.append("UserId", window.DataToSave.userId);
+            formData.append("WorkspaceId", window.DataToSave.workspaceId);
+            formData.append("Blob.Input", window.DataToSave.input);
+            formData.append("Blob.Output", window.DataToSave.output);
+            formData.append("Blob.Type", window.DataToSave.Type);
             formData.append("Filename", filename);
 
             fetch('/Formatter/Save', {
@@ -167,18 +167,23 @@
         }
 
         function minifyJson() {
-            const inputJson = document.getElementById('inputJson').value;
+            const input = document.getElementById('input').value;
             try {
-                const minifiedJson = JSON.stringify(JSON.parse(inputJson));
-                document.getElementById('inputJson').value = minifiedJson;
+                const minified = input
+                .replace(/\/\/.*$/gm, '')          // Remove single-line comments
+                    .replace(/\/\*[\s\S]*?\*\//g, '')  // Remove multi-line comments
+                    .replace(/\s+/g, ' ')              // Collapse whitespace
+                    .replace(/\s*([{};,:])\s*/g, '$1') // Remove whitespace around symbols
+                    .trim();
+                document.getElementById('input').value = minified;
             } catch (e) {
                 showTempDataMessage('Invalid JSON', 'alert-danger');
             }
         }
 
         function clearJson() {
-            document.getElementById('inputJson').value = '';
-            document.getElementById('formattedJson').value = '';
+            document.getElementById('input').value = '';
+            document.getElementById('formatted').value = '';
         }
     </script>
 }

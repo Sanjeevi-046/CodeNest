@@ -1,11 +1,11 @@
 ﻿// ***********************************************************************************************
 //
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
 //
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: Sample Description.
+//  Description: CodeNest .
 //
 // ***********************************************************************************************
 
@@ -22,7 +22,7 @@ namespace CodeNest.DAL.Repository
     {
         private readonly MongoDbService _mongoDbService;
         private readonly IMapper _mapper;
-        public FormatterRepository(MongoDbService mongoDbService , IMapper mapper) 
+        public FormatterRepository(MongoDbService mongoDbService, IMapper mapper)
         {
             _mapper = mapper;
             _mongoDbService = mongoDbService;
@@ -33,7 +33,7 @@ namespace CodeNest.DAL.Repository
                 .Find(x => x.Id == blobId).FirstOrDefaultAsync();
             return _mapper.Map<BlobDto>(blobData);
         }
-        public async Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID ,ObjectId userId)
+        public async Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID, ObjectId userId)
         {
             UpdateDefinition<BlobData> updateDefinition = Builders<BlobData>.Update
                         .Set(x => x.Input, blobDto.Input)
@@ -50,7 +50,7 @@ namespace CodeNest.DAL.Repository
             {
                 return _mapper.Map<BlobDto>(blobData);
             }
-            return new BlobDto();   
+            return new BlobDto();
         }
     }
 }

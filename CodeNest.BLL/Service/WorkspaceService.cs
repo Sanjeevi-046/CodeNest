@@ -1,11 +1,11 @@
 ﻿// ***********************************************************************************************
 //
-//  (c) Copyright 2023, Computer Task Group, Inc. (CTG)
+//  (c) Copyright 2024, Computer Task Group, Inc. (CTG)
 //
 //  This software is licensed under a commercial license agreement. For the full copyright and
 //  license information, please contact CTG for more information.
 //
-//  Description: Sample Description.
+//  Description: CodeNest .
 //
 // ***********************************************************************************************
 
@@ -55,8 +55,8 @@ namespace CodeNest.BLL.Service
         /// <returns>The created workspace details.</returns>
         public async Task<WorkspacesDto> CreateWorkspace(WorkspacesDto workspacesDto, ObjectId user)
         {
-                WorkspacesDto workSpace = await _workSpaceRepository.CreateWorkspace(workspacesDto, user);
-                return workSpace;
+            WorkspacesDto workSpace = await _workSpaceRepository.CreateWorkspace(workspacesDto, user);
+            return workSpace;
         }
 
         public async Task<WorkspacesDto> GetWorkspace(ObjectId id)
