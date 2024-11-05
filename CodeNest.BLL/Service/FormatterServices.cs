@@ -38,18 +38,12 @@ namespace CodeNest.BLL.Service
         /// </summary>
         /// <param name="jsonDto">The JSON data to validate.</param>
         /// <returns>A ValidationDto indicating whether the JSON is valid and any relevant messages.</returns>
-        public async Task<ValidationDto> JsonValidate(BlobDto jsonDto)
+        public async Task<BlobDto> JsonValidate(BlobDto jsonDto)
         {
-            _logger.LogInformation("JsonValidate: Starting JSON validation.");
-
             if (string.IsNullOrWhiteSpace(jsonDto.Input))
             {
                 _logger.LogWarning("JsonValidate: Input is null or whitespace.");
-                return new ValidationDto
-                {
-                    IsValid = false,
-                    Message = "Please Enter Input"
-                };
+                return new BlobDto();
             }
 
             jsonDto.Input = jsonDto.Input.Trim();
@@ -65,43 +59,22 @@ namespace CodeNest.BLL.Service
                     string beautifiedJson = parsedJson.ToString(Formatting.Indented);
 
                     _logger.LogInformation("JsonValidate: JSON is valid.");
-                    return new ValidationDto
+                    return new BlobDto
                     {
-                        IsValid = true,
-                        Message = "Valid JSON",
-                        Blobs = new BlobDto
-                        {
-                            Input = jsonDto.Input,
-                            Output = beautifiedJson
-                        }
+                        Input = jsonDto.Input,
+                        Output = beautifiedJson
                     };
                 }
                 catch (JsonReaderException ex)
                 {
                     _logger.LogError(ex, "JsonValidate: JSON parsing failed.");
-                    return new ValidationDto
-                    {
-                        IsValid = false,
-                        Message = "Invalid JSON format.",
-                        Blobs = new BlobDto
-                        {
-                            Input = jsonDto.Input
-                        }
-                    };
+                    return new BlobDto();
                 }
             }
             else
             {
                 _logger.LogWarning("JsonValidate: Input is not a valid JSON.");
-                return new ValidationDto
-                {
-                    IsValid = false,
-                    Message = "Not a Valid JSON",
-                    Blobs = new BlobDto
-                    {
-                        Input = jsonDto.Input
-                    }
-                };
+                return new BlobDto();
             }
         }
 
@@ -160,56 +133,37 @@ namespace CodeNest.BLL.Service
             return result;
         }
         /// <summary>
-        /// 
+        /// Validates the javascript code
         /// </summary>
         /// <param name="blobDto"></param>
-        /// <returns></returns>
-        public async Task<ValidationDto> JavascriptValidate(BlobDto blobDto)
+        /// <returns>if code is valide returns input with ouput and success message,else returns input only with error message</returns>
+        public async Task<BlobDto> JavascriptValidate(BlobDto blobDto)
         {
             if (string.IsNullOrWhiteSpace(blobDto.Input))
             {
                 _logger.LogWarning("JavascriptValidate: Input is null or whitespace.");
-                return new ValidationDto
-                {
-                    IsValid = false,
-                    Message = "Please enter input."
-                };
+                return new BlobDto();
             }
 
             blobDto.Input = blobDto.Input.Trim();
 
             try
             {
-                //using (Engine engine = new())
-                //engine.Execute(blobDto.Input);
                 JavaScriptParser js = new();
                 js.ParseScript(blobDto.Input);
                 Beautifier beautifier = new();
                 string beautifiedCode = beautifier.Beautify(blobDto.Input);
                 _logger.LogInformation("JavascriptValidate: JavaScript is valid.");
-                return new ValidationDto
-                {
-                    IsValid = true,
-                    Message = "Valid JavaScript",
-                    Blobs = new BlobDto
+                return new BlobDto
                     {
                         Input = blobDto.Input,
                         Output = beautifiedCode
-                    }
                 };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "JavascriptValidate: JavaScript parsing failed.");
-                return new ValidationDto
-                {
-                    IsValid = false,
-                    Message = "Invalid JavaScript format.",
-                    Blobs = new BlobDto
-                    {
-                        Input = blobDto.Input
-                    }
-                };
+                return new BlobDto();
             }
         }
     }

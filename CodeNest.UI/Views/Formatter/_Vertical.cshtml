@@ -1,4 +1,4 @@
-﻿@model List<CodeNest.DTO.Models.BlobDto>
+﻿@model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @{
     string? currentPage = ViewContext.HttpContext.Request.Path;
 }
@@ -7,9 +7,9 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
     <div class='app-brand demo @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
-        @if (Model != null && Model.Count > 0)
+        @if (Model != null && Model?.BlobsList?.Count > 0)
         {
-        <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-userId="@Model[0]?.CreatedBy" class="app-brand-link">
+        <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-userId="@Model.UserId" class="app-brand-link">
             <span class="app-brand-logo demo">
             </span>
             <span class="app-brand-text demo menu-text fw-bold ms-2">@TempData.Peek("appName")</span>
@@ -41,17 +41,17 @@
                 <div>JSON</div>
             </a>
             <ul class="menu-sub" style="display:none; list-style-type: none; padding-left: 0;">
-                @if (Model != null && Model.Count > 0)
+                @if (Model != null && Model?.BlobsList?.Count > 0)
                 {
                     <li class="menu-item">
-                        <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-userId="@(Model[0].CreatedBy)" asp-route-workSpaceId="@Model[0].Workspaces" class="menu-link">
+                        <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-userId="@(Model.UserId)" asp-route-workSpaceId="@Model.WorkspaceId" class="menu-link">
                             <div>
                                 <i class="bi bi-plus-circle"></i>
                                 <span>Add</span>
                             </div>
                         </a>
                     </li>
-                    foreach (var item in Model.Where(x => x.Type?.ToLower() == "json"))
+                    foreach (var item in Model.BlobsList.Where(x => x.Type?.ToLower() == "json"))
                     {
                             <li class="menu-item">
                                 <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-blobId="@(item.Id)" asp-route-userId="@(item.CreatedBy)" asp-route-workSpaceId="@(item.Workspaces)" class="menu-link">
@@ -68,6 +68,14 @@
                 else
                 {
                     <li class="menu-item">
+                        <a asp-controller="Formatter" asp-action="JsonFormatter" asp-route-userId="@(Model.UserId)" asp-route-workSpaceId="@Model.WorkspaceId" class="menu-link">
+                            <div>
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Add</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
                         <a class="menu-link">
                             <div>No items</div>
                         </a>
@@ -81,17 +89,17 @@
                 <div>JavaScript</div>
             </a>
             <ul class="menu-sub" style="display:none; list-style-type: none; padding-left: 0;">
-                @if (Model != null && Model.Count > 0)
+                @if (Model != null && Model?.BlobsList?.Count > 0)
                 {
                     <li class="menu-item">
-                        <a asp-controller="Formatter" asp-action="Javascript" asp-route-userId="@(Model[0].CreatedBy)" asp-route-workSpaceId="@Model[0].Workspaces" class="menu-link">
+                        <a asp-controller="Formatter" asp-action="Javascript" asp-route-userId="@(Model.UserId)" asp-route-workSpaceId="@Model.WorkspaceId" class="menu-link">
                             <div>
                                 <i class="bi bi-plus-circle"></i>
                                 <span>Add</span>
                             </div>
                         </a>
                     </li>
-                    foreach (var item in Model.Where(x => x.Type?.ToLower() == "javascript" || x.Type?.ToLower()=="js"))
+                    foreach (var item in Model.BlobsList.Where(x => x.Type?.ToLower() == "javascript" || x.Type?.ToLower()=="js"))
                     {
                             <li class="menu-item">
                             <a asp-controller="Formatter" asp-action="Javascript" asp-route-blobId="@(item.Id)" asp-route-userId="@(item.CreatedBy)" asp-route-workSpaceId="@(item.Workspaces)" class="menu-link">
@@ -107,6 +115,14 @@
                 }
                 else
                 {
+                    <li class="menu-item">
+                        <a asp-controller="Formatter" asp-action="Javascript" asp-route-userId="@(Model?.UserId)" asp-route-workSpaceId="@Model?.WorkspaceId" class="menu-link">
+                            <div>
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Add</span>
+                            </div>
+                        </a>
+                    </li>
                     <li class="menu-item">
                         <a class="menu-link">
                             <div>No items</div>

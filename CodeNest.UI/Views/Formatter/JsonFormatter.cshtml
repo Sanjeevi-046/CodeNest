@@ -1,4 +1,4 @@
-﻿@using CodeNest.UI.Enum
+﻿@using CodeNest.UI.Resources
 @model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @inject IHttpContextAccessor _httpContextAccessor
 @{
@@ -25,7 +25,7 @@
                 <input type="hidden" name="UserId" value="@Model.UserId" />
                 <input type="hidden" name="WorkspaceId" value="@Model.WorkspaceId" />
                 <input type="hidden" name="BlobId" value="@Model?.Blob?.Id" />
-                <input type="hidden" name="Blob.Type" value="json" />
+                <input type="hidden" name="Blob.Type" value="@Resource.CN_Type_001" />
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
@@ -145,7 +145,8 @@
                 workspaceId: workspaceId,
                 inputJson: inputJson,
                 outputJson: outputJson,
-                Type: "json"
+
+                Type: @Resource.CN_Type_001
             };
 
             var filenameInputModal = new bootstrap.Modal(document.getElementById('filenameInputModal'));
@@ -179,14 +180,14 @@
                 .then(data => {
                     if (data.success) {
                         location.reload();
-                        showTempDataMessage("JSON saved successfully.", "alert-success");
+                        showTempDataMessage("Saved successfully.", "alert-success");
                     } else {
-                        showTempDataMessage("Error saving JSON: " + data.message, "alert-danger");
+                        showTempDataMessage("Error occured: " + data.message, "alert-danger");
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showTempDataMessage("An error occurred while saving JSON.", "alert-danger");
+                    showTempDataMessage("An error occurred while saving.", "alert-danger");
                 });
 
             var filenameInputModal = bootstrap.Modal.getInstance(document.getElementById('filenameInputModal'));
@@ -200,25 +201,7 @@
             tempDataMessageElement.style.display = 'block';
         }
 
-        let originalJson = ''; // Variable to store the original JSON
 
-        function toggleMinifyUndo() {
-            const button = document.getElementById('minifyUndoBtn');
-            const inputJsonElement = document.getElementById('inputJson');
-
-            if (button.textContent === 'Minify') {
-                originalJson = inputJsonElement.value;
-
-                try {
-                    const minifiedJson = JSON.stringify(JSON.parse(originalJson));
-                    inputJsonElement.value = minifiedJson;
-                    button.textContent = 'Undo';
-                } catch (e) {
-                    showTempDataMessage('Invalid JSON', 'alert-danger');
-                }
-            } else {
-                inputJsonElement.value = originalJson;
-                button.textContent = 'Minify';
             }
         }
 

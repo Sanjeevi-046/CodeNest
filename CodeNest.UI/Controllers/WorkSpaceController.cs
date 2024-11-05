@@ -11,6 +11,7 @@
 
 using CodeNest.BLL.Service;
 using CodeNest.DTO.Models;
+using CodeNest.UI.Resources;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -26,20 +27,6 @@ namespace CodeNest.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetWorkSpaces()
-        {
-            string? user = HttpContext.Session.GetString("userId");
-
-            if (string.IsNullOrEmpty(user))
-            {
-                return Unauthorized();
-            }
-
-            List<WorkspacesDto> workspaces = await _workspaceService.GetWorkspaces(new ObjectId(user));
-            return Json(new { workspaces });
-        }
-
-        [HttpGet]
         public IActionResult Create(ObjectId userId)
         {
             return View(new UserWorkspaceFilesDto { UserId = userId });
@@ -48,14 +35,9 @@ namespace CodeNest.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserWorkspaceFilesDto userWorkspace)
         {
-            if (!userWorkspace.UserId.HasValue)
-            {
-                TempData["Error"] = "User ID is required";
-                return RedirectToAction("JsonFormatter", "Formatter");
-            }
-
             // Check if a workspace with the same name already exists
-            WorkspacesDto? existingWorkspace = await _workspaceService.GetWorkspaceByName(userWorkspace.UserId.Value, userWorkspace.Workspace.Name);
+            WorkspacesDto? existingWorkspace = await _workspaceService
+                .GetWorkspaceByName(userWorkspace.UserId.Value, userWorkspace.Workspace.Name);
             if (existingWorkspace != null)
             {
                 // Map the existing workspace
@@ -72,10 +54,11 @@ namespace CodeNest.UI.Controllers
             WorkspacesDto result = await _workspaceService.CreateWorkspace(workspaceDto, userWorkspace.UserId.Value);
             if (result != null)
             {
+                TempData["Success"] =Resource.CN_Success_1002;
                 return RedirectToAction("JsonFormatter", "Formatter", new { userId = result.CreatedBy, workSpaceId = result.Id });
             }
 
-            TempData["Error"] = "Failed to create workspace";
+            TempData["Error"] = Resource.CN_Error_1003;
             return RedirectToAction("JsonFormatter", "Formatter", new { userId = userWorkspace.UserId.Value });
         }
     }

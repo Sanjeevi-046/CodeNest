@@ -1,4 +1,4 @@
-﻿@using CodeNest.UI.Enum
+﻿@using CodeNest.UI.Resources
 @model CodeNest.DTO.Models.UserWorkspaceFilesDto
 @inject IHttpContextAccessor _httpContextAccessor
 @{
@@ -25,7 +25,7 @@
                 <input type="hidden" name="UserId" value="@Model.UserId" />
                 <input type="hidden" name="WorkspaceId" value="@Model.WorkspaceId" />
                 <input type="hidden" name="BlobId" value="@Model?.Blob?.Id" />
-                <input type="hidden" name="Blob.Type" value="@TypeEnum.javascript" />
+                <input type="hidden" name="Blob.Type" value="@Resource.CN_Type_002" />
                 <div class="row">
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
@@ -108,7 +108,7 @@
                 workspaceId: workspaceId,
                 input: input,
                 output: output,
-                Type:"javascript"
+                Type: @Resource.CN_Type_002
             };
 
             // Show the filename input modal
@@ -143,14 +143,14 @@
                 .then(data => {
                     if (data.success) {
                         location.reload();
-                        showTempDataMessage("JSON saved successfully.", "alert-success");
+                        showTempDataMessage("Saved successfully.", "alert-success");
                     } else {
-                        showTempDataMessage("Error saving JSON: " + data.message, "alert-danger");
+                        showTempDataMessage("Error occured : " + data.message, "alert-danger");
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showTempDataMessage("An error occurred while saving JSON.", "alert-danger");
+                    showTempDataMessage("An error occurred while saving.", "alert-danger");
                 });
 
             // Hide the modal after saving
@@ -177,7 +177,7 @@
                     .trim();
                 document.getElementById('input').value = minified;
             } catch (e) {
-                showTempDataMessage('Invalid JSON', 'alert-danger');
+                showTempDataMessage('Invalid data', 'alert-danger');
             }
         }
 
