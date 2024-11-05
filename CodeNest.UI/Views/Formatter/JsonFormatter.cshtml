@@ -30,9 +30,10 @@
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input JSON</h5>
-                        <textarea id="inputJson" name="Blob.Input" rows="22" class="form-control" placeholder="Enter JSON data" required>@Model?.Blob?.Input</textarea>
-                        <div class="mt-2 d-flex justify-content-between">
-                            <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
+                            <textarea id="inputJson" name="Blob.Input" class="form-control" placeholder="Enter JSON data" required style="width: 100%; height: 500px; resize: none;">@Model?.Blob?.Input</textarea>                        <div class="mt-2 d-flex justify-content-between">
+                            <button id="copyInputJsonBtn" type="button" class="btn btn-primary" data-bs-toggle="tooltip" title="Copy the JSON from the input field">Copy Input JSON</button>
+                            <button class="btn btn-primary" id="fileUploadBtn" type="button" onclick="document.getElementById('fileInput').click()" data-bs-toggle="tooltip" title="Upload a JSON file">File Upload</button>
+                            <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="loadJsonFile()">
                         </div>
                     </div>
 
@@ -42,26 +43,25 @@
                         <br />
                         <br />
                         <br />
-                        <button id="validateBtn" asp-action="JsonFormatter" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
-                        <button id="minifyUndoBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="toggleMinifyUndo()">Minify</button>
-                        <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
+                        <button id="validateBtn" asp-action="JsonFormatter" type="submit" class="btn btn-primary mb-2 w-100" data-bs-toggle="tooltip" title="Validate the input JSON">Validate</button>
+                        <button id="minifyUndoBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="toggleMinifyUndo()" data-bs-toggle="tooltip" title="Minify or undo the JSON format">Minify</button>
+                        <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()" data-bs-toggle="tooltip" title="Clear the JSON fields">Clear</button>
                         @if (Model?.BlobId != null)
                         {
-                            <button asp-action="Update" asp-controller="Formatter" type="submit" class="btn btn-primary w-100">Update</button>
+                            <button asp-action="Update" asp-controller="Formatter" type="submit" class="btn btn-primary w-100" data-bs-toggle="tooltip" title="Update the JSON entry">Update</button>
                         }
                         else
                         {
-                            <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()">Save</button>
+                            <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()" data-bs-toggle="tooltip" title="Save the JSON to your workspace">Save</button>
                         }
-                        
                     </div>
 
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Formatted JSON</h5>
-                        <textarea id="formattedJson" name="Blob.Output" rows="22" class="form-control" placeholder="Formatted JSON will appear here">@Model?.Blob?.Output</textarea>
+                        <textarea id="formattedJson" name="Blob.Output" rows="22" class="form-control" placeholder="Formatted JSON will appear here" required style="width: 100%; height: 500px; resize: none;">@Model?.Blob?.Output</textarea>
                         <div class="mt-2 d-flex justify-content-between">
-                            <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
+                            <button id="copyFormattedJsonBtn" type="button" class="btn btn-primary" data-bs-toggle="tooltip" title="Copy the JSON from the Formatted Date">Copy Formatted JSON</button>
                         </div>
                     </div>
                 </div>
@@ -69,6 +69,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="filenameInputModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -95,6 +96,43 @@
 
 @section Scripts {
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+        // Show tooltip and hide after 2 seconds
+        function showTooltip(buttonId) {
+            var tooltipElement = document.getElementById(buttonId);
+            var tooltip = bootstrap.Tooltip.getInstance(tooltipElement);
+            tooltip.show();
+
+            setTimeout(function () {
+                tooltip.hide();
+            }, 2000);
+        }
+
+        function loadJsonFile() {
+            const fileInput = document.getElementById('fileInput');
+            const inputJsonElement = document.getElementById('inputJson');
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+                    try {
+                        const jsonContent = JSON.parse(event.target.result);
+                        inputJsonElement.value = JSON.stringify(jsonContent, null, 2); // Pretty-print JSON
+                    } catch (e) {
+                        alert('Invalid JSON format in the uploaded file.');
+                    }
+                };
+
+                reader.readAsText(file);
+            }
+        }
 
         function checkWorkspaceAndSave() {
             var userId = document.querySelector('input[name="UserId"]').value;
@@ -102,16 +140,14 @@
             var inputJson = document.getElementById('inputJson').value;
             var outputJson = document.getElementById('formattedJson').value;
 
-            // Store values in a global object for later use
             window.jsonDataToSave = {
                 userId: userId,
                 workspaceId: workspaceId,
                 inputJson: inputJson,
                 outputJson: outputJson,
-                Type:"json"
+                Type: "json"
             };
 
-            // Show the filename input modal
             var filenameInputModal = new bootstrap.Modal(document.getElementById('filenameInputModal'));
             filenameInputModal.show();
         }
@@ -153,11 +189,9 @@
                     showTempDataMessage("An error occurred while saving JSON.", "alert-danger");
                 });
 
-            // Hide the modal after saving
             var filenameInputModal = bootstrap.Modal.getInstance(document.getElementById('filenameInputModal'));
             filenameInputModal.hide();
         }
-
 
         function showTempDataMessage(message, alertClass) {
             const tempDataMessageElement = document.getElementById('tempDataMessage');
@@ -173,7 +207,6 @@
             const inputJsonElement = document.getElementById('inputJson');
 
             if (button.textContent === 'Minify') {
-                // Store the original JSON only if it hasn't been stored yet
                 originalJson = inputJsonElement.value;
 
                 try {
@@ -183,17 +216,11 @@
                 } catch (e) {
                     showTempDataMessage('Invalid JSON', 'alert-danger');
                 }
-            } else if (button.textContent === 'Undo') {
-                if (originalJson) {
-                    inputJsonElement.value = originalJson;
-                    originalJson = ''; // Clear the stored original after undoing
-                    button.textContent = 'Minify';
-                } else {
-                    showTempDataMessage('No action to undo', 'alert-warning');
-                }
+            } else {
+                inputJsonElement.value = originalJson;
+                button.textContent = 'Minify';
             }
         }
-
 
         function clearJson() {
             document.getElementById('inputJson').value = '';
