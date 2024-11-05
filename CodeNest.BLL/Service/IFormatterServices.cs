@@ -16,10 +16,10 @@ namespace CodeNest.BLL.Service
 {
     public interface IFormatterServices
     {
-        Task<ValidationDto> JsonValidate(BlobDto jsonDto);
+        Task<BlobDto> JsonValidate(BlobDto jsonDto);
         Task<bool> Save(BlobDto jsonDto, ObjectId workSpace, ObjectId user, string filename);
         Task<BlobDto> GetBlob(ObjectId blobId);
         Task<BlobDto> Update(BlobDto blobDto, ObjectId blobID, ObjectId userId);
-        Task<ValidationDto> JavascriptValidate(BlobDto blobDto);
+        Task<BlobDto> JavascriptValidate(BlobDto blobDto);
     }
 }

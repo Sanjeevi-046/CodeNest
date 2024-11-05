@@ -138,6 +138,7 @@ namespace CodeNest.DAL.Repository
                     _logger.LogInformation("CreateWorkspace: Successfully created new workspace.");
                     return _mapper.Map<WorkspacesDto>(workspaces);
                 }
+
                 return null;
             }
             catch (Exception ex)
