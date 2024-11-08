@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .access-denied-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 50px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .access-denied-container h1 {
+                font-size: 48px;
+                color: #e74c3c;
+            }
+
+            .access-denied-container p {
+                font-size: 18px;
+                color: #333;
+            }
+
+            .access-denied-container a {
+                display: inline-block;
+                margin-top: 20px;
+                padding: 10px 20px;
+                background-color: #3498db;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+
+                .access-denied-container a:hover {
+                    background-color: #2980b9;
+                }
+
+    </style>
+</head>
+<body>
+    <div class="access-denied-container">
+        <h1>Access Denied</h1>
+        <p>You do not have permission to view this page.</p>
+        <a asp-action="Login" asp-controller="Auth">Go to Login</a>
+    </div>
+</body>
+</html>

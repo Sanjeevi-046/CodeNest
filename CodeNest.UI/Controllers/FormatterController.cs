@@ -77,7 +77,7 @@ namespace CodeNest.UI.Controllers
 
             return userWorkspace;
         }
-
+        
         public async Task<IActionResult> JsonFormatter(ObjectId userId, ObjectId? workSpaceId = null, ObjectId? blobId = null)
         {
             UserWorkspaceFilesDto workSpaceDetails = await this
@@ -170,7 +170,7 @@ namespace CodeNest.UI.Controllers
                 blobId = result.Id
             });
         }
-
+        //[Authorize(Roles ="Admin")]
         [HttpGet]
         public async Task<IActionResult> Javascript(ObjectId userId, ObjectId? workSpaceId = null, ObjectId? blobId = null)
         {

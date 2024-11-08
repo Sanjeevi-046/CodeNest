@@ -86,8 +86,14 @@ namespace CodeNest.UI.Controllers
         public IActionResult Logout()
         {
             _httpContextAccessor.HttpContext?.Session.Clear();
+             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             TempData.Clear();
             return RedirectToAction("Login");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View(); 
         }
     }
 }
