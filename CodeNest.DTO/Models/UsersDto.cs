@@ -16,22 +16,23 @@ using System.ComponentModel.DataAnnotations;
 namespace CodeNest.DTO.Models
 {
     public class UsersDto
-    {
-        [BsonId]
-        [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
+    { 
         public ObjectId Id { get; set; }
         [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "Name must be alphabetic characters.")]
         [Required(ErrorMessage = "Name is required")]
         [BsonElement("Name")]
-        public string Name { get; set; }
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", ErrorMessage = "Password must be minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character !")]
+        public string? Name { get; set; }
         [Required(ErrorMessage = "Password is required")]
-        [BsonElement("Password")]
-        public string Password { get; set; }
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+            ErrorMessage = "Password must be minimum 8 characters, at least one uppercase letter," +
+            " one lowercase letter, one number and one special character !")]
+        
+        public string? Password { get; set; }
 
         [BsonElement("Email")]
         [StringLength(50, ErrorMessage = "Email cannot exceed 50 characters")]
-        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address !")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$",
+            ErrorMessage = "Invalid email address !")]
         public string Email { get; set; }
 
         [BsonElement("FirstName")]
