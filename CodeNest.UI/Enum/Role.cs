@@ -9,16 +9,11 @@
 //
 // ***********************************************************************************************
 
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-
-namespace CodeNest.UI.Controllers
+namespace CodeNest.UI.Enum
 {
-    public class JsonController : Controller
+    public enum Role
     {
-        public IActionResult Index(ObjectId workspace)
-        {
-            return ViewComponent("Json", new { workspaceId = workspace });
-        }
+        Admin = 1,
+        User = 2
     }
 }

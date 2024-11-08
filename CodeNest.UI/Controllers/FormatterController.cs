@@ -12,11 +12,13 @@
 using CodeNest.BLL.Service;
 using CodeNest.DTO.Models;
 using CodeNest.UI.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
 namespace CodeNest.UI.Controllers
 {
+    [Authorize]
     public class FormatterController : Controller
     {
         private readonly IFormatterServices _formatterServices;
