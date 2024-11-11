@@ -30,9 +30,11 @@
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <h5>Input </h5>
-                        <textarea id="input" name="Blob.Input" rows="22" class="form-control" placeholder="Enter Javascript data" required>@Model?.Blob?.Input</textarea>
+                        <textarea id="input" name="Blob.Input" rows="22" class="form-control fixed-textarea" placeholder="Enter Javascript data" required>@Model?.Blob?.Input</textarea>
                         <div class="mt-2 d-flex justify-content-between">
-                            <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary">Copy Input JSON</button>
+                            <button id="copyInputJsonBtn" type="button" class="btn btn-outline-secondary w-48">Copy Input JSON</button>
+                            <button id="uploadFileBtn" type="button" class="btn btn-primary w-48" onclick="document.getElementById('fileInput').click()">File Upload</button>
+                            <input type="file" id="fileInput" accept=".js" style="display:none;" onchange="handleFileUpload(event)" />
                         </div>
                     </div>
 
@@ -42,26 +44,28 @@
                         <br />
                         <br />
                         <br />
-                        <button id="validateBtn" asp-action="Javascript" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
-                        <button id="minifyBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="minifyJson()">Minify</button>
-                        <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
-                        @if (Model?.BlobId != null)
-                        {
-                            <button asp-action="Update" asp-controller="Formatter" type="submit" class="btn btn-primary w-100">Update</button>
-                        }
-                        else
-                        {
-                            <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()">Save</button>
-                        }
+                        <div class="d-flex flex-column">
+                            <button id="validateBtn" asp-action="Javascript" type="submit" class="btn btn-primary mb-2 w-100">Validate</button>
+                            <button id="minifyUndoBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="toggleMinifyUndo()">Minify</button>
+                            <button id="clearBtn" type="button" class="btn btn-primary mb-2 w-100" onclick="clearJson()">Clear</button>
 
+                            @if (Model?.BlobId != null)
+                            {
+                                <button asp-action="Update" asp-controller="Formatter" type="submit" class="btn btn-primary w-100">Update</button>
+                            }
+                            else
+                            {
+                                <button id="saveJsonBtn" type="button" class="btn btn-primary w-100" onclick="checkWorkspaceAndSave()">Save</button>
+                            }
+                        </div>
                     </div>
 
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <h5>Output</h5>
-                        <textarea id="formatted" name="Blob.Output" rows="22" class="form-control" placeholder="Output will appear here">@Model?.Blob?.Output</textarea>
+                        <textarea id="formatted" name="Blob.Output" rows="22" class="form-control fixed-textarea" placeholder="Output will appear here">@Model?.Blob?.Output</textarea>
                         <div class="mt-2 d-flex justify-content-between">
-                            <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary">Copy Formatted JSON</button>
+                            <button id="copyFormattedJsonBtn" type="button" class="btn btn-outline-secondary w-48">Copy Formatted JSON</button>
                         </div>
                     </div>
                 </div>
@@ -69,6 +73,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="filenameInputModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -95,7 +100,26 @@
 
 @section Scripts {
     <script>
-        
+        let originalInput = '';
+
+        function extract() {
+            const inputTextarea = document.getElementById('input');
+            const inputValue = inputTextarea.value;
+
+            // Example of processing the input (you can modify as needed)
+            try {
+                const jsonData = JSON.parse(inputValue);
+                // Process the jsonData as required
+                console.log(jsonData); // For demonstration: log to the console
+
+                // If you want to show a success message or update the output textarea
+                document.getElementById('formatted').value = JSON.stringify(jsonData, null, 2);
+                showTempDataMessage("Data extracted successfully.", "alert-success");
+            } catch (err) {
+                showTempDataMessage("Invalid JSON format.", "alert-danger");
+            }
+        }
+
         function checkWorkspaceAndSave() {
             var userId = document.querySelector('input[name="UserId"]').value;
             var workspaceId = document.querySelector('input[name="WorkspaceId"]').value;
@@ -145,7 +169,7 @@
                         location.reload();
                         showTempDataMessage("Saved successfully.", "alert-success");
                     } else {
-                        showTempDataMessage("Error occured : " + data.message, "alert-danger");
+                        showTempDataMessage("Error occurred: " + data.message, "alert-danger");
                     }
                 })
                 .catch(error => {
@@ -158,32 +182,54 @@
             filenameInputModal.hide();
         }
 
+        function toggleMinifyUndo() {
+            const inputTextarea = document.getElementById('input');
+            const currentInput = inputTextarea.value;
 
-        function showTempDataMessage(message, alertClass) {
-            const tempDataMessageElement = document.getElementById('tempDataMessage');
-            tempDataMessageElement.className = 'alert ' + alertClass;
-            tempDataMessageElement.textContent = message;
-            tempDataMessageElement.style.display = 'block';
-        }
-
-        function minifyJson() {
-            const input = document.getElementById('input').value;
-            try {
-                const minified = input
-                .replace(/\/\/.*$/gm, '')          // Remove single-line comments
+            if (originalInput === '') {
+                // Minify
+                originalInput = currentInput; // Store original input
+                const minified = currentInput
+                    .replace(/\/\/.*$/gm, '')          // Remove single-line comments
                     .replace(/\/\*[\s\S]*?\*\//g, '')  // Remove multi-line comments
                     .replace(/\s+/g, ' ')              // Collapse whitespace
                     .replace(/\s*([{};,:])\s*/g, '$1') // Remove whitespace around symbols
                     .trim();
-                document.getElementById('input').value = minified;
-            } catch (e) {
-                showTempDataMessage('Invalid data', 'alert-danger');
+                inputTextarea.value = minified;
+                document.getElementById('minifyUndoBtn').textContent = 'Undo';
+            } else {
+                // Undo
+                inputTextarea.value = originalInput;
+                originalInput = ''; // Reset original input
+                document.getElementById('minifyUndoBtn').textContent = 'Minify';
             }
         }
 
         function clearJson() {
             document.getElementById('input').value = '';
             document.getElementById('formatted').value = '';
+        }
+
+        function showTempDataMessage(message, alertClass) {
+            const tempDataMessageElement = document.getElementById('tempDataMessage');
+            tempDataMessageElement.textContent = message;
+            tempDataMessageElement.className = `alert ${alertClass}`;
+            tempDataMessageElement.style.display = 'block';
+
+            setTimeout(() => {
+                tempDataMessageElement.style.display = 'none';
+            }, 5000); // Hide after 5 seconds
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('input').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
         }
     </script>
 }
