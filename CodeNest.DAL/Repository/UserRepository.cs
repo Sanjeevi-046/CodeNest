@@ -30,7 +30,13 @@ namespace CodeNest.DAL.Repository
             _mapper = mapper;
             _logger = logger;
         }
-
+        public async Task<UsersDto> GetUserByNameIdentifier(string id)
+        {
+            Users existingUser = await _mangoDbService.UserModel
+                   .Find(u => u.NameIdentifier == id)
+                   .FirstOrDefaultAsync();
+            return  _mapper.Map<UsersDto>(existingUser);
+        }
         /// <summary>
         /// Retrieves a user by their identifier.
         /// </summary>
@@ -117,7 +123,11 @@ namespace CodeNest.DAL.Repository
 
                 await _mangoDbService.UserModel.InsertOneAsync(_mapper.Map<Users>(newUser));
                 _logger.LogInformation("Register: Successfully registered new user.");
-                return newUser;
+                Users savedUser = await _mangoDbService.UserModel
+                    .Find(u => u.Name == newUser.Name)  
+                    .FirstOrDefaultAsync();
+
+                return _mapper.Map<UsersDto>(savedUser);
             }
             catch (Exception ex)
             {

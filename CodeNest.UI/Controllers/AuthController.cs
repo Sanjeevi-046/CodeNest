@@ -15,6 +15,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using CodeNest.DAL.Models;
+using Microsoft.Graph;
+using Microsoft.Graph.Models;
+using MongoDB.Bson;
 
 namespace CodeNest.UI.Controllers
 {
@@ -53,8 +58,6 @@ namespace CodeNest.UI.Controllers
             UsersDto result = await _userService.Login(user.Name, user.Password);
             if (result != null)
             {
-                _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
-                _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
                 await GenerateClaimsAsync(result.Name);
                 return RedirectToAction("JsonFormatter", "Formatter", new { userId = result.Id });
             }
@@ -70,8 +73,6 @@ namespace CodeNest.UI.Controllers
                 UsersDto result = await _userService.Register(user);
                 if (result != null)
                 {
-                    _httpContextAccessor.HttpContext?.Session.SetString("userId", result.Id.ToString());
-                    _httpContextAccessor.HttpContext?.Session.SetString("userName", result.Name);
                     return RedirectToAction("Login");
                 }
             }
@@ -86,14 +87,54 @@ namespace CodeNest.UI.Controllers
         public IActionResult Logout()
         {
             _httpContextAccessor.HttpContext?.Session.Clear();
-             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             TempData.Clear();
             return RedirectToAction("Login");
         }
 
         public IActionResult AccessDenied()
         {
-            return View(); 
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult SignInWithMicrosoft()
+        {
+            return Challenge(new AuthenticationProperties { RedirectUri = "/Auth/MicrosoftUserDetails" }, MicrosoftAccountDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MicrosoftUserDetails()
+        {
+            AuthenticateResult result = await HttpContext.AuthenticateAsync(MicrosoftAccountDefaults.AuthenticationScheme);
+            if (result.Succeeded)
+            {
+                // Get the claims for the authenticated user
+                IEnumerable<Claim> claims = result.Principal.Claims;
+
+                // You can extract the user information from the claims
+                string? userEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                string? userName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                string? userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                UsersDto userDetails = await _userService.GetUserByNameIdentifier(userId);
+                if (userDetails != null) 
+                {
+                    await GenerateClaimsAsync(userDetails.Name);
+                    return RedirectToAction("JsonFormatter", "Formatter", new { userId = userDetails.Id });
+                }
+
+                UsersDto newUser = new()
+                {
+                    Name = userName,
+                    Email = userEmail,
+                    NameIdentifier = userId
+                };
+                UsersDto registeredUser = await _userService.Register(newUser);
+                return RedirectToAction("JsonFormatter", "Formatter", new { userId = registeredUser.Id });
+            }
+
+            return Unauthorized();
         }
     }
 }

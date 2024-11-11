@@ -18,5 +18,6 @@ namespace CodeNest.DAL.Repository
         Task<UsersDto> GetUserById(string id);
         Task<UsersDto> Login(string username, string password);
         Task<UsersDto> Register(UsersDto newUser);
+        Task<UsersDto> GetUserByNameIdentifier(string id);
     }
 }

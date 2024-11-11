@@ -58,5 +58,6 @@ namespace CodeNest.DTO.Models
 
         [BsonRepresentation(BsonType.ObjectId)]
         public List<ObjectId>? Workspaces { get; set; }
+        public string? NameIdentifier { get; set; }
     }
 }

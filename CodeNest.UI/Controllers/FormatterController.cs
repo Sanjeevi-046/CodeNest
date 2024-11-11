@@ -24,12 +24,14 @@ namespace CodeNest.UI.Controllers
         private readonly IFormatterServices _formatterServices;
         private readonly IWorkspaceService _workspaceService;
         private readonly IJsonService _jsonService;
+        private readonly IUserService _userService;
 
-        public FormatterController(IFormatterServices formatterServices, IWorkspaceService workspaceService, IJsonService jsonService)
+        public FormatterController(IFormatterServices formatterServices, IWorkspaceService workspaceService, IJsonService jsonService , IUserService userService)
         {
             _formatterServices = formatterServices;
             _workspaceService = workspaceService;
             _jsonService = jsonService;
+            _userService = userService;
         }
 
         private async Task<UserWorkspaceFilesDto> GetUserWorkSpaceDetails(ObjectId? workSpaceId, ObjectId userId, ObjectId? blobId = null)
@@ -39,6 +41,8 @@ namespace CodeNest.UI.Controllers
             WorkspacesDto? workspace = null;
             List<BlobDto> blobsList = [];
             BlobDto? blob = null;
+
+            UsersDto result = await _userService.GetUserById(userId.ToString());
             // Fetch workspaces for the given userId
             workspaces = await _workspaceService.GetWorkspaces(userId);
 
@@ -67,6 +71,7 @@ namespace CodeNest.UI.Controllers
             UserWorkspaceFilesDto userWorkspace = new()
             {
                 UserId = userId,
+                UserName = result.Name,
                 BlobId = blobId,
                 WorkspaceName = workspace?.Name,
                 WorkspaceId = workspaceObjectId,
@@ -101,20 +106,20 @@ namespace CodeNest.UI.Controllers
 
             if (userWorkspaceFiles.Blob == null)
             {
-                TempData["Error"] = Resource.CN_Error_1001;
+                ViewData["Error"] = Resource.CN_Error_1001;
                 return View(userWorkspaceFilesDto);
             }
 
             BlobDto result = await _formatterServices.JsonValidate(userWorkspaceFiles.Blob);
-            if (result!=null)
+            if (result.Input!=null || result.CreatedBy!=null)
             {
-                TempData["Success"] = Resource.CN_Success_1001;
+                ViewData["Success"] = Resource.CN_Success_1001;
                 userWorkspaceFilesDto.Blob = result;
                 return View(userWorkspaceFilesDto);
             }
 
             userWorkspaceFilesDto.Blob = userWorkspaceFiles.Blob;
-            TempData["Error"] = Resource.CN_Error_1001;
+            ViewData["Error"] = Resource.CN_Error_1001;
             return View(userWorkspaceFilesDto); 
         }
 
@@ -137,13 +142,12 @@ namespace CodeNest.UI.Controllers
                 .Save(userWorkspaceDetail.Blob, userWorkspaceDetail.WorkspaceId.Value, userWorkspaceDetail.UserId.Value, filename);
             if (jsonResult)
             {
-                TempData.Clear();
-                TempData["Success"] = Resource.CN_Success_1001;
+                ViewData["Success"] = Resource.CN_Success_1001;
 
                 return Json(new { success = true });
             }
 
-            TempData["Error"] = Resource.CN_Error_1001;
+            ViewData["Error"] = Resource.CN_Error_1001;
             return Json(new { success = false });
         }
 
@@ -154,7 +158,7 @@ namespace CodeNest.UI.Controllers
                 .Update(blobDto: userWorkspaceDetail.Blob, blobID: userWorkspaceDetail.BlobId.Value, userId: userWorkspaceDetail.UserId.Value);
             if (result != null)
             {
-                TempData["Success"] = Resource.CN_Update_1001;
+                ViewData["Success"] = Resource.CN_Update_1001;
                 return RedirectToAction("JsonFormatter", new
                 {
                     userId = userWorkspaceDetail.UserId.Value,
@@ -162,7 +166,7 @@ namespace CodeNest.UI.Controllers
                 });
             }
 
-            TempData["Error"] = Resource.CN_Error_1002;
+            ViewData["Error"] = Resource.CN_Error_1002;
             return RedirectToAction("JsonFormatter", new
             {
                 userId = userWorkspaceDetail.UserId.Value,
@@ -179,7 +183,7 @@ namespace CodeNest.UI.Controllers
             // Check if there are no workspaces and set a flag
             if (workSpaceDetails.Workspaces == null || workSpaceDetails.Workspaces.Count == 0)
             {
-                TempData["NoWorkspace"] = true;
+                ViewData["NoWorkspace"] = true;
                 return RedirectToAction("Create", "WorkSpace", new { userId });
             }
 
@@ -195,19 +199,19 @@ namespace CodeNest.UI.Controllers
             
             if (userWorkspaceFiles.Blob == null)
             {
-                TempData["Error"] = Resource.CN_Error_1001;
+                ViewData["Error"] = Resource.CN_Error_1001;
                 return View(userWorkspaceFilesDto);
             }
             
             BlobDto result = await _formatterServices.JavascriptValidate(userWorkspaceFiles.Blob);
             if (result.Input != null || result.Output != null)
             {
-                TempData["Success"] = Resource.CN_Success_1001;
+                ViewData["Success"] = Resource.CN_Success_1001;
                 userWorkspaceFilesDto.Blob = result;
                 return View(userWorkspaceFilesDto);
             }
 
-            TempData["Error"] = Resource.CN_Error_1001;
+            ViewData["Error"] = Resource.CN_Error_1001;
             return View(userWorkspaceFiles);
         }
     }
