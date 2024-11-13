@@ -16,6 +16,7 @@ namespace CodeNest.DTO.Models
     public class UserWorkspaceFilesDto
     {
         public ObjectId? UserId { get; set; }
+        public string? UserName { get; set; }
         public ObjectId? WorkspaceId { get; set; }
         public String? WorkspaceName { get; set; }
         public ObjectId? BlobId { get; set; }

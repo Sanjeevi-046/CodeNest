@@ -9,6 +9,8 @@
 //
 // ***********************************************************************************************
 
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
 namespace CodeNest.UI.tempdata
 {
     public class TempDataMiddleware
@@ -24,11 +26,11 @@ namespace CodeNest.UI.tempdata
         {
             // Call the next delegate/middleware in the pipeline
             await _next(context);
-
-            // Clear TempData after the response is sent
-            if (context.Response.StatusCode == 200)
+            ITempDataDictionary? tempData = context.RequestServices.GetService<ITempDataDictionary>();
+            if (tempData != null)
             {
-                context.Items["TempDataClear"] = true;
+                tempData.Clear();
+                context.Items["TempDataCleared"] = true; // Optionally log this action in context items
             }
         }
     }

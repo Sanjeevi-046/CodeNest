@@ -31,6 +31,11 @@ namespace CodeNest.BLL.Service
             _logger = logger;
         }
 
+        public async Task<UsersDto> GetUserByNameIdentifier(string id)
+        {
+            UsersDto result = await _userRepository.GetUserByNameIdentifier(id);
+            return result;
+        }
         /// <summary>
         /// Gets the user detail by ID.
         /// </summary>

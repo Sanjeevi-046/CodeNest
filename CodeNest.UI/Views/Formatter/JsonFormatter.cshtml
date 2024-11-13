@@ -7,16 +7,16 @@
 <div class="container-fluid text-center">
     <div class="card">
         <div class="card-header">
-            @if (TempData["Success"] != null)
+            @if (ViewData["Success"] != null)
             {
-                <div class="alert alert-success" role="alert" id="tempDataMessage" style="display: none;">
-                    @TempData["Success"]
+                <div class="alert alert-success" role="alert">
+                    @ViewData["Success"]
                 </div>
             }
-            @if (TempData["Error"] != null)
+            @if (ViewData["Error"] != null)
             {
-                <div class="alert alert-danger" role="alert" id="tempDataMessage" style="display: none;">
-                    @TempData["Error"]
+                <div class="alert alert-danger" role="alert">
+                    @ViewData["Error"]
                 </div>
             }
         </div>
@@ -137,7 +137,7 @@
                 workspaceId: workspaceId,
                 inputJson: inputJson,
                 outputJson: outputJson,
-                Type: '@Resource.CN_Type_001'
+                Type: "Json"
             };
 
             // Show the filename input modal

@@ -7,16 +7,16 @@
 <div class="container-fluid text-center">
     <div class="card">
         <div class="card-header" style="padding:10px">
-            @if (TempData["Success"] != null)
+            @if (ViewData["Success"] != null)
             {
                 <div class="alert alert-success" role="alert">
-                    @TempData["Success"]
+                    @ViewData["Success"]
                 </div>
             }
-            @if (TempData["Error"] != null)
+            @if (ViewData["Error"] != null)
             {
                 <div class="alert alert-danger" role="alert">
-                    @TempData["Error"]
+                    @ViewData["Error"]
                 </div>
             }
         </div>
@@ -132,8 +132,8 @@
                 workspaceId: workspaceId,
                 input: input,
                 output: output,
-                Type: @Resource.CN_Type_002
-                    };
+                Type: "javascript"
+            };
 
             // Show the filename input modal
             var filenameInputModal = new bootstrap.Modal(document.getElementById('filenameInputModal'));
