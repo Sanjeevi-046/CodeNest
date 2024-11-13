@@ -11,7 +11,10 @@
 
 using CodeNest.BLL.Service;
 using CodeNest.DTO.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CodeNest.UI.Controllers
 {
@@ -23,6 +26,18 @@ namespace CodeNest.UI.Controllers
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
+        }
+        private async Task GenerateClaimsAsync(string userName)
+        {
+            ClaimsIdentity identity = new(
+                [
+                    new (ClaimTypes.Name, userName),
+                    new (ClaimTypes.Role, "Users")
+                ], CookieAuthenticationDefaults.AuthenticationScheme
+            );
+
+            ClaimsPrincipal principal = new(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
         public IActionResult ForgotPasswordBasic() => View();
         public IActionResult Login() => View();
@@ -40,6 +55,7 @@ namespace CodeNest.UI.Controllers
             {
                 _httpContextAccessor.HttpContext.Session.SetString("userId", result.Id.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("userName", result.Name);
+                await GenerateClaimsAsync(result.Name);
                 return RedirectToAction("JsonFormatter", "Formatter", new { userId = result.Id });
             }
 
@@ -70,8 +86,14 @@ namespace CodeNest.UI.Controllers
         public IActionResult Logout()
         {
             _httpContextAccessor.HttpContext?.Session.Clear();
+             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             TempData.Clear();
             return RedirectToAction("Login");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View(); 
         }
     }
 }
