@@ -210,7 +210,7 @@
                         const minifiedJson = JSON.stringify(JSON.parse(originalJson));
                         inputJson.value = minifiedJson;
                         /* document.getElementById('formattedJson').value = minifiedJson; */ // Optionally set the formattedJson as well
-                        document.getElementById('minifyUndoBtn').textContent = "Undo"; // Change button text to "Undo"
+                        // Change button text to "Undo"
                         //showTempDataMessage("JSON minified successfully.", "alert-success");
                     } catch (e) {
                         showTempDataMessage('Invalid JSON data', 'alert-danger');
