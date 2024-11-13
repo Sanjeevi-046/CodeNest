@@ -40,5 +40,6 @@ namespace CodeNest.DAL.Models
         public string? Country { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public List<string>? Workspaces { get; set; }
+        public string? NameIdentifier { get; set; }
     }
 }

@@ -24,12 +24,19 @@
             </a>
           </div>
           <!-- /Logo -->
-          <h4 class="mb-1 justify-content-center">Login</h4>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">Login</h4>
+                        <a asp-action="SignInWithMicrosoft" asp-controller="Auth">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-microsoft" viewBox="0 0 16 16">
+                        <path d="M7.462 0H0v7.19h7.462zM16 0H8.538v7.19H16zM7.462 8.211H0V16h7.462zm8.538 0H8.538V16H16z" />
+                    </svg>
+                </a>
+            </div>
+
           <form id="formAuthentication" class="mb-6" asp-action="Login" asp-controller="Auth" method="POST">
             <div class="mb-6">
               <label for="email" class="form-label">Email or Username</label>
               <input type="text" class="form-control" id="email" asp-for="Name" placeholder="Enter your email or username" required autofocus>
-              <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="mb-6 form-password-toggle">
               <label class="form-label" for="password">Password</label>
@@ -37,7 +44,6 @@
                 <input type="password" id="password" class="form-control" asp-for="Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" required />
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
               </div>
-              <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="mb-8">
               <div class="d-flex justify-content-between mt-8">
