@@ -220,7 +220,7 @@
                     inputJson.value = originalJson; // Restore original JSON
                     document.getElementById('formattedJson').value = ''; // Clear formatted JSON
                     originalJson = ""; // Clear the stored original JSON
-                    document.getElementById('minifyUndoBtn').textContent = "Minify"; // Change button text back to "Minify"
+                
                     //showTempDataMessage("Minification undone.", "alert-success");
                 }
             } else {
@@ -232,7 +232,6 @@
             document.getElementById('inputJson').value = '';
             document.getElementById('formattedJson').value = '';
             originalJson = ""; // Clear original JSON on clear
-            document.getElementById('minifyUndoBtn').textContent = "Minify"; // Reset button text
         }
 
         function copyToClipboard(textAreaId) {
