@@ -28,7 +28,7 @@
                     <!-- Input JSON Data Column -->
                     <div class="col-5">
                         <div class="d-flex justify-content-lg-start mb-3">
-                            <button id="copyInputJsonBtn" type="button" class="btn btn-primary mx-1" data-bs-toggle="tooltip" title="Copy Input JSON">
+                            <button id="copyInputJsonBtn" type="button" class="btn btn-primary mx-1" onclick="copyInputJson()" data-bs-toggle="tooltip" title="Copy Input JSON">
                                 <i class="fas fa-copy"></i>
                             </button>
                             <button id="fileUploadBtn" type="button" class="btn btn-primary mx-1" data-bs-toggle="tooltip" title="Upload JSON File" onclick="document.getElementById('fileInput').click()">
@@ -65,7 +65,7 @@
                     <!-- Formatted JSON Data Column -->
                     <div class="col-5">
                         <div class="d-flex justify-content-lg-start mb-3">
-                            <button id="copyFormattedJsonBtn" type="button" class="btn btn-primary mx-1" data-bs-toggle="tooltip" title="Copy Input JSON">
+                            <button id="copyFormattedJsonBtn" type="button" class="btn btn-primary mx-1" onclick="copyFormattedJson()" data-bs-toggle="tooltip" title="Copy Formatted JSON">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>
@@ -218,7 +218,6 @@
                 } else {
                     // If original JSON is already set, undo
                     inputJson.value = originalJson; // Restore original JSON
-                    document.getElementById('formattedJson').value = ''; // Clear formatted JSON
                     originalJson = ""; // Clear the stored original JSON
                 
                     //showTempDataMessage("Minification undone.", "alert-success");
@@ -234,11 +233,21 @@
             originalJson = ""; // Clear original JSON on clear
         }
 
-        function copyToClipboard(textAreaId) {
-            const textArea = document.getElementById(textAreaId);
-            textArea.select();
-            document.execCommand('copy');
-            showTempDataMessage(`${textAreaId === 'inputJson' ? 'Input' : 'Formatted'} JSON copied to clipboard.`, 'alert-success');
+        // Function to copy text from the input field
+        function copyInputJson() {
+            const inputText = document.getElementById("inputJson");
+            inputText.select();
+            inputText.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(inputText.value)
         }
+
+        // Function to copy text from the formatted output field
+        function copyFormattedJson() {
+            const formattedText = document.getElementById("formattedJson");
+            formattedText.select();
+            formattedText.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(formattedText.value)
+        }
+
     </script>
 }
